@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Reading the PAM · Maha Nawaz</title>
+<meta name="description" content="Which strand is which, what actually unzips, how two arginines read two guanines, and why one Cas9 cut needs two nucleases."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="Reading the PAM"><meta property="og:description" content="Which strand is which, what actually unzips, how two arginines read two guanines, and why one Cas9 cut needs two nucleases.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground:   #f2f5f6;
+    --surface:  #ffffff;
+    --sunk:     #e9eef0;
+    --ink:      #141c22;
+    --muted:    #5b6b76;
+    --faint:    #8798a3;
+    --rule:     #d5dfe4;
+
+    --target:     #1266b8;
+    --target-bg:  #e2eef9;
+    --nontarget:  #b4265f;
+    --nontarget-bg:#fbe6ee;
+    --rna:        #9a6b06;
+    --rna-bg:     #f9eed4;
+    --protein:    #4e6b63;
+    --protein-bg: #e3ecea;
+
+    --maxw: 720px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:  #0e1417;
+      --surface: #161f24;
+      --sunk:    #1c272d;
+      --ink:     #e4ecf0;
+      --muted:   #9db0bb;
+      --faint:   #6d818d;
+      --rule:    #2c3a42;
+
+      --target:     #63b0f5;
+      --target-bg:  #13293c;
+      --nontarget:  #f57fae;
+      --nontarget-bg:#3a1526;
+      --rna:        #e0ae4a;
+      --rna-bg:     #33280f;
+      --protein:    #8fb5aa;
+      --protein-bg: #1b2a27;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:  #0e1417;
+    --surface: #161f24;
+    --sunk:    #1c272d;
+    --ink:     #e4ecf0;
+    --muted:   #9db0bb;
+    --faint:   #6d818d;
+    --rule:    #2c3a42;
+
+    --target:     #63b0f5;
+    --target-bg:  #13293c;
+    --nontarget:  #f57fae;
+    --nontarget-bg:#3a1526;
+    --rna:        #e0ae4a;
+    --rna-bg:     #33280f;
+    --protein:    #8fb5aa;
+    --protein-bg: #1b2a27;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 48px 72px;
+  }
+
+  h1 {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(30px, 6vw, 42px);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  .standfirst {
+    font-size: 17px;
+    color: var(--muted);
+    margin: 0 0 8px;
+    max-width: 58ch;
+  }
+  .sourceline {
+    font-size: 13px;
+    color: var(--faint);
+    margin: 0;
+  }
+
+  h2 {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 4px;
+    text-wrap: balance;
+  }
+  .sec-kicker {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 6px;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  section {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+  }
+  p { margin: 0 0 16px; max-width: 64ch; }
+  ul { margin: 0 0 16px; padding-left: 22px; max-width: 64ch; }
+  li { margin-bottom: 7px; }
+
+  strong { font-weight: 600; }
+  em.term { font-style: normal; font-weight: 600; }
+
+  code, .mono {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.92em;
+  }
+  code {
+    background: var(--sunk);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  .sw-target    { color: var(--target); font-weight: 600; }
+  .sw-nontarget { color: var(--nontarget); font-weight: 600; }
+  .sw-rna       { color: var(--rna); font-weight: 600; }
+
+  figure {
+    margin: 26px 0;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 20px 18px 16px;
+    overflow-x: auto;
+  }
+  figure svg { display: block; width: 100%; max-width: 100%; height: auto; }
+  figcaption {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  /* SVG theming */
+  .s-line   { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+  .s-target { stroke: var(--target); }
+  .s-nt     { stroke: var(--nontarget); }
+  .s-rna    { stroke: var(--rna); }
+  .t-base   { font-family: "IBM Plex Mono", monospace; font-size: 14px; font-weight: 600; text-anchor: middle; }
+  .t-target { fill: var(--target); }
+  .t-nt     { fill: var(--nontarget); }
+  .t-rna    { fill: var(--rna); }
+  .t-lab    { font-family: "IBM Plex Sans", sans-serif; font-size: 12.5px; fill: var(--muted); }
+  .t-lab-s  { font-family: "IBM Plex Sans", sans-serif; font-size: 11px; fill: var(--faint); }
+  .t-cap    { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .t-ink    { fill: var(--ink); font-family: "IBM Plex Sans", sans-serif; font-size: 13px; font-weight: 600; }
+  .tick     { stroke: var(--faint); stroke-width: 1.4; }
+  .rule-l   { stroke: var(--rule); stroke-width: 1.5; }
+  .prot     { fill: var(--protein-bg); stroke: var(--protein); stroke-width: 1.8; }
+  .prot-t   { fill: var(--protein); font-family: "IBM Plex Sans", sans-serif; font-size: 12px; font-weight: 600; }
+  .band-nt  { fill: var(--nontarget-bg); }
+  .band-t   { fill: var(--target-bg); }
+  .band-r   { fill: var(--rna-bg); }
+  .dash     { stroke-dasharray: 4 4; }
+
+  .callout {
+    background: var(--sunk);
+    border-left: 3px solid var(--protein);
+    border-radius: 0 5px 5px 0;
+    padding: 14px 16px;
+    margin: 22px 0;
+    font-size: 15px;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .steps { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); margin: 24px 0 8px; }
+  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 14px 14px 12px;
+  }
+  .step-n {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .step h4 { margin: 0 0 8px; font-size: 15px; font-weight: 600; }
+  .step p { font-size: 13.5px; line-height: 1.5; margin: 10px 0 0; color: var(--muted); max-width: none; }
+  .step svg { display: block; width: 100%; height: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14.5px;
+  }
+  th, td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); font-weight: 600; font-family: "IBM Plex Mono", monospace; }
+
+  .key { display: flex; flex-wrap: wrap; gap: 10px 20px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .key li { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); margin: 0; }
+  .key i { width: 22px; height: 3px; border-radius: 2px; display: inline-block; }
+
+  .foot { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--faint); }
+</style>
+<style>
+:root{--ground:#FFF8EA;--surface:#FFFDF7;--sunk:#FBEED3;--ink:#1D2F66;--muted:#56628A;--faint:#7F89A6;--rule:#E8DCC2;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ground:#15224B;--surface:#1D2F66;--sunk:#243A78;--ink:#FFF5D9;--muted:#C3C8DA;--faint:#9AA3BF;--rule:#33498A;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--ground:#15224B;--surface:#1D2F66;--sunk:#243A78;--ink:#FFF5D9;--muted:#C3C8DA;--faint:#9AA3BF;--rule:#33498A;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-D">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+
+<div class="wrap">
+
+<h1>Reading the PAM</h1>
+<p class="standfirst">Four things the PAM-recognition section assumes you already know: which strand is which, what actually comes apart, how two arginines read two guanines, and why one cut needs two nucleases.</p>
+<p class="sourceline">Reading notes on Chen &amp; Doudna, <em>Nat. Rev. Chem.</em> 1, 0078 (2017), pp. 5–7 &amp; Fig. 3a</p><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · September 22, 2026</span></div>
+
+<ul class="key">
+  <li><i style="background:var(--target)"></i> target strand</li>
+  <li><i style="background:var(--nontarget)"></i> non-target strand</li>
+  <li><i style="background:var(--rna)"></i> guide RNA</li>
+  <li><i style="background:var(--protein)"></i> Cas9</li>
+</ul>
+
+<!-- ===================== 1 ===================== -->
+<section>
+<p class="sec-kicker">The naming</p>
+<h2>Target strand and non-target strand</h2>
+
+<p>The names are assigned <strong>from the guide RNA's point of view</strong>, not the protein's. That is the whole trick, and nothing in the section makes sense until it lands.</p>
+
+<ul>
+  <li>The <span class="sw-target">target strand</span> is the one the guide RNA <em class="term">pairs with</em>. It is complementary to the guide.</li>
+  <li>The <span class="sw-nontarget">non-target strand</span> is the other one. It has the <em class="term">same</em> sequence as the guide RNA (T where the RNA has U), so the guide cannot pair with it — it gets pushed out of the way.</li>
+</ul>
+
+<figure>
+<svg viewBox="0 0 700 290" role="img" aria-label="A DNA duplex with a ten-base protospacer and a TGG PAM. The top non-target strand has the same sequence as the guide RNA shown below; the bottom target strand is complementary to it and is the strand the guide pairs with.">
+  <!-- PAM shading -->
+  <rect x="316" y="26" width="72" height="150" rx="4" class="band-nt" opacity="0.55"/>
+
+  <!-- non-target strand -->
+  <text x="20" y="48" class="t-cap" fill="var(--nontarget)">non-target strand</text>
+  <text x="20" y="66" class="t-lab-s">Cas9 reads the GG on this strand</text>
+  <line x1="106" y1="88" x2="400" y2="88" class="s-line s-nt"/>
+  <text x="92" y="92" class="t-base t-nt">5′</text>
+  <text x="414" y="92" class="t-base t-nt">3′</text>
+  <g class="t-base t-nt">
+    <text x="128" y="92">G</text><text x="150" y="92">A</text><text x="172" y="92">C</text>
+    <text x="194" y="92">C</text><text x="216" y="92">T</text><text x="238" y="92">A</text>
+    <text x="260" y="92">G</text><text x="282" y="92">C</text><text x="304" y="92">T</text>
+    <text x="326" y="92">A</text>
+    <text x="348" y="92">T</text><text x="370" y="92">G</text><text x="392" y="92">G</text>
+  </g>
+
+  <!-- base-pair ticks -->
+  <g class="tick">
+    <line x1="128" y1="100" x2="128" y2="130"/><line x1="150" y1="100" x2="150" y2="130"/>
+    <line x1="172" y1="100" x2="172" y2="130"/><line x1="194" y1="100" x2="194" y2="130"/>
+    <line x1="216" y1="100" x2="216" y2="130"/><line x1="238" y1="100" x2="238" y2="130"/>
+    <line x1="260" y1="100" x2="260" y2="130"/><line x1="282" y1="100" x2="282" y2="130"/>
+    <line x1="304" y1="100" x2="304" y2="130"/><line x1="326" y1="100" x2="326" y2="130"/>
+    <line x1="348" y1="100" x2="348" y2="130"/><line x1="370" y1="100" x2="370" y2="130"/>
+    <line x1="392" y1="100" x2="392" y2="130"/>
+  </g>
+
+  <!-- target strand -->
+  <line x1="106" y1="142" x2="400" y2="142" class="s-line s-target"/>
+  <text x="92" y="146" class="t-base t-target">3′</text>
+  <text x="414" y="146" class="t-base t-target">5′</text>
+  <g class="t-base t-target">
+    <text x="128" y="146">C</text><text x="150" y="146">T</text><text x="172" y="146">G</text>
+    <text x="194" y="146">G</text><text x="216" y="146">A</text><text x="238" y="146">T</text>
+    <text x="260" y="146">C</text><text x="282" y="146">G</text><text x="304" y="146">A</text>
+    <text x="326" y="146">T</text>
+    <text x="348" y="146">A</text><text x="370" y="146">C</text><text x="392" y="146">C</text>
+  </g>
+  <text x="20" y="168" class="t-cap" fill="var(--target)">target strand</text>
+  <text x="20" y="186" class="t-lab-s">the guide RNA pairs with this one</text>
+
+  <!-- brackets -->
+  <path d="M 118 202 L 118 210 L 336 210 L 336 202" fill="none" class="rule-l"/>
+  <text x="227" y="228" class="t-lab" text-anchor="middle">protospacer — 20 bp, 10 shown</text>
+  <path d="M 340 202 L 340 210 L 400 210 L 400 202" fill="none" class="rule-l"/>
+  <text x="370" y="228" class="t-lab" text-anchor="middle" fill="var(--nontarget)">PAM</text>
+
+  <!-- guide RNA -->
+  <line x1="106" y1="264" x2="338" y2="264" class="s-line s-rna"/>
+  <text x="92" y="268" class="t-base t-rna">5′</text>
+  <text x="352" y="268" class="t-base t-rna">3′</text>
+  <g class="t-base t-rna">
+    <text x="128" y="268">G</text><text x="150" y="268">A</text><text x="172" y="268">C</text>
+    <text x="194" y="268">C</text><text x="216" y="268">U</text><text x="238" y="268">A</text>
+    <text x="260" y="268">G</text><text x="282" y="268">C</text><text x="304" y="268">U</text>
+    <text x="326" y="268">A</text>
+  </g>
+  <text x="440" y="268" class="t-cap" fill="var(--rna)">guide RNA</text>
+  <text x="440" y="284" class="t-lab-s">identical to the non-target strand</text>
+</svg>
+<figcaption><b>Read the three rows vertically.</b> The guide RNA's letters are the <em>same</em> as the non-target strand's (U replaces T) and <em>complementary</em> to the target strand's. So the guide can only pair with the target strand — which is exactly why that strand is called the target. Note also that the GG the protein reads sits on the non-target strand: <b>each strand has its own reader.</b> The RNA reads one, the protein reads the other.</figcaption>
+</figure>
+
+<div class="callout">
+<p><strong>A trap in the name.</strong> "Non-target" does not mean unimportant or ignored. That strand carries the PAM, gets threaded into its own tunnel in the protein, and is cut. It is only "non-target" in the narrow sense that the guide RNA does not bind it.</p>
+</div>
+</section>
+
+<!-- ===================== 2 ===================== -->
+<section>
+<p class="sec-kicker">My first question</p>
+<h2>Is the NGG unzipped?</h2>
+
+<p><strong>No. The PAM stays double-stranded the entire time.</strong> This is the point the paper makes by calling it "the PAM duplex" — the word <em class="term">duplex</em> is telling you it is still paired.</p>
+
+<p>Cas9 reads the two Gs by reaching into the <strong>major groove</strong> of intact double-stranded DNA. The edges of base pairs are exposed in that groove, so a protein can identify a sequence without opening it. Only the 20 bp <em>next to</em> the PAM comes apart.</p>
+
+<figure>
+<svg viewBox="0 0 700 300" role="img" aria-label="Diagram of an R-loop. On the right the PAM region remains a base-paired duplex; on the left the twenty-base protospacer is unwound, with the target strand paired to the guide RNA and the non-target strand displaced below.">
+  <rect x="60" y="32" width="380" height="216" rx="5" class="band-r" opacity="0.5"/>
+  <rect x="452" y="32" width="150" height="216" rx="5" class="band-nt" opacity="0.5"/>
+
+  <text x="250" y="54" class="t-cap" text-anchor="middle" fill="var(--rna)">unwound — the R-loop</text>
+  <text x="527" y="54" class="t-cap" text-anchor="middle" fill="var(--nontarget)">PAM duplex</text>
+  <text x="527" y="72" class="t-lab-s" text-anchor="middle">still paired</text>
+
+  <!-- guide RNA -->
+  <line x1="80" y1="108" x2="430" y2="108" class="s-line s-rna"/>
+  <text x="66" y="112" class="t-base t-rna">5′</text>
+  <text x="446" y="112" class="t-base t-rna">3′</text>
+  <text x="80" y="96" class="t-lab" fill="var(--rna)">guide RNA</text>
+
+  <!-- RNA:DNA ticks -->
+  <g class="tick">
+    <line x1="110" y1="116" x2="110" y2="150"/><line x1="150" y1="116" x2="150" y2="150"/>
+    <line x1="190" y1="116" x2="190" y2="150"/><line x1="230" y1="116" x2="230" y2="150"/>
+    <line x1="270" y1="116" x2="270" y2="150"/><line x1="310" y1="116" x2="310" y2="150"/>
+    <line x1="350" y1="116" x2="350" y2="150"/><line x1="390" y1="116" x2="390" y2="150"/>
+  </g>
+  <text x="250" y="140" class="t-lab-s" text-anchor="middle">RNA : DNA hybrid</text>
+
+  <!-- target strand: continuous through both regions -->
+  <line x1="80" y1="162" x2="596" y2="162" class="s-line s-target"/>
+  <text x="66" y="166" class="t-base t-target">3′</text>
+  <text x="610" y="166" class="t-base t-target">5′</text>
+  <text x="470" y="152" class="t-lab" fill="var(--target)">target strand</text>
+
+  <!-- PAM region ticks between target and non-target -->
+  <g class="tick">
+    <line x1="480" y1="170" x2="480" y2="204"/><line x1="510" y1="170" x2="510" y2="204"/>
+    <line x1="540" y1="170" x2="540" y2="204"/><line x1="570" y1="170" x2="570" y2="204"/>
+  </g>
+
+  <!-- non-target strand: displaced on the left, paired on the right -->
+  <path d="M 80 232 L 380 232 Q 430 232 448 216 L 470 216" class="s-line s-nt"/>
+  <line x1="466" y1="216" x2="596" y2="216" class="s-line s-nt"/>
+  <text x="66" y="236" class="t-base t-nt">5′</text>
+  <text x="610" y="220" class="t-base t-nt">3′</text>
+  <text x="120" y="254" class="t-lab" fill="var(--nontarget)">non-target strand — displaced</text>
+  <text x="527" y="236" class="t-base t-nt">T G G</text>
+
+  <!-- unwinding direction -->
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--protein)"/>
+    </marker>
+  </defs>
+  <line x1="446" y1="284" x2="110" y2="284" stroke="var(--protein)" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="456" y="288" class="t-lab" fill="var(--protein)">unwinding starts here and travels left</text>
+</svg>
+<figcaption><b>The PAM is the hinge, not part of the door.</b> Reading the intact <code>TGG</code> duplex on the right is what triggers the opening on the left. Unwinding runs one way only — from the PAM-proximal end outward to the PAM-distal end — which is what Figure 4 of the paper means by "unidirectional".</figcaption>
+</figure>
+</section>
+
+<!-- ===================== 3 ===================== -->
+<section>
+<p class="sec-kicker">Four steps, in order</p>
+<h2>The phosphate lock-loop</h2>
+
+<h3>First: what "+1" means</h3>
+<p>Positions are counted outward from the <strong>boundary between the PAM and the protospacer</strong>, and the numbers refer to <em class="term">phosphates</em> in the backbone, not bases.</p>
+<ul>
+  <li><strong>+</strong> counts into the target sequence — <code>+1</code> is the first phosphate inside the protospacer, right at the boundary</li>
+  <li><strong>−</strong> counts the other way, into the PAM</li>
+  <li><strong>*</strong> means the position is on the non-target strand</li>
+</ul>
+
+<figure>
+<svg viewBox="0 0 700 180" role="img" aria-label="A numbering ruler along the DNA. Phosphate positions are counted outward from the boundary between the protospacer and the PAM: plus numbers run into the protospacer, minus numbers into the PAM, and an asterisk marks the non-target strand.">
+  <rect x="432" y="36" width="128" height="98" rx="4" class="band-nt" opacity="0.5"/>
+  <line x1="432" y1="28" x2="432" y2="146" class="rule-l dash"/>
+
+  <text x="240" y="26" class="t-cap" text-anchor="middle" fill="var(--target)">protospacer</text>
+  <text x="496" y="26" class="t-cap" text-anchor="middle" fill="var(--nontarget)">PAM</text>
+
+  <g class="t-lab-s" text-anchor="middle">
+    <text x="250" y="56">+5*</text><text x="290" y="56">+4*</text><text x="330" y="56">+3*</text>
+    <text x="370" y="56">+2*</text><text x="410" y="56">+1*</text>
+    <text x="454" y="56">−1*</text><text x="494" y="56">−2*</text><text x="534" y="56">−3*</text>
+  </g>
+  <line x1="220" y1="72" x2="580" y2="72" class="s-line s-nt"/>
+  <text x="200" y="76" class="t-base t-nt">5′</text>
+  <text x="596" y="76" class="t-base t-nt">3′</text>
+
+  <g class="tick">
+    <line x1="250" y1="78" x2="250" y2="106"/><line x1="290" y1="78" x2="290" y2="106"/>
+    <line x1="330" y1="78" x2="330" y2="106"/><line x1="370" y1="78" x2="370" y2="106"/>
+    <line x1="410" y1="78" x2="410" y2="106"/><line x1="454" y1="78" x2="454" y2="106"/>
+    <line x1="494" y1="78" x2="494" y2="106"/><line x1="534" y1="78" x2="534" y2="106"/>
+  </g>
+
+  <line x1="220" y1="112" x2="580" y2="112" class="s-line s-target"/>
+  <text x="200" y="116" class="t-base t-target">3′</text>
+  <text x="596" y="116" class="t-base t-target">5′</text>
+  <g class="t-lab-s" text-anchor="middle">
+    <text x="250" y="132">+5</text><text x="290" y="132">+4</text><text x="330" y="132">+3</text>
+    <text x="370" y="132">+2</text>
+    <text x="454" y="132">−1</text><text x="494" y="132">−2</text><text x="534" y="132">−3</text>
+  </g>
+  <circle cx="410" cy="128" r="9" fill="var(--protein)"/>
+  <text x="410" y="132" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;fill:var(--surface);text-anchor:middle">+1</text>
+  <text x="410" y="164" class="t-lab" text-anchor="middle" fill="var(--protein)">the phosphate that kinks</text>
+</svg>
+<figcaption><b>The +1 phosphate is the hinge point.</b> It sits exactly where the clamped PAM duplex ends and the region that has to peel open begins — so it is the one linkage in the whole molecule where a discontinuity has to happen.</figcaption>
+</figure>
+
+<h3>Then: why the DNA bends at all</h3>
+<p>Nothing pushes it. <strong>The binding energy pays for the bend.</strong> Bending DNA is uphill on its own, but Cas9's contacts — the positive groove on the backbone, the two arginines on the GG, the lock-loop on the +1 phosphate — release far more energy than the bend costs, so the bent state is the favourable one overall.</p>
+
+<p>Geometrically: <strong>two points on the DNA get pinned to fixed positions on a rigid protein.</strong> The β-hairpin holds the PAM duplex; the lock-loop holds the +1 phosphate. The stretch of DNA between those two grips is longer than the straight-line distance between them, so it has nowhere to go but to bend. Cas9's surface is shaped to fit <em>bent</em> DNA — the DNA deforms to fit the mould.</p>
+
+<p><strong>There is no ATP anywhere in this.</strong> The paper says so directly: "dsDNA unwinding by Cas9 is ATP independent." No motor, no fuel. Every bit of the deformation is paid for out of binding free energy — the same trick enzymes use generally, spending binding energy to strain a substrate toward the state you want it in.</p>
+
+<p>The four steps below are a real temporal sequence, so they are numbered. Watch what the DNA does, not the protein — <strong>the protein stays rigid and the DNA bends</strong>, which is the surprise the paper flags as "induced fit".</p>
+
+<div class="steps">
+
+  <div class="step">
+    <span class="step-n">STEP 1</span>
+    <h4>Collide and grip</h4>
+    <svg viewBox="0 0 220 150" role="img" aria-label="Cas9 lands on double-stranded DNA and holds it in a positively charged groove; the DNA is straight and fully paired.">
+      <path d="M 40 22 Q 110 6 180 22 L 180 76 Q 110 92 40 76 Z" class="prot"/>
+      <text x="110" y="52" class="prot-t" text-anchor="middle">Cas9 + guide</text>
+      <line x1="14" y1="104" x2="206" y2="104" class="s-line s-nt"/>
+      <line x1="14" y1="126" x2="206" y2="126" class="s-line s-target"/>
+      <g class="tick">
+        <line x1="40" y1="108" x2="40" y2="122"/><line x1="70" y1="108" x2="70" y2="122"/>
+        <line x1="100" y1="108" x2="100" y2="122"/><line x1="130" y1="108" x2="130" y2="122"/>
+        <line x1="160" y1="108" x2="160" y2="122"/><line x1="190" y1="108" x2="190" y2="122"/>
+      </g>
+      <text x="110" y="145" class="t-lab-s" text-anchor="middle">+ charge attracts the backbone</text>
+    </svg>
+    <p>Random three-dimensional collision. A positively charged groove grabs the negatively charged backbone. Sequence-blind so far — it will grab anything.</p>
+  </div>
+
+  <div class="step">
+    <span class="step-n">STEP 2</span>
+    <h4>Read the GG</h4>
+    <svg viewBox="0 0 220 150" role="img" aria-label="A beta-hairpin carrying Arg1333 and Arg1335 reaches into the major groove and hydrogen bonds to the two guanines; the DNA is still fully double-stranded.">
+      <path d="M 40 22 Q 110 6 180 22 L 180 62 L 160 62 L 160 92 L 146 92 L 146 62 L 40 62 Z" class="prot"/>
+      <text x="92" y="44" class="prot-t" text-anchor="middle">β-hairpin</text>
+      <text x="153" y="108" class="t-lab-s" text-anchor="middle">R1333/R1335</text>
+      <line x1="14" y1="112" x2="206" y2="112" class="s-line s-nt"/>
+      <line x1="14" y1="134" x2="206" y2="134" class="s-line s-target"/>
+      <g class="tick">
+        <line x1="40" y1="116" x2="40" y2="130"/><line x1="70" y1="116" x2="70" y2="130"/>
+        <line x1="100" y1="116" x2="100" y2="130"/><line x1="130" y1="116" x2="130" y2="130"/>
+        <line x1="160" y1="116" x2="160" y2="130"/><line x1="190" y1="116" x2="190" y2="130"/>
+      </g>
+      <text x="176" y="126" class="t-base t-nt" font-size="12">GG</text>
+      <text x="110" y="148" class="t-lab-s" text-anchor="middle">still fully double-stranded</text>
+    </svg>
+    <p>Two arginines reach into the <strong>major groove</strong> and hydrogen-bond to the guanine edges. No unzipping — the sequence is read through intact DNA.</p>
+  </div>
+
+  <div class="step">
+    <span class="step-n">STEP 3</span>
+    <h4>Kink, then lock</h4>
+    <svg viewBox="0 0 240 180" role="img" aria-label="Cas9 with two protrusions: a rigid beta-hairpin still reading the GG in the intact PAM duplex on the right, and a flexible lock-loop carrying Lys1107 and Ser1109 that has swung in to clamp the plus-one phosphate where the target strand kinks.">
+      <path d="M 34 22 Q 120 8 206 22 L 206 62 L 170 62 L 170 96 L 150 96 L 150 62 L 114 62 L 114 84 L 98 84 L 98 62 L 34 62 Z" class="prot"/>
+      <text x="64" y="46" class="prot-t" text-anchor="middle">Cas9</text>
+
+      <text x="176" y="86" class="t-lab-s" fill="var(--protein)">β-hairpin</text>
+      <text x="176" y="99" class="t-lab-s">rigid · reads GG</text>
+      <text x="92" y="78" class="t-lab-s" fill="var(--protein)" text-anchor="end">lock-loop</text>
+      <text x="92" y="91" class="t-lab-s" text-anchor="end">flexible · swings in</text>
+
+      <path d="M 106 86 L 108 128" class="s-line dash" stroke="var(--protein)" stroke-width="1.6"/>
+
+      <line x1="16" y1="104" x2="96" y2="104" class="s-line s-nt"/>
+      <line x1="128" y1="122" x2="224" y2="122" class="s-line s-nt"/>
+      <path d="M 16 124 L 100 124 L 118 144 L 224 144" class="s-line s-target"/>
+      <g class="tick">
+        <line x1="150" y1="126" x2="150" y2="142"/>
+        <line x1="176" y1="126" x2="176" y2="142"/>
+        <line x1="202" y1="126" x2="202" y2="142"/>
+      </g>
+      <circle cx="109" cy="134" r="5" fill="var(--protein)"/>
+      <text x="100" y="170" class="t-lab-s" text-anchor="middle">kink in the DNA, at the +1 phosphate</text>
+    </svg>
+    <p>Two protrusions, two jobs. The <strong>β-hairpin</strong> is still holding the GG from step 2 — it does not move. The <strong>lock-loop</strong> (Lys1107, Ser1109) is a floppy connecting segment that swings in and clamps the +1 phosphate, holding the DNA's new bend in place.</p>
+  </div>
+
+  <div class="step">
+    <span class="step-n">STEP 4</span>
+    <h4>A window opens</h4>
+    <svg viewBox="0 0 220 150" role="img" aria-label="The strain from the kink flips three bases out of the helix into solvent, and the guide RNA descends to test those exposed bases for complementarity.">
+      <path d="M 40 14 Q 110 2 180 14 L 180 50 L 152 50 L 152 76 L 136 76 L 136 50 L 40 50 Z" class="prot"/>
+      <line x1="14" y1="120" x2="90" y2="120" class="s-line s-target"/>
+      <path d="M 90 120 L 106 136 L 206 136" class="s-line s-target"/>
+      <line x1="120" y1="112" x2="206" y2="112" class="s-line s-nt"/>
+      <!-- flipped bases -->
+      <circle cx="48" cy="102" r="6" fill="none" stroke="var(--target)" stroke-width="2"/>
+      <circle cx="70" cy="98" r="6" fill="none" stroke="var(--nontarget)" stroke-width="2"/>
+      <circle cx="92" cy="102" r="6" fill="none" stroke="var(--nontarget)" stroke-width="2"/>
+      <text x="70" y="82" class="t-lab-s" text-anchor="middle">flipped out</text>
+      <!-- guide RNA probing -->
+      <path d="M 14 62 L 60 62" class="s-line s-rna"/>
+      <path d="M 60 62 L 60 84" class="s-line s-rna dash"/>
+      <text x="16" y="52" class="t-lab-s" fill="var(--rna)">guide RNA</text>
+      <text x="110" y="150" class="t-lab-s" text-anchor="middle">nucleation site</text>
+    </svg>
+    <p>The bend strains the neighbouring base pairs and flips three bases out into solvent. Those exposed bases are the <strong>nucleation site</strong> — the foothold the guide RNA tests first.</p>
+  </div>
+
+</div>
+
+<h3>What "flips three bases out into the solvent" means</h3>
+
+<p>In an intact duplex every base is doing two jobs at once: <strong>paired</strong> across to its partner, and <strong>stacked</strong> face-to-face with the bases above and below it. Both jobs require the base to sit inside the helix. Nothing is exposed except the edges facing into the grooves.</p>
+
+<p><strong>Flipping out</strong> means a base rotates about its backbone bonds and swings clear of the stack, so it points into the surrounding water — the "bulk solvent". It stays attached to the backbone; it just stops being part of the helix.</p>
+
+<p><strong>Why it happens here:</strong> a sharp kink wrecks the local stacking geometry. Once the backbone turns a corner, the bases on either side of the corner can no longer sit flat against each other, and rotating out relieves the strain. Cas9 also provides surfaces that hold the flipped-out bases in place.</p>
+
+<p><strong>What it results in:</strong> three base pairs are now broken, which opens a short single-stranded window at the PAM-proximal edge of the protospacer. In an intact duplex the target strand's bases are already occupied by their partners — the guide RNA has nothing to bind. Break three pairs and the RNA finally has somewhere to start.</p>
+
+<p>That window is the <em class="term">toehold</em>. Once the guide gets two or three base pairs into it, each new RNA–DNA pair releases enough energy to break the next DNA–DNA pair, and the hybrid zips along away from the PAM. This is why R-loop formation is unidirectional: it can only start where the window is.</p>
+
+<div class="callout">
+<p><strong>Base flipping is a general enzymatic move</strong>, not a Cas9 peculiarity. DNA methyltransferases and repair glycosylases flip their target base fully out of the helix and into an active-site pocket, because chemistry on a base buried in a stack is impossible. Cas9 uses the same manoeuvre for a different purpose — not to react with the base, but to make it available for pairing.</p>
+</div>
+
+<div class="callout">
+<p><strong>The authors then undercut this.</strong> Mutating the lock-loop residues did <em>not</em> reduce cleavage, and the loop is not conserved across Cas9s from other species. A 2017 study proposed it helps the guide RNA <em>pair</em> rather than helps the DNA <em>melt</em>. Steps 3 and 4 above are the leading model, not settled fact — which is why the paragraph is full of "suggested", "proposed" and "however".</p>
+</div>
+</section>
+
+<!-- ===================== 4 ===================== -->
+<section>
+<p class="sec-kicker">The chemistry</p>
+<h2>Why swapping in an arginine lets you read a guanine</h2>
+
+<p>Guanine's edge, where it faces into the major groove, presents two hydrogen-bond <em class="term">acceptors</em> — the O6 oxygen and the N7 nitrogen — sitting a fixed distance apart. Any side chain that wants to identify a G has to place two hydrogen-bond <em class="term">donors</em> at that same spacing.</p>
+
+<p><strong>Arginine does exactly that.</strong> Its guanidinium group is a flat fork with two N–H donors, geometrically matched to O6 and N7. Two bonds at once — a <em class="term">bidentate</em> contact — which is both strong and specific. Arginine is the standard guanine reader across all of biology, not just in Cas9.</p>
+
+<p><strong>Threonine cannot.</strong> One short side chain, one hydroxyl, one possible bond, and too little reach. It can touch DNA, but it cannot say "this one is a G."</p>
+
+<figure>
+<svg viewBox="0 0 700 250" role="img" aria-label="Side by side comparison. Arginine's guanidinium fork makes two hydrogen bonds to guanine's O6 and N7 atoms. Threonine's single short hydroxyl can make at most one contact and cannot reach both.">
+  <line x1="350" y1="26" x2="350" y2="224" class="rule-l"/>
+
+  <!-- LEFT: arginine -->
+  <text x="26" y="42" class="t-cap" fill="var(--protein)">arginine — reads G</text>
+  <rect x="236" y="84" width="72" height="84" rx="6" fill="var(--nontarget-bg)" stroke="var(--nontarget)" stroke-width="1.8"/>
+  <text x="272" y="134" class="t-base t-nt" font-size="26">G</text>
+  <text x="272" y="184" class="t-lab-s" text-anchor="middle">guanine</text>
+  <circle cx="236" cy="106" r="5" fill="var(--nontarget)"/>
+  <text x="222" y="100" class="t-lab-s" text-anchor="end">O6</text>
+  <circle cx="236" cy="146" r="5" fill="var(--nontarget)"/>
+  <text x="222" y="150" class="t-lab-s" text-anchor="end">N7</text>
+  <!-- arg backbone + fork -->
+  <path d="M 40 126 L 120 126" class="s-line" stroke="var(--protein)"/>
+  <path d="M 120 126 L 152 106 M 120 126 L 152 146" class="s-line" stroke="var(--protein)"/>
+  <text x="160" y="102" class="t-lab-s" fill="var(--protein)">N–H</text>
+  <text x="160" y="152" class="t-lab-s" fill="var(--protein)">N–H</text>
+  <text x="40" y="116" class="t-lab-s" fill="var(--protein)">Arg1333</text>
+  <!-- H-bonds -->
+  <path d="M 196 105 L 230 106" class="s-line dash" stroke="var(--ink)" stroke-width="1.6"/>
+  <path d="M 196 147 L 230 146" class="s-line dash" stroke="var(--ink)" stroke-width="1.6"/>
+  <text x="120" y="208" class="t-ink" text-anchor="middle">two H-bonds, spacing matches</text>
+  <text x="120" y="226" class="t-lab-s" text-anchor="middle">bidentate — strong and specific</text>
+
+  <!-- RIGHT: threonine -->
+  <text x="376" y="42" class="t-cap" fill="var(--faint)">threonine — cannot</text>
+  <rect x="586" y="84" width="72" height="84" rx="6" fill="var(--nontarget-bg)" stroke="var(--nontarget)" stroke-width="1.8"/>
+  <text x="622" y="134" class="t-base t-nt" font-size="26">G</text>
+  <text x="622" y="184" class="t-lab-s" text-anchor="middle">guanine</text>
+  <circle cx="586" cy="106" r="5" fill="var(--nontarget)"/>
+  <text x="572" y="100" class="t-lab-s" text-anchor="end">O6</text>
+  <circle cx="586" cy="146" r="5" fill="var(--nontarget)"/>
+  <text x="572" y="150" class="t-lab-s" text-anchor="end">N7</text>
+  <path d="M 390 126 L 446 126" class="s-line" stroke="var(--faint)"/>
+  <text x="454" y="130" class="t-lab-s" fill="var(--faint)">O–H</text>
+  <text x="390" y="116" class="t-lab-s" fill="var(--faint)">Thr1337</text>
+  <path d="M 490 126 L 540 126" class="s-line dash" stroke="var(--faint)" stroke-width="1.6"/>
+  <text x="556" y="124" class="t-lab-s" fill="var(--faint)">✕</text>
+  <text x="510" y="208" class="t-ink" text-anchor="middle" fill="var(--faint)">one donor, too short</text>
+  <text x="510" y="226" class="t-lab-s" text-anchor="middle">can touch DNA, cannot identify a base</text>
+</svg>
+<figcaption><b>Thr1337Arg in one line:</b> position 1337 sits where it can reach the fourth base of the PAM, but threonine has nothing to read it with. Put an arginine there and that position gains a guanine reader — so the enzyme now recognises a G at PAM position 4, giving <code>5′-NGNG-3′</code>. <b>Add the right side chain in the right place, and the protein reads a new base.</b> Schematic: the boxes stand for the base's groove-facing edge, not its real ring geometry.</figcaption>
+</figure>
+
+<div class="callout">
+<p><strong>Why this is the paragraph that matters for design work.</strong> PAM specificity — the hard limit on where CRISPR can be aimed — comes down to a handful of side chains reaching into a groove. That is a tractable design problem: identify which positions contact which bases, then swap in side chains whose donor/acceptor geometry matches the base you want read.</p>
+</div>
+</section>
+
+<!-- ===================== 5 ===================== -->
+<section>
+<p class="sec-kicker">Two strands, two enzymes</p>
+<h2>HNH and RuvC</h2>
+
+<p>Cas9 has <strong>two separate nuclease active sites</strong> — two distinct pockets, in two distinct domains, using two different chemistries. Each is responsible for one strand.</p>
+
+<table>
+  <thead><tr><th>Domain</th><th>Cuts</th><th>Mechanism</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>HNH</strong><br><span class="mono" style="color:var(--faint)">D839 · H840 · N863</span></td>
+      <td><span class="sw-target">target strand</span><br><span class="t-lab">the one paired with the guide RNA</span></td>
+      <td>one Mg²⁺; His840 activates a water molecule</td>
+    </tr>
+    <tr>
+      <td><strong>RuvC</strong><br><span class="mono" style="color:var(--faint)">D10 · E762 · H983 · D986</span></td>
+      <td><span class="sw-nontarget">non-target strand</span><br><span class="t-lab">the displaced one</span></td>
+      <td>two metal ions, RNase H-like fold</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Neither cuts both strands. A double-strand break requires <strong>both firing in a coordinated way</strong> — which is why the paper spends a whole section on allosteric activation: something has to tell HNH it is safe to cut, and HNH in turn signals RuvC.</p>
+
+<figure>
+<svg viewBox="0 0 700 280" role="img" aria-label="The R-loop with both nuclease domains in place. HNH sits above the target strand and RuvC below the displaced non-target strand; both cut three base pairs from the PAM, producing a blunt double-strand break.">
+  <rect x="440" y="60" width="130" height="150" rx="5" class="band-nt" opacity="0.45"/>
+  <text x="505" y="48" class="t-cap" text-anchor="middle" fill="var(--nontarget)">PAM</text>
+
+  <!-- HNH domain -->
+  <ellipse cx="300" cy="46" rx="88" ry="28" fill="var(--target-bg)" stroke="var(--target)" stroke-width="1.8"/>
+  <text x="300" y="44" class="t-base t-target" font-size="15">HNH</text>
+  <text x="300" y="60" class="t-lab-s" text-anchor="middle" fill="var(--target)">one metal ion</text>
+
+  <!-- guide RNA -->
+  <line x1="70" y1="112" x2="420" y2="112" class="s-line s-rna"/>
+  <text x="56" y="116" class="t-base t-rna">5′</text>
+  <text x="80" y="102" class="t-lab-s" fill="var(--rna)">guide RNA</text>
+
+  <!-- target strand -->
+  <line x1="70" y1="150" x2="590" y2="150" class="s-line s-target"/>
+  <text x="56" y="154" class="t-base t-target">3′</text>
+  <text x="604" y="154" class="t-base t-target">5′</text>
+
+  <!-- non-target strand -->
+  <path d="M 70 214 L 360 214 Q 410 214 428 196 L 452 196" class="s-line s-nt"/>
+  <line x1="448" y1="196" x2="590" y2="196" class="s-line s-nt"/>
+  <text x="56" y="218" class="t-base t-nt">5′</text>
+  <text x="604" y="200" class="t-base t-nt">3′</text>
+
+  <!-- PAM ticks -->
+  <g class="tick">
+    <line x1="470" y1="158" x2="470" y2="188"/><line x1="500" y1="158" x2="500" y2="188"/>
+    <line x1="530" y1="158" x2="530" y2="188"/><line x1="560" y1="158" x2="560" y2="188"/>
+  </g>
+
+  <!-- RuvC domain -->
+  <ellipse cx="240" cy="256" rx="92" ry="26" fill="var(--nontarget-bg)" stroke="var(--nontarget)" stroke-width="1.8"/>
+  <text x="240" y="254" class="t-base t-nt" font-size="15">RuvC</text>
+  <text x="240" y="270" class="t-lab-s" text-anchor="middle" fill="var(--nontarget)">two metal ions</text>
+
+  <!-- cut marks at 3 bp from PAM -->
+  <line x1="404" y1="136" x2="404" y2="164" stroke="var(--target)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="404" y1="200" x2="404" y2="228" stroke="var(--nontarget)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 340 74 L 398 132" stroke="var(--target)" stroke-width="1.8" class="dash" fill="none"/>
+  <path d="M 306 236 L 396 216" stroke="var(--nontarget)" stroke-width="1.8" class="dash" fill="none"/>
+  <text x="418" y="126" class="t-lab-s" fill="var(--target)">cut</text>
+  <text x="418" y="240" class="t-lab-s" fill="var(--nontarget)">cut</text>
+  <text x="404" y="98" class="t-lab" text-anchor="middle">3 bp from PAM</text>
+</svg>
+<figcaption><b>Both cuts land at the same position, three base pairs from the PAM</b> — which is why Cas9 leaves blunt ends. Cas12, with only a RuvC site and no HNH, cuts the two strands at offset positions instead and leaves sticky overhangs. The colour of each domain here matches the strand it is responsible for.</figcaption>
+</figure>
+</section>
+
+<p class="foot">Diagrams are schematic — spacing, shapes and domain positions are drawn for legibility, not to structural scale. Residue numbering follows SpCas9. For the real geometry see PDB 4UN3 and 5F9R.</p>
+
+</div>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="chen-phosphenes.html"><small>← Previous note</small><span>Shape perception from 1,024 electrodes in visual cortex</span></a><a class="next" href="subretinal-bench.html"><small>Next note →</small><span>Subretinal pixel bench</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

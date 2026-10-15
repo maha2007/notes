@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Semantic maps that tile the cortex · Maha Nawaz</title>
+<meta name="description" content="Seven people listen to two hours of stories in an fMRI scanner, and meaning turns out to be painted across both hemispheres in a shared ~140-area atlas."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="Semantic maps that tile the cortex"><meta property="og:description" content="Seven people listen to two hours of stories in an fMRI scanner, and meaning turns out to be painted across both hemispheres in a shared ~140-area atlas.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: single reading column (~68ch) with wider figure panels; each section = one figure panel, prose then redrawn diagram */
+:root{
+  --paper:#EDF0F3; --panel:#FFFFFF; --ink:#17202C; --muted:#586374; --rule:#D2D8E0; --soft:#E2E7ED;
+  --accent:#C9440E; --cool:#2856C2;
+  --cortex:#2F343C; --cortex-ink:#ECEFF3; --cortex-line:#5C6573;
+  --display:'Bricolage Grotesque','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --body:'Literata',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:17px/1.62 var(--body);}
+.wrap{max-width:900px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(23px,3.4vw,30px);font-weight:700;margin-top:64px}
+h3{font-size:19px;font-weight:700;margin-top:36px}
+p{margin:12px 0}
+.eyebrow,.tag{font:500 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tag{color:var(--accent)}
+.cite{color:var(--muted);font-size:15px;margin-top:10px}
+.lede{font-size:19px;margin-top:20px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+nav.toc a{font:500 13px var(--mono);color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:5px 10px;border-radius:999px;background:var(--panel)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+.short{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:28px}
+.short ol{margin:8px 0 0;padding-left:20px;display:grid;gap:6px}
+.fig{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px;margin:22px 0}
+.fig .scroll{overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto}
+.fig .wide svg{min-width:640px}
+.cap{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
+.cap b{color:var(--ink);font-weight:600}
+.read{display:grid;gap:10px;margin:16px 0}
+.read div{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:baseline}
+.read dt,.read .k{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.ex{background:var(--soft);border-radius:8px;padding:12px 16px;margin:16px 0;font-size:16px}
+.ex .eyebrow{color:var(--cool)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.two>*{min-width:0}
+@media (max-width:640px){.two{grid-template-columns:1fr}.read div{grid-template-columns:1fr;gap:2px}}
+/* SVG text */
+svg text{font-family:var(--mono);font-size:12px;fill:var(--ink)}
+svg .m{fill:var(--muted)} svg .a{fill:var(--accent)} svg .c{fill:var(--cool)}
+svg .d{font-family:var(--display);font-weight:700;font-size:16px}
+svg .s{font-size:10.5px} svg .b{font-size:14px} svg .w{fill:var(--cortex-ink)}
+svg .ln{stroke:var(--ink);fill:none} svg .lm{stroke:var(--muted);fill:none} svg .lr{stroke:var(--rule);fill:none}
+svg .la{stroke:var(--accent);fill:none} svg .lc{stroke:var(--cool);fill:none}
+svg .box{fill:var(--paper);stroke:var(--rule)}
+svg .cx{fill:var(--cortex)}
+/* widgets */
+.ctrl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:12px;font:13px var(--mono)}
+.ctrl label{display:flex;align-items:center;gap:8px}
+input[type=range]{width:150px;accent-color:var(--accent)}
+button{font:500 13px var(--mono);background:var(--ink);color:var(--paper);border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.picker{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}
+.picker>*{min-width:0}
+@media (max-width:560px){.picker{grid-template-columns:1fr}}
+#swatch{width:150px;height:150px;border-radius:8px;border:1px solid var(--rule)}
+.sl{display:grid;gap:8px;font:13px var(--mono)}
+.sl label{display:grid;grid-template-columns:44px 1fr 48px;gap:10px;align-items:center}
+.sl input{width:100%}
+#pickout{margin-top:10px;font-size:16px}
+canvas#vor{display:block;width:100%;height:340px;border-radius:8px;touch-action:none;cursor:grab;background:var(--paper)}
+.eq{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.eq>div{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;min-width:0;background:var(--panel)}
+.eq .f{font:15px var(--mono);margin:6px 0;overflow-x:auto;white-space:nowrap}
+@media (max-width:640px){.eq{grid-template-columns:1fr}}
+.bar{height:14px;border-radius:3px;background:linear-gradient(90deg,#3a3f47 0%,#7a1c0c 18%,#c2300f 38%,#ef6a12 58%,#f8c43a 80%,#fffbe0 100%)}
+.barlab{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--muted);margin-top:4px}
+.swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:14px}
+.swatches span{display:flex;align-items:center;gap:8px}
+.swatches i{display:inline-block;width:26px;height:18px;border-radius:3px;border:1px solid var(--rule)}
+dl.gl{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;font-size:15px}
+dl.gl dt{font:500 13px var(--mono);color:var(--accent)} dl.gl dd{margin:0}
+@media (max-width:560px){dl.gl{grid-template-columns:1fr}}
+a{color:var(--cool)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+:root{--paper:#FFF8EA;--panel:#FFFDF7;--ink:#1D2F66;--muted:#56628A;--rule:#E8DCC2;--soft:#FBEED3;--accent:#B65200;--cool:#2A57B8;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--display:'Bitter',Georgia,serif;--body:'Bitter',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-A">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+<div class="mn-series" aria-label="Series"><b>Language &amp; thought</b><span>Part 1 of 4</span><span aria-current="page">1. Huth et al. 2016</span><a href="language-network.html">2. Fedorenko, Ivanova &amp; Regev 2024</a><a href="language-of-thought.html">3. Frankland &amp; Greene 2020</a><a href="language-neurons.html">4. Cai et al. 2026</a></div>
+<div class="wrap">
+<header class="col">
+  <div class="eyebrow">Reading notes · Nature 532, 453–458 (2016)</div>
+  <h1 style="margin-top:10px">Natural speech reveals the semantic maps that tile human cerebral cortex</h1>
+  <p class="cite">Huth, de Heer, Griffiths, Theunissen &amp; Gallant · UC Berkeley</p><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · October 13, 2026</span></div>
+  <p class="lede">The question: when you understand a word, <em>where</em> in the brain does its meaning light up, and does each spot care about a <em>different kind</em> of meaning? Earlier studies tested a handful of hand-picked categories. This paper lets people listen to real stories and maps meaning across the whole cortex at once.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#primer">fMRI primer</a><a href="#fig1a">Fig 1a</a><a href="#fig1b">Fig 1b</a><a href="#fig1c">Fig 1c</a><a href="#fig2">Fig 2 PCA</a><a href="#fig2a">Fig 2a</a><a href="#fig2b">Fig 2b–c</a><a href="#fig3a">Fig 3a</a><a href="#fig3b">Fig 3b</a><a href="#fig3c">Fig 3c</a><a href="#takeaways">Takeaways</a>
+  </nav>
+  <div class="short">
+    <div class="eyebrow">The 60-second version</div>
+    <ol>
+      <li>7 people lay in an fMRI scanner listening to 2+ hours of <em>The Moth</em> stories.</li>
+      <li>Every word was turned into 985 numbers describing what words it usually appears near.</li>
+      <li>For every tiny cube of brain (a voxel), a regression learned which of those word-features make it respond. These models predicted brain activity on a <em>new</em> story across a large "semantic system".</li>
+      <li>PCA found ~4 dimensions of meaning shared across people. The biggest one: <b>people &amp; social</b> vs <b>perceptual &amp; physical</b>.</li>
+      <li>A new generative model (PrAGMATiC) turned the noisy maps into an atlas of ~140 areas, spread across <em>both</em> hemispheres and strikingly similar across people.</li>
+    </ol>
+  </div>
+</header>
+
+<div class="fig">
+  <div class="scroll wide">
+  <svg viewBox="0 0 960 150" role="img" aria-label="Pipeline: listen, describe words, fit voxels, PCA, atlas">
+    <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--muted)"/></marker></defs>
+    <g id="pipe"></g>
+  </svg>
+  </div>
+  <div class="cap"><b>The whole paper as a pipeline.</b> Each stage feeds the next; the tags show which figure covers it.</div>
+</div>
+
+<section id="primer" class="col">
+  <h2>Primer: what fMRI actually measures</h2>
+  <p>fMRI doesn't see neurons fire. When a patch of brain works harder, fresh oxygenated blood rushes in a few seconds later. The scanner picks up that change in blood oxygen, called the <b>BOLD signal</b>.</p>
+  <p>The brain is chopped into a 3-D grid of <b>voxels</b> (3-D pixels). Here each voxel is 2.24 × 2.24 × 4.1 mm, about a grain of rice, and the scanner takes a full-brain snapshot every 2 seconds (the <b>TR</b>). So each person yields a big table: tens of thousands of voxels, each with a time series of ~3,700 values.</p>
+  <div class="ex"><div class="eyebrow">Two facts that shape everything below</div>
+  <b>1. It's slow.</b> BOLD peaks ~5 s after the neural event, so the model must account for delay.<br>
+  <b>2. It's noisy.</b> Even a perfect model can't predict every wiggle, so prediction scores of r ≈ 0.3–0.6 are considered strong.</div>
+</section>
+
+<section id="fig1a">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 1a · Voxel-wise model estimation</div>
+  <h2 style="margin-top:6px">Turning stories into numbers a brain can be fit to</h2>
+  <p>Figure 1a packs four ideas into one strip. Here they are pulled apart.</p>
+  <h3>Step 1 · Each word becomes 985 numbers</h3>
+  <p>The authors picked 985 common "basis" words (from Wikipedia's list of 1000 basic words). For every word in the stories, they counted how often it appears within 15 words of each basis word, across a huge text corpus (books, Wikipedia, Reddit, ~1.5 billion words). Counts were log-transformed and z-scored. The result is a 985-number fingerprint per word.</p>
+  <p>The intuition: <b>words used in similar contexts mean similar things</b>. "Month" and "week" both show up near "day", "year", "time", so their fingerprints match.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="cooc" viewBox="0 0 700 300" role="img" aria-label="Co-occurrence fingerprints for month, week and tall"></svg></div>
+    <div class="cap"><b>Illustrative fingerprints</b> across 8 of the 985 basis words (values made up for the picture). The correlations on the right are the real ones reported in the paper: month vs week <b>r = 0.74</b>, month vs tall <b>r = −0.22</b>.</div>
+  </div>
+
+  <div class="col">
+  <h3>Step 2 · A story becomes 985 time series</h3>
+  <p>Every word was time-stamped to the audio (via forced alignment). At the moment a word is spoken, its 985 numbers are dropped onto the timeline. Then the timeline is smoothed and resampled to match the scanner's 2-second snapshots. These are the wiggly "Semantic features" traces on the left of Fig 1a, labelled 'Above', 'Dance', 'Man', 'Seven' (four of the 985 basis words).</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="ts" viewBox="0 0 700 250" role="img" aria-label="Words placed on a timeline become a feature time series"></svg></div>
+    <div class="cap"><b>One feature channel</b> (co-occurrence with the basis word "seven"). Numeric words like "four" push it up. Summed and resampled every 2 s, it becomes one of the 985 traces fed to the model.</div>
+  </div>
+
+  <div class="col">
+  <h3>Step 3 · Handling the brain's ~5-second delay</h3>
+  <p>Because BOLD lags, a word heard now affects the signal 2–8 s later. Rather than assume a fixed delay shape, the model makes four copies of every feature, shifted by 2, 4, 6 and 8 s, and learns a separate weight for each. This is the <b>FIR (finite impulse response)</b> model. 985 semantic + 41 low-level features × 4 delays = <b>4,104 weights per voxel</b>.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="hrf" viewBox="0 0 700 230" role="img" aria-label="Hemodynamic delay and four FIR taps"></svg></div>
+    <div class="cap"><b>Why four delays.</b> A word at t = 0 produces a slow blood-flow bump (curve). Four weights sample it at 2, 4, 6 and 8 s, so the model learns the bump's shape per voxel.</div>
+  </div>
+
+  <div class="col">
+  <h3>Step 4 · The regression: features × weights = BOLD</h3>
+  <p>The matrix equation in Fig 1a is just linear regression, run separately for every voxel. The colored numbers (2.8, −0.4, 0.7…) are example weights: positive means "this feature makes this voxel respond more".</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="mat" viewBox="0 0 700 250" role="img" aria-label="Matrix equation X times w equals y"></svg></div>
+    <div class="cap"><b>One voxel's model.</b> With 4,104 weights and only ~3,700 time points, ordinary regression would overfit wildly, so they use <b>ridge regression</b> (a penalty that keeps weights small). They also include word rate, phoneme rate and 39 phoneme features so that low-level sound properties can't masquerade as meaning; those weights are thrown away afterwards.</div>
+  </div>
+  <div class="ex col"><div class="eyebrow">Concrete example</div>A voxel in the angular gyrus might end up with big positive weights on features like co-occurrence with "mother", "friend", "family". Whenever the speaker talks about people, its predicted BOLD rises ~5 s later. That weight vector <em>is</em> the voxel's semantic tuning.</div>
+</section>
+
+<section id="fig1b">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 1b · Validation</div>
+  <h2 style="margin-top:6px">Testing the model on a story it has never heard</h2>
+  <p>A model that fits training data could just be memorizing noise. So each person heard one more 10-minute story that was <b>never used for fitting</b>. The trained weights turn that story's word features into a predicted BOLD trace for every voxel, which is compared to the real one with a correlation <b>r</b>.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="val" viewBox="0 0 700 260" role="img" aria-label="Predicted versus actual BOLD on held-out story"></svg></div>
+    <div class="cap"><b>Simulated example of one well-predicted voxel</b> over the 290 test time points. The r shown is computed live from these two traces. Real voxels in the semantic system reach r ≈ 0.3–0.6.</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">Left of 1b</span><span>Same semantic features as 1a, but from the new 11-minute story.</span></div>
+    <div><span class="k">Middle</span><span>The <em>same</em> weights learned in 1a (arrow from panel a). No refitting.</span></div>
+    <div><span class="k">Right</span><span>Model predictions vs new BOLD responses → correlation = prediction performance.</span></div>
+  </div>
+</section>
+
+<section id="fig1c">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 1c · Where the model works</div>
+  <h2 style="margin-top:6px">Reading a cortical flatmap</h2>
+  <p>The cortex is a crumpled sheet about 2–4 mm thick. To see all of it at once, software inflates it and makes a few cuts, then presses it flat, like peeling an orange and flattening the peel on a table. The four small brains around Fig 1c show the same data on the folded surface; the big shapes are the flattened left (LH) and right (RH) hemispheres.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="flat" viewBox="0 0 760 350" role="img" aria-label="Schematic flatmap with semantic regions labelled"></svg></div>
+    <div style="max-width:360px;margin-top:12px"><div class="bar"></div><div class="barlab"><span>r = 0 (grey: not significant)</span><span>0.6</span></div></div>
+    <div class="cap"><b>Orientation guide, not data.</b> Front of the brain points outward on each side (LH to the left, RH to the right), top of the brain is up. Coloured patches mark the six regions named in Fig 1c. In the real figure, red-to-yellow voxels are well predicted (FDR-corrected p &lt; 0.05); grey ones aren't.</div>
+  </div>
+  <div class="col">
+  <p>In Fig 1c the colour scale runs from r = 0 to 0.6. Good predictions cluster in six regions, which match the "semantic system" found by decades of earlier work:</p>
+  <div class="tablewrap"><table>
+    <tr><th>Label</th><th>Region</th><th>Roughly where</th></tr>
+    <tr><td class="mono">LTC</td><td>Lateral temporal cortex</td><td>Side of the head, above the ear</td></tr>
+    <tr><td class="mono">VTC</td><td>Ventral temporal cortex</td><td>Underside of the temporal lobe</td></tr>
+    <tr><td class="mono">LPC</td><td>Lateral parietal cortex</td><td>Behind and above the ear (angular gyrus)</td></tr>
+    <tr><td class="mono">MPC</td><td>Medial parietal cortex</td><td>Inner surface, toward the back (precuneus)</td></tr>
+    <tr><td class="mono">SPFC</td><td>Superior prefrontal cortex</td><td>Top front of the brain</td></tr>
+    <tr><td class="mono">IPFC</td><td>Inferior prefrontal cortex</td><td>Lower front, near Broca's area</td></tr>
+  </table></div>
+  <p>Notice that the dark, unpredicted regions include primary visual and motor cortex. That makes sense: listening to a story doesn't drive them in a word-meaning-specific way.</p>
+  </div>
+</section>
+
+<section id="fig2">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 2 · The shared dimensions of meaning</div>
+  <h2 style="margin-top:6px">Compressing 985 dimensions into 4</h2>
+  <p>Each voxel now has 985 semantic weights. That's too many to look at directly. So the authors stacked the weight vectors of the best-predicted voxels (10,000 per person) and ran <b>principal components analysis (PCA)</b>: find the directions along which voxels differ most.</p>
+  </div>
+  <div class="two">
+    <div class="fig" style="margin:0"><svg id="pca" viewBox="0 0 360 270" role="img" aria-label="PCA on a cloud of voxel weight vectors"></svg><div class="cap"><b>PCA intuition.</b> Each dot is one voxel's weight vector (2 of 985 dimensions shown). PC1 is the longest axis of the cloud: the single biggest way voxels disagree.</div></div>
+    <div class="fig" style="margin:0"><svg id="scree" viewBox="0 0 360 270" role="img" aria-label="Variance explained per principal component versus stimulus baseline"></svg><div class="cap"><b>How many PCs are real?</b> (Extended Data Fig 2, approximate.) Group PCs are compared with PCs of the stimulus itself. Only ~4 beat that baseline in most subjects.</div></div>
+  </div>
+  <div class="col">
+  <p>The control is clever. Some structure in the weights could come from the stories themselves (e.g., if "people" words were simply most common). So they asked: does each brain-derived PC explain more variance than the corresponding PC of the <em>stimulus</em> features? Four dimensions passed in 6 of 7 subjects. Those 4 are the paper's "shared semantic space".</p>
+  </div>
+</section>
+
+<section id="fig2a">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 2a · What the dimensions mean</div>
+  <h2 style="margin-top:6px">Placing 10,470 words in the space</h2>
+  <p>PCs are just directions in a 985-D space, so to interpret them the authors projected every word from the stories onto them. Then k-means clustering grouped words into 12 categories, labelled by hand. Fig 2a plots the categories (big labels) and the 458 best words (small labels) across four pairs of PCs. Here is the first pair, redrawn:</p>
+  </div>
+  <div class="fig">
+    <div class="scroll"><svg id="plane" viewBox="0 0 560 440" role="img" aria-label="Twelve semantic categories on PC1 and PC2" style="min-width:420px"></svg></div>
+    <div class="cap"><b>Approximate redraw</b> of the PC1/PC2 panel (positions and colours read from Fig 2a and the key in Fig 3c). Small grey words are the paper's example member of each category.</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">PC1</span><span>The biggest axis. One end: <b>humans and social interaction</b> (social, emotional, violent, communal). Other end: <b>perceptual descriptions, quantities, settings</b> (tactile, locational, numeric, visual). Consistent with the idea that people are an especially privileged topic for the brain.</span></div>
+    <div><span class="k">PC2</span><span><b>Perceptual</b> (visual, tactile) vs <b>non-perceptual</b> (mental, professional, temporal).</span></div>
+    <div><span class="k">PC3–4</span><span>Explain less variance and are hard to name. The authors don't try hard.</span></div>
+    <div><span class="k">Colour</span><span>Every category (and later every voxel) gets an RGB colour: <b style="color:#d23">red</b> = PC1, <b style="color:#2a2">green</b> = PC2, <b style="color:var(--cool)">blue</b> = PC3. Green-ish = visual/tactile/numeric/locational. Red-pink-magenta = social/emotional/mental/temporal. Lavender = abstract.</span></div>
+  </div>
+</section>
+
+<section id="fig2b">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 2b–c · Painting the brain</div>
+  <h2 style="margin-top:6px">From a voxel's weights to a colour on cortex</h2>
+  <p>Fig 2b uses the same colour code on voxels. Take a voxel's 985 weights, project them onto PC1–3 to get three numbers, use those as R, G, B, and paint that spot. A green voxel responds more to visual and numeric words; a magenta one to social and mental words.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="v2c" viewBox="0 0 760 170" role="img" aria-label="Voxel weight vector projected to RGB colour"></svg></div>
+  </div>
+  <div class="fig">
+    <div class="eyebrow" style="margin-bottom:10px">Try it: set a voxel's PC scores</div>
+    <div class="picker">
+      <div id="swatch" aria-live="polite"></div>
+      <div>
+        <div class="sl">
+          <label for="pc1">PC1 <input id="pc1" type="range" min="-1" max="1" step="0.05" value="0.8"><span id="pc1v">0.80</span></label>
+          <label for="pc2">PC2 <input id="pc2" type="range" min="-1" max="1" step="0.05" value="-0.4"><span id="pc2v">-0.40</span></label>
+          <label for="pc3">PC3 <input id="pc3" type="range" min="-1" max="1" step="0.05" value="0.3"><span id="pc3v">0.30</span></label>
+        </div>
+        <div id="pickout"></div>
+      </div>
+    </div>
+    <div class="cap">Toy mapping: each score from −1 to +1 sets one colour channel from 0 to 255; the nearest category is found by colour. The paper's real colour scale is more tuned, but the logic is the same.</div>
+  </div>
+  <div class="col">
+  <p><b>What Fig 2b shows</b> (subject S2, flatmap plus folded views): semantic tuning is <em>not</em> one blob per category. It forms intricate patchworks across prefrontal cortex, LTC and MTC, LPC and MPC. Black regions are voxels the model couldn't predict.</p>
+  <p><b>What Fig 2c shows:</b> the same flatmaps for three other subjects. The patchworks look strikingly alike, for example social (red/pink) patches in the same spots of parietal cortex across people. That consistency is what motivates building a single group atlas.</p>
+  <p class="cap">Note: in many PDF copies, page 3's figure renders with garbled overlay text. The interactive version at <a href="http://gallantlab.org/huth2016" target="_blank" rel="noopener">gallantlab.org/huth2016</a> is the clearest way to see Fig 2's real maps.</p>
+  </div>
+</section>
+
+<section id="fig3a">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 3a · PrAGMATiC</div>
+  <h2 style="margin-top:6px">A generative model of cortical maps</h2>
+  <p>Problem: brains differ in size and folding, so you can't just overlay seven maps and average. PrAGMATiC (Probabilistic And Generative Model of Areas Tiling the Cortex) solves this by describing <em>how a map is generated</em>, with some parameters shared across people and some unique to each.</p>
+  <p>It has two halves, matching the two halves of Fig 3a:</p>
+  </div>
+  <div class="eq">
+    <div>
+      <div class="eyebrow">Arrangement model · where areas sit</div>
+      <div class="f">E(H; L) = Σ (d<sub>ij</sub> − L<sub>ij</sub>)²</div>
+      <div class="f">P(H; L) ∝ e<sup>−E</sup></div>
+      <p style="font-size:15px;margin:6px 0 0">Each area is a single point (centroid). Neighbouring centroids are joined by <b>springs</b>. <b>L</b> = each spring's ideal length (shared). <b>H</b> = actual centroid positions (unique per person). Stretched or squished springs store energy; low-energy layouts are probable. Springs also tie areas to 19 known <b>landmarks</b> (✕) like auditory cortex or FFA, found separately in each person.</p>
+    </div>
+    <div>
+      <div class="eyebrow">Emission model · what each area means</div>
+      <div class="f">E(V | H; M) ∝ Σ (M<sub>nearest</sub> − V<sub>l</sub>)²</div>
+      <div class="f">P(V | H; M) ∝ e<sup>−E</sup></div>
+      <p style="font-size:15px;margin:6px 0 0">Every point on cortex belongs to its <b>nearest centroid</b>, which carves cortex into a <b>Voronoi tessellation</b>. Each area has a mean semantic value <b>M</b> (a 4-D point in PC space, shared). Each voxel's observed value <b>V</b> is that mean plus Gaussian noise.</p>
+    </div>
+  </div>
+  <div class="col"><p><b>Total probability</b> = arrangement × map: P(V, H; M, L) = P(H; L) · P(V | H; M). Training adjusts L and M to make the seven real maps probable and made-up maps improbable (a contrastive-divergence-style maximum-likelihood rule). Because individual H is free, nobody's brain has to be warped to a template.</p></div>
+  <div class="fig">
+    <div class="eyebrow" style="margin-bottom:10px">Try it: drag the area centroids (circles)</div>
+    <canvas id="vor" aria-label="Interactive Voronoi map with spring-connected centroids"></canvas>
+    <div class="ctrl">
+      <button id="relax" type="button">Relax springs</button>
+      <button id="subj" class="ghost" type="button">New subject</button>
+      <label for="noise"><input id="noise" type="checkbox"> Show voxel noise (V)</label>
+      <span>Spring energy E(H;L): <b id="energy" class="mono">0</b></span>
+    </div>
+    <div class="cap">Drag a circle: springs turn <b style="color:var(--accent)">orange</b> when stretched, <b style="color:var(--cool)">blue</b> when squished, and energy rises (a less probable layout). <b>Relax</b> lets springs pull back. <b>New subject</b> keeps the same springs L and area meanings M but gives a different layout H, which is how one atlas fits seven different brains. ✕ = landmarks.</div>
+  </div>
+</section>
+
+<section id="fig3b">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 3b · Choosing the number of areas</div>
+  <h2 style="margin-top:6px">How many areas tile the cortex?</h2>
+  <p>The number of areas is a knob the model can't learn by itself. So: fit PrAGMATiC on 6 subjects, then use it to predict the 7th subject's BOLD responses from that person's anatomy and landmarks alone. Repeat for each held-out subject and each area count.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll"><svg id="nareas" viewBox="0 0 580 300" role="img" aria-label="Prediction performance versus total number of areas" style="min-width:420px"></svg></div>
+    <div class="cap"><b>Approximate redraw of the mean curves.</b> Performance climbs fast up to ~64 areas, then flattens. It stops improving significantly at <b>192</b> areas for the left hemisphere and <b>128</b> for the right. Coloured lines in the real figure are individual subjects S1–S7.</div>
+  </div>
+  <div class="col"><p>Why are the r values so small here (~0.06) compared with Fig 1c (up to 0.6)? Here the map is predicted for a brand-new <em>person</em> from a group atlas, averaged over all of cortex, including many voxels that aren't semantic at all. The point is the shape of the curve, not the height.</p></div>
+</section>
+
+<section id="fig3c">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 3c · The semantic atlas</div>
+  <h2 style="margin-top:6px">Reading the final map</h2>
+  <p>The 192 + 128 areas include non-semantic ones (e.g., motor cortex). Each area was kept only if its semantic model predicted better than a low-level model (word rate, phoneme rate, phonemes). Survivors: <b>77 areas in the left hemisphere, 63 in the right</b>, drawn on one subject's flattened cortex with the Fig 2 colour code.</p>
+  </div>
+  <div class="fig col">
+    <div class="eyebrow">Legend decoder</div>
+    <div class="swatches">
+      <span><i style="background:linear-gradient(135deg,#4caf50,#e0457b)"></i>Coloured patch = one semantic area; colour = its mean in PC1–3</span>
+      <span><i style="background:repeating-linear-gradient(45deg,#111 0 3px,#888 3px 6px)"></i>Black hatching = MRI signal dropout (no data)</span>
+      <span><i style="background:repeating-linear-gradient(45deg,#fff 0 3px,#888 3px 6px)"></i>White hatching = explained by low-level sound features</span>
+      <span><i style="background:#777;border:2px solid #fff"></i>White outlines = known regions from separate localizer scans</span>
+      <span><i style="background:#777"></i>Plain grey = not semantically selective</span>
+    </div>
+    <div class="cap" style="margin-top:14px">Outlined labels: AC auditory cortex, BA Broca's area, FFA/PPA/EBA/OFA face, place, body and occipital face areas, V1–V4 visual, M1/S1 motor and somatosensory (F = feet, H = hands, M = mouth), FEF/SEF eye fields, IPS intraparietal sulcus, RSC retrosplenial, sPMv speech premotor.</div>
+  </div>
+  <div class="col">
+  <p><b>Patterns worth spotting in the atlas:</b></p>
+  <div class="read">
+    <div><span class="k">LPC &amp; MPC</span><span>A bullseye: central areas (angular gyrus, subparietal sulcus) are <b>social</b>; surrounding rings are <b>numeric, visual, tactile</b>.</span></div>
+    <div><span class="k">SPFC</span><span>Medial parts mostly social; dorsolateral parts mixed.</span></div>
+    <div><span class="k">LTC</span><span>Fewer distinct areas than expected, likely because MRI signal is poor in the anterior temporal lobe (black hatching).</span></div>
+    <div><span class="k">Networks</span><span>LPC, MPC and SPFC belong to the <b>default mode network</b>, the system active in introspection and daydreaming. The authors speculate the same map may represent conscious thought, not just heard speech.</span></div>
+  </div>
+  </div>
+</section>
+
+<section id="takeaways" class="col">
+  <h2>Takeaways and caveats</h2>
+  <h3>What the paper showed</h3>
+  <div class="read">
+    <div><span class="k">Broad</span><span>Meaning isn't in one "language area". Semantic selectivity covers large parts of temporal, parietal and prefrontal cortex.</span></div>
+    <div><span class="k">Bilateral</span><span>Both hemispheres carry rich, fairly symmetric maps. This conflicts with lesion studies pointing to the left hemisphere. Possibly narrative stories engage the right hemisphere more than single words do.</span></div>
+    <div><span class="k">Shared</span><span>The layout is similar across people. Could be innate wiring, or shared upbringing (all subjects were educated Westerners).</span></div>
+    <div><span class="k">Method</span><span>Data-driven: no hypothesis about categories was needed. Two hours of listening was enough to map the whole cortex.</span></div>
+  </div>
+  <h3>Limitations to keep in mind</h3>
+  <div class="read">
+    <div><span class="k">Features</span><span>Word co-occurrence is a bag-of-words model: "dog bites man" = "man bites dog". No syntax or context. Later work by the same lab swapped in contextual language-model embeddings and predicted much better.</span></div>
+    <div><span class="k">Areas</span><span>PrAGMATiC assumes each area is uniform inside. Some maps may really be smooth gradients.</span></div>
+    <div><span class="k">Sample</span><span>7 people, including two authors. Labels for PCs and categories were assigned by hand.</span></div>
+    <div><span class="k">Colour</span><span>RGB shows only 3 of 4 dimensions, and two voxels can look similar while differing on PC4.</span></div>
+  </div>
+  <h3>Glossary</h3>
+  <dl class="gl">
+    <dt>BOLD</dt><dd>Blood-oxygen signal fMRI measures; a slow proxy for neural activity.</dd>
+    <dt>Voxel</dt><dd>One 3-D pixel of brain, here 2.24 × 2.24 × 4.1 mm.</dd>
+    <dt>Encoding model</dt><dd>Predicts brain activity <em>from</em> stimulus features (as here). The reverse is a decoding model.</dd>
+    <dt>Ridge regression</dt><dd>Linear regression with a penalty on large weights, to avoid overfitting.</dd>
+    <dt>FIR</dt><dd>Separate weights per time delay, so the model learns the response's timing.</dd>
+    <dt>FDR</dt><dd>False discovery rate: multiple-comparisons correction across thousands of voxels.</dd>
+    <dt>Voronoi</dt><dd>Partition where every point belongs to its nearest centre.</dd>
+  </dl>
+</section>
+</div>
+
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';
+function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function T(p,x,y,str,cls,anchor){const e=S('text',{x:x,y:y,class:cls||'','text-anchor':anchor||'start'},p);e.textContent=str;return e}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function gauss(r){let u=0;while(!u)u=r();const v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+const $=id=>document.getElementById(id);
+const CAT=[
+ {n:'visual',w:'yellow',x:-0.2,y:0.85,c:'#6cc46a'},{n:'tactile',w:'fingers',x:-0.55,y:0.68,c:'#3fae5a'},
+ {n:'numeric',w:'four',x:-0.5,y:0.42,c:'#3c9f78'},{n:'locational',w:'stadium',x:-0.85,y:0.15,c:'#2f8a4e'},
+ {n:'abstract',w:'natural',x:0.05,y:0.5,c:'#a98ae0'},{n:'violent',w:'lethal',x:0.5,y:0.38,c:'#cc6cc8'},
+ {n:'communal',w:'schools',x:0.3,y:0.05,c:'#e877a6'},{n:'emotional',w:'despised',x:0.58,y:-0.12,c:'#e65d8c'},
+ {n:'social',w:'child',x:0.82,y:-0.32,c:'#df4579'},{n:'temporal',w:'minute',x:-0.62,y:-0.25,c:'#e2483b'},
+ {n:'professional',w:'meetings',x:-0.25,y:-0.45,c:'#d6336c'},{n:'mental',w:'asleep',x:0.15,y:-0.72,c:'#c2408f'}];
+function hex2rgb(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+
+/* Pipeline */
+(function(){const g=$('pipe');const items=[
+ ['Fig 1a','Listen','7 people hear 2+ h','of Moth stories in fMRI'],
+ ['Fig 1a','Describe words','each word → 985','co-occurrence numbers'],
+ ['Fig 1a–c','Fit every voxel','ridge regression learns','which features drive it'],
+ ['Fig 2','Find shared axes','PCA on voxel weights','→ 4 shared dimensions'],
+ ['Fig 3','Build an atlas','PrAGMATiC tiles cortex','into 140 semantic areas']];
+ items.forEach((it,i)=>{const x=8+i*190;S('rect',{x:x,y:22,width:172,height:108,rx:8,class:'box'},g);
+  T(g,x+12,44,it[0],'a s');T(g,x+12,70,it[1],'d');T(g,x+12,94,it[2],'m');T(g,x+12,112,it[3],'m');
+  if(i<4)S('line',{x1:x+174,y1:76,x2:x+188,y2:76,class:'lm','stroke-width':1.5,'marker-end':'url(#arr)'},g)});})();
+
+/* Co-occurrence */
+(function(){const s=$('cooc');const basis=['day','year','time','night','height','building','man','short'];
+ const rows=[['month',[1.6,1.4,1.2,0.6,-0.6,-0.2,-0.4,0.1],'var(--cool)'],['week',[1.5,0.9,1.3,0.9,-0.5,-0.1,-0.3,0.3],'var(--cool)'],['tall',[-0.6,-0.5,-0.3,-0.4,1.6,1.3,1.0,0.8],'var(--accent)']];
+ const x0=110,cw=48;basis.forEach((b,j)=>{const t=T(s,x0+j*cw+cw/2,22,b,'m s','middle')});
+ T(s,8,22,'basis word →','m s');
+ rows.forEach((r,i)=>{const yc=70+i*80;T(s,8,yc+4,'"'+r[0]+'"','b');S('line',{x1:x0,y1:yc,x2:x0+cw*8,y2:yc,class:'lr'},s);
+  r[1].forEach((v,j)=>{const h=v*22;S('rect',{x:x0+j*cw+10,y:h>0?yc-h:yc,width:cw-20,height:Math.abs(h),style:'fill:'+r[2],opacity:0.85},s)});
+  T(s,x0+cw*8+8,yc+4,'… ×985','m s')});
+ const xr=560;T(s,xr,56,'similarity','m s');
+ S('path',{d:'M548,70 C530,70 530,150 548,150',class:'lm'},s);T(s,xr,114,'r = 0.74','b c');T(s,xr,130,'similar','m s');
+ S('path',{d:'M548,62 C510,62 510,230 548,230',class:'lm','stroke-dasharray':'3 3'},s);T(s,xr,214,'r = −0.22','b a');T(s,xr,230,'month vs tall','m s');
+ T(s,8,290,'Each bar = log co-occurrence count with that basis word, z-scored.','m s');})();
+
+/* Time series */
+(function(){const s=$('ts');const words=[['I',0.3,-0.2],['saw',0.9,-0.1],['four',1.6,1.6],['kids',2.3,0.2],['and',2.8,-0.3],['seven',3.6,1.9],['dogs',4.3,0.1],['at',5.0,-0.2],['the',5.4,-0.3],['park',6.1,0.0],['at',7.0,-0.2],['noon',7.6,0.6],['then',8.6,-0.1],['two',9.4,1.5],['more',10.1,0.4]];
+ const x=t=>50+t*55,base=150;S('line',{x1:40,y1:base,x2:680,y2:base,class:'lm'},s);
+ for(let k=0;k<=12;k+=2){S('line',{x1:x(k),y1:base,x2:x(k),y2:base+6,class:'lm'},s);T(s,x(k),base+20,k+' s','m s','middle')}
+ words.forEach(w=>{T(s,x(w[1]),30,w[0],'s','middle');S('line',{x1:x(w[1]),y1:base,x2:x(w[1]),y2:base-w[2]*40,class:w[2]>1?'la':'lm','stroke-width':3},s)});
+ let d='';for(let i=0;i<=240;i++){const t=i*0.05;let v=0;words.forEach(w=>{v+=w[2]*Math.exp(-Math.pow((t-w[1])/0.55,2)/2)});d+=(i?'L':'M')+x(t).toFixed(1)+','+(base-v*30).toFixed(1)}
+ S('path',{d:d,class:'lc','stroke-width':2},s);
+ for(let k=0;k<=12;k+=2){let v=0;words.forEach(w=>{v+=w[2]*Math.exp(-Math.pow((k-w[1])/0.55,2)/2)});S('circle',{cx:x(k),cy:base-v*30,r:4,style:'fill:var(--cool)'},s)}
+ T(s,40,232,'sticks: value of the "seven" feature for each word     line: smoothed     dots: sampled every 2 s (TR)','m s');})();
+
+/* HRF / FIR */
+(function(){const s=$('hrf');const x=t=>70+t*45,base=180,amp=110;S('line',{x1:60,y1:base,x2:640,y2:base,class:'lm'},s);
+ for(let k=0;k<=12;k+=2){S('line',{x1:x(k),y1:base,x2:x(k),y2:base+6,class:'lm'},s);T(s,x(k),base+20,k+' s','m s','middle')}
+ const h=t=>t<=0?0:Math.pow(t/5,5)*Math.exp(5-t);let d='';for(let i=0;i<=240;i++){const t=i*0.05;d+=(i?'L':'M')+x(t).toFixed(1)+','+(base-amp*h(t)).toFixed(1)}
+ S('path',{d:d,class:'lm','stroke-width':2,'stroke-dasharray':'4 3'},s);
+ S('line',{x1:x(0),y1:base,x2:x(0),y2:40,class:'lc','stroke-width':3},s);T(s,x(0)+8,44,'word heard','c s');
+ [2,4,6,8].forEach(k=>{const v=h(k);S('rect',{x:x(k)-8,y:base-amp*v,width:16,height:amp*v,style:'fill:var(--accent)',opacity:0.85},s);T(s,x(k),base-amp*v-8,'w'+k+'s','a s','middle')});
+ T(s,x(5)+60,70,'BOLD response (slow bump)','m s');T(s,x(9.2),120,'4 weights per feature','a s');T(s,x(9.2),136,'= 4 delayed copies','m s');})();
+
+/* Matrix */
+(function(){const s=$('mat');
+ S('rect',{x:20,y:40,width:220,height:170,rx:3,class:'box'},s);
+ const r=rng(3);for(let j=0;j<22;j++){let d='';for(let i=0;i<=34;i++){const yy=44+i*4.8;const xx=24+j*10+3+gauss(r)*2;d+=(i?'L':'M')+xx.toFixed(1)+','+yy.toFixed(1)}S('path',{d:d,class:'lm',opacity:0.5},s)}
+ T(s,20,30,'X  stimulus features','b');T(s,20,230,'3,737 time pts × 4,104 features','m s');
+ T(s,262,132,'×','d','middle');
+ S('rect',{x:282,y:20,width:30,height:210,rx:3,class:'box'},s);const ws=['2.8','−1.5','0.1','1.7','…','−0.4','0.7'];
+ ws.forEach((w,i)=>T(s,297,48+i*28,w,(w.startsWith('−')?'c':'a')+' s','middle'));T(s,330,30,'w','b');T(s,330,46,'one voxel','m s');T(s,330,62,'4,104 weights','m s');
+ T(s,430,132,'=','d','middle');
+ S('rect',{x:452,y:40,width:30,height:170,rx:3,class:'box'},s);let d='';const r2=rng(9);for(let i=0;i<=34;i++){const yy=44+i*4.8;const xx=467+Math.sin(i*0.6)*6+gauss(r2)*2;d+=(i?'L':'M')+xx.toFixed(1)+','+yy.toFixed(1)}S('path',{d:d,class:'la','stroke-width':1.5},s);
+ T(s,496,30,'y  BOLD','b');T(s,496,46,'one voxel,','m s');T(s,496,62,'3,737 time pts','m s');
+ T(s,496,130,'Repeat for every','m s');T(s,496,146,'voxel: tens of','m s');T(s,496,162,'thousands of fits.','m s');})();
+
+/* Validation */
+(function(){const s=$('val');const r=rng(42),N=290;const sig=[],a=[],p=[];
+ for(let i=0;i<N;i++){const v=Math.sin(i/9)*0.9+Math.sin(i/23+1)*0.7+Math.sin(i/4.3)*0.35;sig.push(v)}
+ for(let i=0;i<N;i++){a.push(sig[i]+gauss(r)*1.25);p.push(sig[i]*0.75+gauss(r)*0.25)}
+ const mean=v=>v.reduce((x,y)=>x+y,0)/v.length;const ma=mean(a),mp=mean(p);let sab=0,saa=0,sbb=0;for(let i=0;i<N;i++){sab+=(a[i]-ma)*(p[i]-mp);saa+=(a[i]-ma)**2;sbb+=(p[i]-mp)**2}
+ const rr=sab/Math.sqrt(saa*sbb);const X=i=>40+i*(620/N),Y=v=>120-v*32;
+ S('line',{x1:40,y1:120,x2:660,y2:120,class:'lr'},s);
+ const path=(v,cls,w)=>{let d='';v.forEach((y,i)=>d+=(i?'L':'M')+X(i).toFixed(1)+','+Y(y).toFixed(1));S('path',{d:d,class:cls,'stroke-width':w},s)};
+ path(a,'lm',1.2);path(p,'la',2);
+ S('line',{x1:40,y1:222,x2:60,y2:222,class:'lm','stroke-width':2},s);T(s,66,226,'actual BOLD (new story)','m s');
+ S('line',{x1:240,y1:222,x2:260,y2:222,class:'la','stroke-width':2},s);T(s,266,226,'model prediction','a s');
+ T(s,660,226,'r = '+rr.toFixed(2),'b','end');T(s,40,250,'0','m s');T(s,660,250,'290 TRs ≈ 10 min','m s','end');})();
+
+/* Flatmap schematic */
+(function(){const s=$('flat');
+ function blob(cx,cy,rx,ry,flip,seed){let d='';for(let i=0;i<=120;i++){const th=i/120*Math.PI*2;const k=1+0.07*Math.sin(3*th+seed)+0.05*Math.cos(5*th+seed*2)+0.04*Math.sin(7*th);let x=Math.cos(th)*rx*k,y=Math.sin(th)*ry*k;if(flip)x=-x;d+=(i?'L':'M')+(cx+x).toFixed(1)+','+(cy+y).toFixed(1)}return d+'Z'}
+ S('path',{d:blob(205,170,175,130,false,1),class:'cx'},s);S('path',{d:blob(555,170,175,130,true,1),class:'cx'},s);
+ const regs=[['SPFC',95,100,48,30],['IPFC',105,215,42,30],['MPC',250,62,40,22],['LPC',275,140,44,32],['LTC',220,238,52,24],['VTC',320,245,30,22]];
+ const fills=['#ef6a12','#c2300f','#f8c43a','#ef6a12','#c2300f','#ef6a12'];
+ regs.forEach((g,i)=>{[false,true].forEach(m=>{const cx=m?760-g[1]:g[1];S('ellipse',{cx:cx,cy:g[2]+10,rx:g[3],ry:g[4],fill:fills[i],opacity:0.8},s);T(s,cx,g[2]+14,g[0],'w','middle')})});
+ T(s,205,16,'Left hemisphere (LH)','b','middle');T(s,555,16,'Right hemisphere (RH)','b','middle');
+ const ax=(x,y,dir)=>{S('line',{x1:x,y1:y,x2:x+dir*36,y2:y,class:'lm','marker-end':'url(#arr2)'},s);S('line',{x1:x,y1:y,x2:x,y2:y-30,class:'lm','marker-end':'url(#arr2)'},s);T(s,x+dir*40,y+4,'anterior','m s',dir<0?'end':'start');T(s,x,y-36,'superior','m s','middle')};
+ const defs=S('defs',{},s);const mk=S('marker',{id:'arr2',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto'},defs);S('path',{d:'M0,0L10,5L0,10z',style:'fill:var(--muted)'},mk);
+ ax(80,338,-1);ax(680,338,1);})();
+
+/* PCA scatter */
+(function(){const s=$('pca');const r=rng(7),ang=-25*Math.PI/180,cx=180,cy=140;
+ for(let i=0;i<170;i++){const u=gauss(r)*62,v=gauss(r)*18;const x=cx+u*Math.cos(ang)-v*Math.sin(ang),y=cy+u*Math.sin(ang)+v*Math.cos(ang);S('circle',{cx:x,cy:y,r:2.6,style:'fill:var(--muted)',opacity:0.55},s)}
+ const defs=S('defs',{},s);const mk=S('marker',{id:'arr3',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},defs);S('path',{d:'M0,0L10,5L0,10z',style:'fill:var(--accent)'},mk);
+ const mk2=S('marker',{id:'arr4',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},defs);S('path',{d:'M0,0L10,5L0,10z',style:'fill:var(--cool)'},mk2);
+ S('line',{x1:cx,y1:cy,x2:cx+140*Math.cos(ang),y2:cy+140*Math.sin(ang),class:'la','stroke-width':2.5,'marker-end':'url(#arr3)'},s);
+ S('line',{x1:cx,y1:cy,x2:cx-50*Math.sin(ang),y2:cy+50*Math.cos(ang),class:'lc','stroke-width':2.5,'marker-end':'url(#arr4)'},s);
+ T(s,cx+140*Math.cos(ang)-6,cy+140*Math.sin(ang)-10,'PC1','a b','end');T(s,cx-50*Math.sin(ang)+8,cy+50*Math.cos(ang)+14,'PC2','c b');
+ T(s,10,258,'weight on feature A →','m s');T(s,10,20,'↑ weight on feature B','m s');})();
+
+/* Scree */
+(function(){const s=$('scree');const g=[8,5,3.8,3.0,1.5,1.3,1.2,1.1,1.05,1.0,0.95,0.9],st=[1.8,2.5,2.1,2.0,1.8,1.7,1.6,1.6,1.5,1.5,1.4,1.4];
+ const X=i=>50+i*25,Y=v=>230-v*20;S('line',{x1:44,y1:230,x2:340,y2:230,class:'lm'},s);S('line',{x1:44,y1:30,x2:44,y2:230,class:'lm'},s);
+ [0,5,10].forEach(v=>{T(s,38,Y(v)+4,v+'%','m s','end')});[1,4,8,12].forEach(k=>T(s,X(k-1),246,k,'m s','middle'));T(s,195,264,'principal component','m s','middle');
+ const line=(v,cls)=>{let d='';v.forEach((y,i)=>d+=(i?'L':'M')+X(i)+','+Y(y));S('path',{d:d,class:cls,'stroke-width':2},s)};
+ line(st,'lm');line(g,'lc');g.forEach((v,i)=>S('circle',{cx:X(i),cy:Y(v),r:4.5,style:i<4?'fill:var(--panel);stroke:var(--cool);stroke-width:2':'fill:var(--cool)'},s));
+ S('rect',{x:X(0)-10,y:30,width:X(3)-X(0)+20,height:200,style:'fill:var(--cool)',opacity:0.07},s);
+ T(s,X(1.5),46,'4 significant','c s','middle');T(s,330,Y(st[11])-8,'stimulus PCs','m s','end');T(s,330,Y(g[11])+18,'group PCs','c s','end');})();
+
+/* Semantic plane */
+(function(){const s=$('plane');const cx=280,cy=220,sx=220,sy=180;
+ S('line',{x1:40,y1:cy,x2:520,y2:cy,class:'lm'},s);S('line',{x1:cx,y1:20,x2:cx,y2:420,class:'lm'},s);
+ T(s,520,cy-28,'PC1','b','end');T(s,cx+8,30,'PC2','b');
+ T(s,44,cy+18,'← perceptual, quantitative','m s');T(s,516,cy-10,'people, social →','m s','end');
+ T(s,cx-8,44,'perceptual ↑','m s','end');T(s,cx-8,414,'non-perceptual ↓','m s','end');
+ CAT.forEach(c=>{const x=cx+c.x*sx,y=cy-c.y*sy;S('circle',{cx:x,cy:y,r:6,fill:c.c},s);const t=T(s,x+10,y+4,c.n,'b');t.setAttribute('style','fill:'+c.c+';font-weight:500');T(s,x+10,y+19,"'"+c.w+"'",'m s')});})();
+
+/* voxel to colour */
+(function(){const s=$('v2c');const r=rng(5);
+ S('rect',{x:10,y:40,width:150,height:60,rx:4,class:'box'},s);for(let i=0;i<30;i++){const v=gauss(r)*12;S('rect',{x:14+i*4.8,y:v>0?70-v:70,width:3.4,height:Math.abs(v),style:'fill:var(--muted)'},s)}
+ T(s,10,30,"voxel's 985 weights",'s');T(s,10,120,'(learned in Fig 1a)','m s');
+ S('line',{x1:168,y1:70,x2:208,y2:70,class:'lm','marker-end':'url(#arr)'},s);T(s,188,58,'dot with','m s','middle');T(s,188,92,'PC1–3','m s','middle');
+ const vals=[['PC1','+0.70','#d9364a'],['PC2','−0.20','#3aa35a'],['PC3','+0.40','#3f6fd6']];
+ vals.forEach((v,i)=>{T(s,222,48+i*24,v[0],'s');T(s,262,48+i*24,v[1],'b')});
+ S('line',{x1:320,y1:70,x2:360,y2:70,class:'lm','marker-end':'url(#arr)'},s);
+ const rgb=[0.85,0.4,0.7];vals.forEach((v,i)=>{S('rect',{x:372,y:36+i*24,width:110,height:14,rx:2,class:'box'},s);S('rect',{x:372,y:36+i*24,width:110*rgb[i],height:14,rx:2,fill:v[2]},s);T(s,490,47+i*24,['R','G','B'][i],'s')});
+ S('line',{x1:508,y1:70,x2:548,y2:70,class:'lm','marker-end':'url(#arr)'},s);
+ S('rect',{x:560,y:36,width:70,height:70,rx:6,fill:'rgb(217,102,179)'},s);T(s,595,126,'pinkish','m s','middle');T(s,595,142,'= social-leaning','m s','middle');
+ S('path',{d:'M650,70 L690,70',class:'lm','marker-end':'url(#arr)'},s);T(s,700,66,'paint','s');T(s,700,82,'on cortex','s');})();
+
+/* RGB picker */
+(function(){const ids=['pc1','pc2','pc3'];
+ function upd(){const v=ids.map(i=>parseFloat($(i).value));ids.forEach((i,k)=>$(i+'v').textContent=v[k].toFixed(2));
+  const rgb=v.map(x=>Math.round((x+1)/2*255));$('swatch').style.background='rgb('+rgb.join(',')+')';
+  let best=null,bd=1e9;CAT.forEach(c=>{const q=hex2rgb(c.c);const d=q.reduce((a,x,k)=>a+(x-rgb[k])**2,0);if(d<bd){bd=d;best=c}});
+  $('pickout').innerHTML='Closest category: <b style="color:'+best.c+'">'+best.n+'</b>. A voxel like this responds more to words like <i>‘'+best.w+'’</i>.'}
+ ids.forEach(i=>$(i).addEventListener('input',upd));upd();})();
+
+/* 3b chart */
+(function(){const s=$('nareas');const n=[8,32,64,128,192,256,320,384];const lh=[0.016,0.045,0.052,0.056,0.058,0.059,0.0595,0.06],rh=[0.013,0.041,0.05,0.056,0.057,0.0575,0.058,0.058];
+ const X=k=>60+k/384*480,Y=v=>250-v*2600;S('line',{x1:56,y1:250,x2:550,y2:250,class:'lm'},s);S('line',{x1:56,y1:30,x2:56,y2:250,class:'lm'},s);
+ [0,0.02,0.04,0.06,0.08].forEach(v=>{T(s,50,Y(v)+4,v.toFixed(2),'m s','end');S('line',{x1:56,y1:Y(v),x2:550,y2:Y(v),class:'lr'},s)});
+ n.forEach(k=>T(s,X(k),268,k,'m s','middle'));T(s,300,290,'total number of areas','m s','middle');
+ const line=(v,cls,col)=>{let d='';v.forEach((y,i)=>d+=(i?'L':'M')+X(n[i]).toFixed(1)+','+Y(y).toFixed(1));S('path',{d:d,class:cls,'stroke-width':2.2},s);v.forEach((y,i)=>S('circle',{cx:X(n[i]),cy:Y(y),r:3.5,style:'fill:'+col},s))};
+ line(lh,'la','var(--accent)');line(rh,'lc','var(--cool)');
+ S('line',{x1:X(192),y1:Y(0.058)-8,x2:X(192),y2:70,class:'la','stroke-dasharray':'3 3'},s);T(s,X(192),62,'LH plateaus: 192','a s','middle');
+ S('line',{x1:X(128),y1:Y(0.056)+8,x2:X(128),y2:Y(0.03),class:'lc','stroke-dasharray':'3 3'},s);T(s,X(128),Y(0.03)+16,'RH plateaus: 128','c s','middle');
+ T(s,540,Y(0.06)-10,'left','a s','end');T(s,540,Y(0.058)+18,'right','c s','end');
+ T(s,62,22,'avg prediction performance (r)','m s');})();
+
+/* Voronoi + springs */
+(function(){const cv=$('vor'),ctx=cv.getContext('2d');let W=0,H=340,pts=[],springs=[],drag=null,anim=null;
+ const cols=CAT.map(c=>hex2rgb(c.c));
+ function inMask(x,y){const dx=(x-W/2)/(W*0.47),dy=(y-H/2)/(H*0.45);const th=Math.atan2(dy,dx);const k=1+0.06*Math.sin(3*th)+0.04*Math.cos(5*th);return dx*dx+dy*dy<k*k}
+ function init(){const r=rng(11);pts=[];let tries=0;while(pts.length<14&&tries<5000){tries++;const x=W*0.08+r()*W*0.84,y=H*0.1+r()*H*0.8;if(!inMask(x,y))continue;if(pts.some(p=>Math.hypot(p.x-x,p.y-y)<Math.min(W,H)*0.17))continue;pts.push({x:x,y:y,lm:false,c:cols[pts.length%cols.length]})}
+  pts[0].lm=true;pts[5]&&(pts[5].lm=true);springs=[];const seen={};
+  pts.forEach((p,i)=>{pts.map((q,j)=>[j,Math.hypot(p.x-q.x,p.y-q.y)]).filter(a=>a[0]!==i).sort((a,b)=>a[1]-b[1]).slice(0,3).forEach(a=>{const k=Math.min(i,a[0])+'-'+Math.max(i,a[0]);if(!seen[k]){seen[k]=1;springs.push({i:i,j:a[0],L:a[1]})}})})}
+ function energy(){let e=0;springs.forEach(s=>{const d=Math.hypot(pts[s.i].x-pts[s.j].x,pts[s.i].y-pts[s.j].y);e+=Math.pow((d-s.L)/40,2)});return e}
+ function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+ function draw(){const dpr=window.devicePixelRatio||1;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+  const step=4,noise=$('noise').checked,r=rng(99);
+  for(let y=0;y<H;y+=step)for(let x=0;x<W;x+=step){if(!inMask(x+2,y+2))continue;let bi=0,bd=1e12;for(let k=0;k<pts.length;k++){const d=(pts[k].x-x)**2+(pts[k].y-y)**2;if(d<bd){bd=d;bi=k}}
+   let c=pts[bi].c;if(noise){const n=gauss(r)*45;c=c.map(v=>Math.max(0,Math.min(255,v+n+gauss(r)*20)))}ctx.fillStyle='rgb('+c.map(Math.round).join(',')+')';ctx.fillRect(x,y,step,step)}
+  const acc=css('--accent'),cool=css('--cool');
+  springs.forEach(s=>{const a=pts[s.i],b=pts[s.j];const d=Math.hypot(a.x-b.x,a.y-b.y);const st=(d-s.L)/s.L;ctx.strokeStyle=st>0.08?acc:st<-0.08?cool:'rgba(255,255,255,0.75)';ctx.lineWidth=1.5+Math.min(3,Math.abs(st)*6);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()});
+  pts.forEach(p=>{if(p.lm){ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(p.x-7,p.y-7);ctx.lineTo(p.x+7,p.y+7);ctx.moveTo(p.x+7,p.y-7);ctx.lineTo(p.x-7,p.y+7);ctx.stroke()}else{ctx.fillStyle='rgb('+p.c.join(',')+')';ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(p.x,p.y,8,0,Math.PI*2);ctx.fill();ctx.stroke()}});
+  $('energy').textContent=energy().toFixed(2)}
+ function relaxStep(){springs.forEach(s=>{const a=pts[s.i],b=pts[s.j];const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;const f=(d-s.L)/d*0.12;if(!a.lm&&a!==drag){a.x+=dx*f;a.y+=dy*f}if(!b.lm&&b!==drag){b.x-=dx*f;b.y-=dy*f}})}
+ function relax(n){cancelAnimationFrame(anim);let k=0;const go=()=>{for(let i=0;i<4;i++)relaxStep();draw();if(++k<n&&energy()>0.005)anim=requestAnimationFrame(go)};go()}
+ function size(){const old=W;W=cv.clientWidth;const dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;if(!old||!pts.length)init();else{const f=W/old;pts.forEach(p=>p.x*=f);springs.forEach(s=>s.L=s.L*(f+1)/2)}draw()}
+ function pos(e){const b=cv.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}}
+ cv.addEventListener('pointerdown',e=>{const p=pos(e);let best=null,bd=24;pts.forEach(q=>{if(q.lm)return;const d=Math.hypot(q.x-p.x,q.y-p.y);if(d<bd){bd=d;best=q}});if(best){drag=best;cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'}});
+ cv.addEventListener('pointermove',e=>{if(!drag)return;const p=pos(e);drag.x=Math.max(4,Math.min(W-4,p.x));drag.y=Math.max(4,Math.min(H-4,p.y));draw()});
+ const end=()=>{drag=null;cv.style.cursor='grab'};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+ $('relax').addEventListener('click',()=>relax(200));
+ $('subj').addEventListener('click',()=>{const r=rng(Math.floor(Math.random()*1e6));pts.forEach(p=>{p.x+=gauss(r)*(p.lm?10:35);p.y+=gauss(r)*(p.lm?8:25);p.x=Math.max(10,Math.min(W-10,p.x));p.y=Math.max(10,Math.min(H-10,p.y))});draw();setTimeout(()=>relax(60),350)});
+ $('noise').addEventListener('change',draw);
+ window.addEventListener('resize',size);
+ if(window.matchMedia)window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+ size();
+ /* start slightly displaced so springs are visible */
+ const r0=rng(21);pts.forEach(p=>{if(!p.lm){p.x+=gauss(r0)*7;p.y+=gauss(r0)*5}});draw();})();
+})();
+</script>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="index.html"><small>← All notes</small><span>Reading notes</span></a><a class="next" href="language-network.html"><small>Next note →</small><span>The language network as a natural kind</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Language neurons, one by one · Maha Nawaz</title>
+<meta name="description" content="579 single neurons recorded while people chat: specialist cells for grammar, and an LLM that predicts them about a second before each word is spoken."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="Language neurons, one by one"><meta property="og:description" content="579 single neurons recorded while people chat: specialist cells for grammar, and an LLM that predicts them about a second before each word is spoken.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: single reading column (~68ch) with wider figure panels; each section = one figure panel, prose then redrawn diagram */
+:root{
+  --paper:#EDF0F3; --panel:#FFFFFF; --ink:#17202C; --muted:#586374; --rule:#D2D8E0; --soft:#E2E7ED;
+  --accent:#C9440E; --cool:#2856C2;
+  --cortex:#2F343C; --cortex-ink:#ECEFF3; --cortex-line:#5C6573;
+  --display:'Bricolage Grotesque','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --body:'Literata',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:17px/1.62 var(--body);}
+.wrap{max-width:900px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(23px,3.4vw,30px);font-weight:700;margin-top:64px}
+h3{font-size:19px;font-weight:700;margin-top:36px}
+p{margin:12px 0}
+.eyebrow,.tag{font:500 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tag{color:var(--accent)}
+.cite{color:var(--muted);font-size:15px;margin-top:10px}
+.lede{font-size:19px;margin-top:20px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+nav.toc a{font:500 13px var(--mono);color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:5px 10px;border-radius:999px;background:var(--panel)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+.short{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:28px}
+.short ol{margin:8px 0 0;padding-left:20px;display:grid;gap:6px}
+.fig{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px;margin:22px 0}
+.fig .scroll{overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto}
+.fig .wide svg{min-width:640px}
+.cap{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
+.cap b{color:var(--ink);font-weight:600}
+.read{display:grid;gap:10px;margin:16px 0}
+.read div{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:baseline}
+.read dt,.read .k{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.ex{background:var(--soft);border-radius:8px;padding:12px 16px;margin:16px 0;font-size:16px}
+.ex .eyebrow{color:var(--cool)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.two>*{min-width:0}
+@media (max-width:640px){.two{grid-template-columns:1fr}.read div{grid-template-columns:1fr;gap:2px}}
+/* SVG text */
+svg text{font-family:var(--mono);font-size:12px;fill:var(--ink)}
+svg .m{fill:var(--muted)} svg .a{fill:var(--accent)} svg .c{fill:var(--cool)}
+svg .d{font-family:var(--display);font-weight:700;font-size:16px}
+svg .s{font-size:10.5px} svg .b{font-size:14px} svg .w{fill:var(--cortex-ink)}
+svg .ln{stroke:var(--ink);fill:none} svg .lm{stroke:var(--muted);fill:none} svg .lr{stroke:var(--rule);fill:none}
+svg .la{stroke:var(--accent);fill:none} svg .lc{stroke:var(--cool);fill:none}
+svg .box{fill:var(--paper);stroke:var(--rule)}
+svg .cx{fill:var(--cortex)}
+/* widgets */
+.ctrl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:12px;font:13px var(--mono)}
+.ctrl label{display:flex;align-items:center;gap:8px}
+input[type=range]{width:150px;accent-color:var(--accent)}
+button{font:500 13px var(--mono);background:var(--ink);color:var(--paper);border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.picker{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}
+.picker>*{min-width:0}
+@media (max-width:560px){.picker{grid-template-columns:1fr}}
+#swatch{width:150px;height:150px;border-radius:8px;border:1px solid var(--rule)}
+.sl{display:grid;gap:8px;font:13px var(--mono)}
+.sl label{display:grid;grid-template-columns:44px 1fr 48px;gap:10px;align-items:center}
+.sl input{width:100%}
+#pickout{margin-top:10px;font-size:16px}
+canvas#vor{display:block;width:100%;height:340px;border-radius:8px;touch-action:none;cursor:grab;background:var(--paper)}
+.eq{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.eq>div{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;min-width:0;background:var(--panel)}
+.eq .f{font:15px var(--mono);margin:6px 0;overflow-x:auto;white-space:nowrap}
+@media (max-width:640px){.eq{grid-template-columns:1fr}}
+.bar{height:14px;border-radius:3px;background:linear-gradient(90deg,#3a3f47 0%,#7a1c0c 18%,#c2300f 38%,#ef6a12 58%,#f8c43a 80%,#fffbe0 100%)}
+.barlab{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--muted);margin-top:4px}
+.swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:14px}
+.swatches span{display:flex;align-items:center;gap:8px}
+.swatches i{display:inline-block;width:26px;height:18px;border-radius:3px;border:1px solid var(--rule)}
+dl.gl{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;font-size:15px}
+dl.gl dt{font:500 13px var(--mono);color:var(--accent)} dl.gl dd{margin:0}
+@media (max-width:560px){dl.gl{grid-template-columns:1fr}}
+a{color:var(--cool)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style><style>
+.wbtns{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.wbtns button{background:transparent;color:var(--ink);border:1px solid var(--rule);font-size:15px;padding:7px 12px}
+.wbtns button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.feat{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.feat div{border:1px solid var(--rule);border-radius:6px;padding:8px 10px;background:var(--paper);min-width:0}
+.feat .k{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.feat .v{font:15px var(--mono);margin-top:2px}
+.nbtns{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.nbtns button{font-size:12.5px;background:transparent;color:var(--ink);border:1px solid var(--rule);padding:6px 10px}
+.nbtns button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.note{border-left:3px solid var(--cool);padding:2px 0 2px 14px;margin:16px 0;font-size:15.5px}
+</style>
+<style>
+:root{--paper:#FFF8EA;--panel:#FFFDF7;--ink:#1D2F66;--muted:#56628A;--rule:#E8DCC2;--soft:#FBEED3;--accent:#B65200;--cool:#2A57B8;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--display:'Bitter',Georgia,serif;--body:'Bitter',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-A">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+<div class="mn-series" aria-label="Series"><b>Language &amp; thought</b><span>Part 4 of 4</span><a href="huth-semantic-maps.html">1. Huth et al. 2016</a><a href="language-network.html">2. Fedorenko, Ivanova &amp; Regev 2024</a><a href="language-of-thought.html">3. Frankland &amp; Greene 2020</a><span aria-current="page">4. Cai et al. 2026</span></div>
+<div class="wrap">
+<header class="col">
+  <div class="eyebrow">Reading notes · Nature 656, 425–433 (2026) · open access</div>
+  <h1 style="margin-top:10px">Language Neurons, One by One</h1>
+  <p class="cite">Cai, Kfir, Jamali, Huang, Kim, Cash &amp; Williams · "Mapping the neuronal building blocks of human language with language models" · Massachusetts General Hospital / Harvard</p><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · October 13, 2026</span></div>
+  <p class="lede">The three papers I read before this one (<a href="huth-semantic-maps.html">Huth</a>, <a href="language-network.html">Fedorenko</a>, <a href="language-of-thought.html">Frankland &amp; Greene</a>) watched language through fMRI: millimetre voxels averaging hundreds of thousands of neurons. This one records <b>individual neurons</b> in people having real conversations, and asks what single cells care about when we build a sentence.</p>
+  <div class="note">This is a primary research article, not a review. It's the first in this set to measure single cells, and the first to use a large language model as the yardstick.</div>
+  <nav class="toc" aria-label="Sections">
+    <a href="#setup">Setup</a><a href="#fig1">Fig 1</a><a href="#trees">Parse trees</a><a href="#fig2">Fig 2</a><a href="#try">Try it</a><a href="#fig3">Fig 3</a><a href="#fig4">Fig 4</a><a href="#fig5">Fig 5</a><a href="#links">vs other papers</a><a href="#caveats">Caveats</a>
+  </nav>
+  <div class="short">
+    <div class="eyebrow">The 60-second version</div>
+    <ol>
+      <li>8 epilepsy patients with tiny 96-electrode arrays in frontal and temporal cortex chatted naturally: 10,460 words, <b>579 neurons</b>.</li>
+      <li>Each spoken word was labelled with grammar features from a parser: part of speech, which phrase it's in, how deep in the sentence tree, its grammatical relation.</li>
+      <li>About half the neurons were selective, each for a <b>specific</b> grammatical feature, with little overlap. Some track word-level grammar (nouns, verbs). Others track sentence structure (phrase type, tree depth, phrases closing).</li>
+      <li>You can decode these features from the population, and the codes generalize to new sentences.</li>
+      <li>An LLM's contextual embeddings predicted neural activity best, better than grammar or word meaning alone, with the signal peaking ~1 s <em>before</em> the word is spoken.</li>
+      <li>Neurons are found in both hemispheres, but left-hemisphere neurons are more strongly tuned. Single neurons are far more selective than the field potentials around them.</li>
+    </ol>
+  </div>
+</header>
+
+<section id="setup" class="col">
+  <h2>Setup: how you record a neuron in a talking person</h2>
+  <p>The patients were already having electrodes placed to locate the source of their seizures. With consent, the surgeons also inserted a <b>Utah array</b> into tissue that was planned for removal anyway: a 4 × 4 mm bed of 96 needle electrodes, each tipped finer than a hair. Each needle can pick up the electrical spikes of nearby individual neurons.</p>
+  <div class="read">
+    <div><span class="k">People</span><span>8 adults (3 female, 5 male, age 27–52), normal language. One array each.</span></div>
+    <div><span class="k">Sites</span><span>Left: 2 anterior temporal, 1 posterior temporal, 1 prefrontal. Right: 1 anterior temporal, 2 posterior temporal, 1 prefrontal. All in areas known to engage in language.</span></div>
+    <div><span class="k">Task</span><span>Free conversation. Asked "Do you want a phone right now?", someone might answer "Yes, keep it there just in case, and then just bring that back over." Sentences are built fresh, not read or repeated. 1,895 sentences in total.</span></div>
+    <div><span class="k">Window</span><span>Neural activity from <b>400 to 100 ms before each word is spoken</b>: the planning period. So this is about <em>producing</em> language, not hearing it.</span></div>
+  </div>
+</section>
+
+<section id="fig1">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 1 · Tracking neurons during speech</div>
+  <h2 style="margin-top:6px">From spikes to words</h2>
+  </div>
+  <div class="col read">
+    <div><span class="k">1a</span><span>Brain views with the eight array sites (red squares) on a highlighted fronto-temporal language region. Inset: the array's dimensions (96 electrodes, 400 µm apart).</span></div>
+    <div><span class="k">1b</span><span>Raw voltage from one electrode. Each sharp downward blip is an <b>action potential (AP)</b>, a spike. Spikes with a consistent shape (right) are assigned to one neuron, a process called spike sorting.</span></div>
+    <div><span class="k">1c</span><span>The audio waveform of "I just heard the best news in my life", with three neurons' spikes underneath. Each tick is a spike; the red curve is the firing rate. Different cells fire around different words.</span></div>
+    <div><span class="k">1d–e</span><span>Each sentence is parsed into a tree, which gives every word a set of labels (explained in the next section).</span></div>
+    <div><span class="k">1f</span><span>Four example neurons, each locked to the moment a word is spoken (time 0).</span></div>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="psth" viewBox="0 0 760 330" role="img" aria-label="How to read a raster and PSTH"></svg></div>
+    <div class="cap"><b>How to read Fig 1f (simulated example).</b> Bottom, the <b>raster</b>: each row is one spoken word, each dot one spike. Coloured rows are words with the neuron's preferred feature (here, modal verbs like "can", "should"); grey rows are all other words. Top, the <b>PSTH</b> (peri-stimulus time histogram): average firing rate over all rows of each colour. The coloured curve rising above grey before time 0 means the neuron fires more while <em>planning</em> that kind of word.</div>
+  </div>
+  <div class="col"><p>The real Fig 1f shows four cells: Cell 16 for modal verbs (a part of speech), Cell 3 for adverb phrases (a constituent), Cell 65 for words at constituency depth 2, and Cell 78 for words that close exactly one phrase.</p></div>
+</section>
+
+<section id="trees">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figures 1d &amp; 2b · Two ways to parse a sentence</div>
+  <h2 style="margin-top:6px">What the grammar labels mean</h2>
+  <p>The authors used two standard NLP parsers (from AllenNLP) to label every word automatically. They describe sentence structure in two different ways.</p>
+  </div>
+  <div class="fig">
+    <div class="eyebrow" style="margin-bottom:6px">Constituency tree (Fig 1d): words nest inside phrases</div>
+    <div class="scroll wide"><svg id="ctree" viewBox="0 0 760 300" role="img" aria-label="Constituency tree of They came home for the weekend"></svg></div>
+    <div class="cap">S = sentence, NP = noun phrase, VP = verb phrase, ADVP = adverb phrase, PP = prepositional phrase. Each word's <b>depth</b> = levels between it and the top. "They": pronoun (PRP), in a noun phrase, depth 3, position 1, matching the paper's example.</div>
+  </div>
+  <div class="fig">
+    <div class="eyebrow" style="margin-bottom:6px">Dependency tree (Fig 2b): words point to the word they modify</div>
+    <div class="scroll wide"><svg id="dtree" viewBox="0 0 760 240" role="img" aria-label="Dependency tree of They came home for the weekend"></svg></div>
+    <div class="cap">The verb "came" is the root. Every other word hangs off a "head" word with a labelled relation: nsubj = nominal subject, advmod = adverbial modifier, prep = preposition, pobj = object of preposition, det = determiner. "They": nominal subject, dependency depth 2.</div>
+  </div>
+  <div class="col">
+  <div class="tablewrap"><table>
+    <tr><th>Feature</th><th>Plain meaning</th><th>Level</th></tr>
+    <tr><td>Part of speech</td><td>Noun, verb, adverb, determiner…</td><td>Word</td></tr>
+    <tr><td>Constituent</td><td>Which phrase type the word belongs to (NP, VP, PP…)</td><td>Phrase</td></tr>
+    <tr><td>Constituency depth</td><td>How deeply nested the word is in the phrase tree</td><td>Sentence</td></tr>
+    <tr><td>Closing level</td><td>How many phrases finish at this word. In "Several happy and active children in the park are playing games", "park" closes 3 phrases (the park → in the park → the whole subject).</td><td>Sentence</td></tr>
+    <tr><td>Ordinal position</td><td>1st, 2nd, 3rd word… (a control: depth also grows as a sentence goes on)</td><td>Sentence</td></tr>
+    <tr><td>Dependency</td><td>Grammatical relation to its head (subject, object, modifier…)</td><td>Relation</td></tr>
+    <tr><td>Dependency depth</td><td>Steps from the root verb in the dependency tree</td><td>Relation</td></tr>
+    <tr><td>Word pitch</td><td>Voice pitch: a sound-level control, not grammar</td><td>Sound</td></tr>
+  </table></div>
+  </div>
+</section>
+
+<section id="fig2">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 2 · Selectivity and decoding</div>
+  <h2 style="margin-top:6px">Specialist neurons for specific grammar</h2>
+  <p>A neuron is "selective" for a feature if its firing before words of one category (e.g., adverbs) is significantly higher than before all other words (Mann–Whitney test, corrected for multiple comparisons).</p>
+  </div>
+  <div class="fig">
+    <div class="scroll"><svg id="sel4" viewBox="0 0 640 285" role="img" aria-label="Percentage of selective neurons per feature" style="min-width:460px"></svg></div>
+    <div class="cap"><b>Fig 2a (left) + 2c (left).</b> % of the 579 neurons selective for each feature. Each is well above chance, and held up when random subsets of words were dropped and when word frequency, length and surprisal were controlled.</div>
+  </div>
+  <div class="col">
+  <h3>Do the same neurons do everything? No.</h3>
+  <p>The heatmaps in Fig 2a/2c are <b>coincidence matrices</b>: the diagonal is the % of neurons selective for that feature, off-diagonal cells are the % selective for <em>both</em>. Dark diagonal + pale off-diagonal = specialists. Across all feature pairs, only 2.2% of neurons overlapped. Pitch-tuned neurons (12%) almost never overlapped with grammar neurons (≤2.2%), so the grammar effects aren't just voice changes.</p>
+  </div>
+  <div class="fig">
+    <div class="two">
+      <div><svg id="venn1" viewBox="0 0 320 250" role="img" aria-label="Venn diagram constituency depth, dependency depth, ordinal position"></svg></div>
+      <div><svg id="venn2" viewBox="0 0 320 250" role="img" aria-label="Venn diagram constituents, parts of speech, dependencies"></svg></div>
+    </div>
+    <div class="cap"><b>Fig 2c (bottom right), neuron counts.</b> Left: even though constituency depth, dependency depth and word position all rise through a sentence, mostly <em>different</em> neurons track each (72, 48, 39 alone; only 2 track all three). Right: same for phrase type, part of speech and dependency relation.</div>
+  </div>
+  <div class="col">
+  <h3>Fig 2d: can you read grammar off the neurons?</h3>
+  <p>Train a classifier on 70% of words (neural activity → label), test on the other 30%. Repeat 1,000 times. The histograms show the accuracy distribution; the triangle is the mean; the dotted line is chance.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll"><svg id="dec" viewBox="0 0 640 260" role="img" aria-label="Decoding accuracy versus chance per feature" style="min-width:460px"></svg></div>
+    <div class="cap"><b>Fig 2d, mean single-word decoding accuracy vs chance.</b> E.g., constituency depth: 31.5% correct where guessing gives 14.3%. Modest numbers, because one word's few spikes are noisy; averaging over several words raises accuracy (Extended Data Fig 2).</div>
+  </div>
+  <div class="col"><p><b>Fig 2e</b> is a UMAP: each dot is a neuron, positioned by its tuning profile and coloured by its preferred feature. Neurons with the same preference cluster together, so feature types form distinct groups in "tuning space".</p></div>
+</section>
+
+<section id="try">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Try it</div>
+  <h2 style="margin-top:6px">Be the parser, then be the neuron</h2>
+  </div>
+  <div class="fig">
+    <div class="eyebrow">1 · Click a word to see its labels</div>
+    <div class="wbtns" id="wbtns" role="group" aria-label="Words"></div>
+    <div class="feat" id="feat"></div>
+    <div class="eyebrow" style="margin-top:18px">2 · Pick a neuron type and see which words make it fire</div>
+    <div class="nbtns" id="nbtns" role="group" aria-label="Neuron types"></div>
+    <div class="scroll"><svg id="ras" viewBox="0 0 640 170" role="img" aria-label="Simulated spikes per word" style="min-width:460px"></svg></div>
+    <div class="cap" id="raswhy"></div>
+  </div>
+</section>
+
+<section id="fig3">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 3 · Language models as a yardstick</div>
+  <h2 style="margin-top:6px">Do neurons encode words in context?</h2>
+  <p>"Dog" is a noun in both "The dog ate the bone" and "The man walked the dog", but it's the subject in one and the object in the other. And "bark" means different things in "The dog has a loud bark" and "The tree has thick bark". So the question is: do neurons encode feature <em>combinations</em> and <em>context</em>?</p>
+  <p>The method is the encoding-model logic from Huth 2016: turn each word into a vector, then fit a ridge regression from vector to firing rate on all sentences but one, and predict the left-out sentence. <b>Predictivity</b> = correlation between predicted and actual firing.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="emb" viewBox="0 0 860 250" role="img" aria-label="Four embedding models compared"></svg></div>
+    <div class="cap"><b>Fig 3a, redrawn.</b> Four ways to describe a word, all reduced to 30 dimensions with PCA (so bigger models don't win just by having more numbers), then mapped to neural activity.</div>
+  </div>
+  <div class="two">
+    <div class="fig" style="margin:0"><svg id="pred" viewBox="0 0 340 260" role="img" aria-label="Predictivity by model"></svg><div class="cap"><b>Fig 3b.</b> Population predictivity. Contextual LLM embeddings win (~0.05) over syntax + meaning combined (~0.015). Small r, but significantly above chance and above the others.</div></div>
+    <div class="fig" style="margin:0"><svg id="ctx" viewBox="0 0 340 260" role="img" aria-label="Predictivity versus context length"></svg><div class="cap"><b>Fig 3c.</b> Give the LLM more preceding words and it predicts neurons better, plateauing at ~5 words. Neurons carry a few words of context.</div></div>
+  </div>
+  <div class="col read" style="margin-top:20px">
+    <div><span class="k">3d controls</span><span>Shuffle which sentence goes with which neural data → predictivity ≈ 0. Feed the LLM random tokens instead of the real words → ≈ 0. So the fit depends on the actual words in the actual sentence.</span></div>
+    <div><span class="k">Only 1.8%</span><span>of neurons encoded both syntactic and semantic information. Individual cells lean one way; the <em>population</em> carries the combination.</span></div>
+    <div><span class="k">3e</span><span>Heatmap: LLM layer (y) × time relative to word onset (x). Bright = high predictivity. The bright band sits <b>before</b> 0, peaking ~1 s before the word is spoken, in middle layers. The brain is encoding the word's contextual meaning while planning it.</span></div>
+    <div><span class="k">3f</span><span>Each dot = one feature's neurons, placed at their average peak time and LLM layer. Different feature-tuned groups peak at different layers and times, from about 1.4 s to 0.4 s before the word.</span></div>
+  </div>
+  <div class="fig">
+    <div class="scroll"><svg id="heat" viewBox="0 0 620 270" role="img" aria-label="Simulated predictivity across layers and time" style="min-width:440px"></svg></div>
+    <div class="cap"><b>Schematic of Fig 3e.</b> Brightest region ≈ middle layers, ~1 s before the word. Vicuna-7B has 32 layers; early layers are closer to raw tokens, middle layers carry the richest contextual meaning.</div>
+  </div>
+</section>
+
+<section id="fig4">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 4 · Where these neurons are</div>
+  <h2 style="margin-top:6px">Everywhere recorded, but stronger on the left</h2>
+  </div>
+  <div class="col read">
+    <div><span class="k">4a donuts</span><span>One donut per feature. Outer ring = which participant each selective neuron came from (lighter = left hemisphere, darker = right). Inner ring = which area. Every feature draws on many people and areas. The half-shaded circles below give the share of selective neurons: left 122/254 (48%), right 167/325 (51%), anterior temporal 115/241, posterior frontal 33/66, posterior temporal 141/272. Roughly half everywhere.</span></div>
+    <div><span class="k">4b boxes</span><span>But <b>how strongly</b> neurons are tuned (z-score) differs: left &gt; right, and posterior frontal &gt; temporal.</span></div>
+    <div><span class="k">4b radars</span><span>Each spoke is a feature, and the distance from the centre is average tuning strength. The left-hemisphere shape is bigger on almost every spoke. The posterior frontal shape is the largest.</span></div>
+    <div><span class="k">LLM fit</span><span>Contextual predictivity was also higher on the left, and highest in anterior temporal cortex.</span></div>
+  </div>
+  <div class="fig">
+    <div class="scroll"><svg id="radar" viewBox="0 0 640 300" role="img" aria-label="Radar plot of tuning strength left vs right hemisphere" style="min-width:460px"></svg></div>
+    <div class="cap"><b>How to read the radar plots (schematic values).</b> Same number of tuned cells in both hemispheres, but left cells are tuned more sharply. That's "left-lateralized" in <em>strength</em>, not in <em>presence</em>.</div>
+  </div>
+</section>
+
+<section id="fig5">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 5 · Neurons vs local field potentials</div>
+  <h2 style="margin-top:6px">Zoom in and the code gets sharper</h2>
+  <p>The same electrode records two things. <b>Spikes</b> are the outputs of one or a few neurons right at the tip. The <b>local field potential (LFP)</b> is the slow, summed electrical activity of the surrounding population, closer to what ECoG (and loosely fMRI) see.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll"><svg id="aplfp" viewBox="0 0 640 260" role="img" aria-label="Neurons versus LFP selectivity" style="min-width:460px"></svg></div>
+    <div class="cap"><b>Key numbers from Fig 5.</b> At the very same sites, single neurons were selective far more often and far more strongly than the LFP. Only 19% of sites had neurons and LFP tuned to the same feature.</div>
+  </div>
+  <div class="col">
+  <p><b>Left panel</b> sorts all 579 channels by neuron z-score (orange, rising to the right) and plots the LFP z-score at the same channel (blue) underneath. The orange climbs to 5–10; the blue stays near zero. <b>Middle:</b> neuron vs LFP z-scores barely correlate (r = 0.21). <b>Right:</b> the LFP coincidence matrix shows only a faint diagonal.</p>
+  <div class="ex"><div class="eyebrow">Analogy</div>A stadium crowd's roar (LFP) tells you a goal happened. Individual fans' chants (neurons) tell you which team they support. Average them and the detail cancels out. This is why fMRI studies can find "language areas" but struggle to separate syntax from meaning inside them.</div>
+  </div>
+</section>
+
+<section id="links" class="col">
+  <h2>How it fits with the other three papers</h2>
+  <div class="read">
+    <div><span class="k">Huth 2016</span><span>Cited (ref. 9). Same encoding-model recipe (features → ridge regression → predict held-out data → correlation), but with neurons instead of voxels, and production instead of listening. It also delivers the upgrade I flagged in my <a href="huth-semantic-maps.html#takeaways">Huth notes</a>: contextual LLM embeddings beat word-level (word2vec, like Huth's co-occurrence) features.</span></div>
+    <div><span class="k">Fedorenko 2024</span><span>Cited (ref. 28). Arrays sat in regions that respond to her language localizers (from group maps, not each patient's own scan). Her review argued no language <em>area</em> specializes in syntax vs meaning. This paper finds specialization at the <em>cell</em> level: syntax- and meaning-tuned neurons interleaved in the same patch. That matches her prediction of "heterogeneity among interleaved neural populations". Both agree on left-hemisphere dominance, but here right-hemisphere neurons are present, just more weakly tuned.</span></div>
+    <div><span class="k">Frankland &amp; Greene 2020</span><span>Their language of thought needs reusable parts plus role binding. Here there are neurons for grammatical relations (nominal subject, object of preposition) that generalize across sentences, a cellular version of role slots. One difference: they found lmSTC tracked <em>event</em> roles (agent/patient) rather than grammatical subject/object. This paper labels grammatical dependencies and doesn't test event roles. The population-combines-what-single-cells-separate result echoes their additive vs multiplicative binding question.</span></div>
+  </div>
+</section>
+
+<section id="caveats" class="col">
+  <h2>Caveats</h2>
+  <div class="read">
+    <div><span class="k">Patients</span><span>8 people with epilepsy; tissue near seizure foci may not be typical.</span></div>
+    <div><span class="k">Coverage</span><span>One 4 × 4 mm array per person, 8 sites total. Classic areas like left inferior frontal gyrus (Broca's region) weren't sampled; the authors flag this.</span></div>
+    <div><span class="k">Effect sizes</span><span>Selectivity is statistical: ~10–16% of neurons per feature, single-word decoding ~2× chance, LLM predictivity r ≈ 0.05. Real but small.</span></div>
+    <div><span class="k">Labels</span><span>Grammar categories come from automatic parsers, which can disagree; features overlap (a noun is usually in a noun phrase), though the authors control for this.</span></div>
+    <div><span class="k">Production only</span><span>It's unknown whether the same neurons encode heard language.</span></div>
+    <div><span class="k">Localizers</span><span>Sites weren't defined with each patient's own fMRI language localizer, the standard Fedorenko argues for, so some neurons may belong to neighbouring speech-planning or motor areas.</span></div>
+  </div>
+  <h3>Glossary</h3>
+  <dl class="gl">
+    <dt>AP / spike</dt><dd>Action potential: one neuron's electrical output pulse.</dd>
+    <dt>Spike sorting</dt><dd>Assigning spikes to individual neurons by their waveform shape.</dd>
+    <dt>Utah array</dt><dd>10 × 10 grid of needle microelectrodes over 4 × 4 mm.</dd>
+    <dt>LFP</dt><dd>Local field potential: summed slow activity of the local population.</dd>
+    <dt>PSTH / raster</dt><dd>Average firing rate over time / spike dots per trial.</dd>
+    <dt>Constituency parse</dt><dd>Tree of nested phrases.</dd>
+    <dt>Dependency parse</dt><dd>Tree of head → dependent word relations.</dd>
+    <dt>Predictivity</dt><dd>Correlation between model-predicted and actual firing.</dd>
+    <dt>z-score (modulation)</dt><dd>How far the preferred-feature firing rate is above other words, in standard deviations.</dd>
+    <dt>UMAP</dt><dd>Method to draw high-dimensional data in 2-D, keeping similar points close.</dd>
+  </dl>
+</section>
+</div>
+
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';
+function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function T(p,x,y,str,cls,anchor){const e=S('text',{x:x,y:y,class:cls||'','text-anchor':anchor||'start'},p);e.textContent=str;return e}
+const $=id=>document.getElementById(id);
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function gauss(r){let u=0;while(!u)u=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*r())}
+const COL={depth:'#5dade2',close:'#f0b27a',const:'#58d68d',pos:'#f1948a',dep:'#a1887f',ddepth:'#bb8fce',pitch:'#7b241c'};
+
+/* PSTH explainer */
+(function(){const s=$('psth');const r=rng(4);const X=t=>70+(t+1000)/1500*560;
+ S('line',{x1:X(0),y1:20,x2:X(0),y2:300,class:'lm','stroke-dasharray':'3 3'},s);T(s,X(0),316,'0 = word spoken','m s','middle');
+ [-1000,-500,0,500].forEach(t=>T(s,X(t),300,t+' ms','m s','middle'));
+ const rate=(t,pref)=>pref?2+6*Math.exp(-Math.pow((t+250)/220,2)):2;
+ let rows=[];for(let i=0;i<24;i++){const pref=i<10;const y=130+i*6.5;const spikes=[];for(let t=-1000;t<500;t+=5){if(r()<rate(t,pref)*0.005)spikes.push(t)}rows.push([pref,y,spikes])}
+ rows.forEach(rw=>rw[2].forEach(t=>S('line',{x1:X(t),y1:rw[1]-2,x2:X(t),y2:rw[1]+2,stroke:rw[0]?'#e74c3c':'var(--muted)','stroke-width':1.5},s)));
+ T(s,64,165,'modal verbs','s','end').setAttribute('style','fill:#e74c3c');T(s,64,230,'other words','m s','end');T(s,64,145,'raster','m s','end');
+ const curve=(pref,col)=>{let d='';for(let t=-1000;t<=500;t+=10){const y=110-rate(t,pref)*10;d+=(t===-1000?'M':'L')+X(t).toFixed(1)+','+y.toFixed(1)}S('path',{d:d,stroke:col,'stroke-width':2.5,fill:'none'},s)};
+ curve(true,'#e74c3c');curve(false,'var(--muted)');T(s,64,60,'PSTH','m s','end');T(s,64,76,'(spikes/s)','m s','end');
+ T(s,X(-250),20,'fires more ~250 ms before modal verbs','s','middle').setAttribute('style','fill:#e74c3c');
+ S('rect',{x:X(-400),y:26,width:X(-100)-X(-400),height:272,fill:'var(--accent)',opacity:0.07},s);T(s,X(-250),292,'analysis window','a s','middle');})();
+
+/* constituency tree */
+(function(){const s=$('ctree');const W=['They','came','home','for','the','weekend'],P=['PRP','VB','RB','IN','DT','NN'];const wx=[90,210,330,450,570,690];const wy=250;
+ const N={S:[390,30,'S'],NP:[90,90,'NP'],VP:[300,90,'VP'],ADVP:[330,150,'ADVP'],PP:[510,150,'PP'],NP2:[630,200,'NP']};
+ const E=[['S','NP'],['S','VP'],['VP','ADVP'],['VP','PP'],['PP','NP2']];
+ const line=(a,b,c,d)=>S('line',{x1:a,y1:b,x2:c,y2:d,class:'lm'},s);
+ E.forEach(e=>line(N[e[0]][0],N[e[0]][1]+6,N[e[1]][0],N[e[1]][1]-14));
+ line(N.NP[0],N.NP[1]+6,wx[0],wy-30);line(N.VP[0],N.VP[1]+6,wx[1],wy-30);line(N.ADVP[0],N.ADVP[1]+6,wx[2],wy-30);line(N.PP[0],N.PP[1]+6,wx[3],wy-30);line(N.NP2[0],N.NP2[1]+6,wx[4],wy-30);line(N.NP2[0],N.NP2[1]+6,wx[5],wy-30);
+ const cc={NP:'#58d68d',VP:'#58d68d',ADVP:'#58d68d',PP:'#58d68d',NP2:'#58d68d',S:'var(--ink)'};
+ for(const k in N){const t=T(s,N[k][0],N[k][1],N[k][2],'b','middle');if(k!=='S')t.setAttribute('style','fill:#1e8449')}
+ const dep=[3,3,4,4,5,5];W.forEach((w,i)=>{T(s,wx[i],wy-14,P[i],'s','middle').setAttribute('style','fill:#c0392b');T(s,wx[i],wy+4,w,'b','middle');T(s,wx[i],wy+22,'depth '+dep[i]+' · pos '+(i+1),'m s','middle')});})();
+
+/* dependency tree */
+(function(){const s=$('dtree');const W=['They','came','home','for','the','weekend'];const x=[90,210,330,450,570,690],y=200;
+ const defs=S('defs',{},s);const m=S('marker',{id:'dar',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},defs);S('path',{d:'M0,0L10,5L0,10z',style:'fill:#a1887f'},m);
+ W.forEach((w,i)=>T(s,x[i],y,w,'b','middle'));
+ const arc=(h,d,lab,lev)=>{const x1=x[h],x2=x[d],top=y-20-lev*38;S('path',{d:'M'+x1+','+(y-18)+' C'+x1+','+top+' '+x2+','+top+' '+x2+','+(y-18),stroke:'#a1887f','stroke-width':1.8,fill:'none','marker-end':'url(#dar)'},s);T(s,(x1+x2)/2,top+20+lev*2,lab,'s','middle').setAttribute('style','fill:#8d6e63')};
+ arc(1,0,'nsubj',1);arc(1,2,'advmod',1);arc(1,3,'prep',2.2);arc(3,5,'pobj',1.6);arc(5,4,'det',0.8);
+ T(s,x[1],28,'ROOT','a s','middle');S('line',{x1:x[1],y1:34,x2:x[1],y2:y-18,class:'la','stroke-dasharray':'3 3'},s);
+ ['nsubj · 2','root · 1','advmod · 2','prep · 2','det · 4','pobj · 3'].forEach((l,i)=>T(s,x[i],y+20,l,'m s','middle'));})();
+
+/* selectivity bars */
+(function(){const s=$('sel4');const d=[['Const. depth',15.9,COL.depth],['Closing level',11.1,COL.close],['Constituents',16.2,COL.const],['Parts of speech',9.2,COL.pos],['Dependencies',10.2,COL.dep],['Dep. depth',12.1,COL.ddepth],['Word pitch',12,COL.pitch]];
+ const Y=v=>220-v*9;S('line',{x1:50,y1:220,x2:620,y2:220,class:'lm'},s);[0,5,10,15,20].forEach(v=>{T(s,44,Y(v)+4,v+'%','m s','end');S('line',{x1:50,y1:Y(v),x2:620,y2:Y(v),class:'lr'},s)});
+ d.forEach((b,i)=>{const x=70+i*79;S('rect',{x:x,y:Y(b[1]),width:52,height:220-Y(b[1]),fill:b[2]},s);T(s,x+26,Y(b[1])-6,b[1]+'%','s','middle');b[0].split(' ').forEach((wd,k)=>T(s,x+26,238+k*14,wd,'s','middle'))});
+ T(s,70+6*79+26,268,'(sound control)','m s','middle');})();
+
+/* venns */
+function venn(id,labs,cols,nums){const s=$(id);const c=[[120,100],[200,100],[160,165]],R=62;
+ c.forEach((p,i)=>S('circle',{cx:p[0],cy:p[1],r:R,fill:cols[i],opacity:0.55},s));
+ T(s,c[0][0]-40,c[0][1]-4,nums[0],'b','middle');T(s,c[1][0]+40,c[1][1]-4,nums[1],'b','middle');T(s,c[2][0],c[2][1]+38,nums[2],'b','middle');
+ T(s,160,82,nums[3],'s','middle');T(s,125,148,nums[4],'s','middle');T(s,195,148,nums[5],'s','middle');T(s,160,128,nums[6],'s','middle');
+ T(s,c[0][0]-40,22,labs[0],'s','middle');T(s,c[1][0]+40,22,labs[1],'s','middle');T(s,160,246,labs[2],'s','middle')}
+venn('venn1',['Constituency depth','Dependency depth','Ordinal position'],['#f5b041','#3f51b5','#e74c3c'],['72','48','39','10','8','10','2']);
+venn('venn2',['Constituents','Parts of speech','Dependencies'],['#f5b041','#3f51b5','#e74c3c'],['71','27','37','11','7','10','5']);
+
+/* decoding */
+(function(){const s=$('dec');const d=[['Const. depth',31.5,14.3,COL.depth],['Closing level',27.1,11.1,COL.close],['Constituents',25.1,10,COL.const],['Parts of speech',18.4,10,COL.pos],['Dependencies',23.2,10,COL.dep],['Dep. depth',27.2,11.1,COL.ddepth]];
+ const X=v=>150+v*12;S('line',{x1:X(0),y1:20,x2:X(0),y2:230,class:'lm'},s);[0,10,20,30,40].forEach(v=>{T(s,X(v),248,v+'%','m s','middle');S('line',{x1:X(v),y1:20,x2:X(v),y2:230,class:'lr'},s)});
+ d.forEach((b,i)=>{const y=40+i*34;T(s,140,y+5,b[0],'s','end');S('rect',{x:X(0),y:y-8,width:X(b[1])-X(0),height:16,fill:b[3]},s);S('line',{x1:X(b[2]),y1:y-12,x2:X(b[2]),y2:y+12,class:'ln','stroke-width':2.5,'stroke-dasharray':'3 2'},s);T(s,X(b[1])+6,y+5,b[1]+'%  (×'+(b[1]/b[2]).toFixed(1)+')','s')});
+ T(s,X(0),14,'bar = decoding accuracy     dashed tick = chance','m s');})();
+
+/* interactive */
+(function(){const words=[
+ {w:'They',pos:'pronoun (PRP)',con:'noun phrase (NP)',depth:3,ord:1,dep:'nominal subject (nsubj)',dd:2},
+ {w:'came',pos:'verb (VB)',con:'verb phrase (VP)',depth:3,ord:2,dep:'root',dd:1},
+ {w:'home',pos:'adverb (RB)',con:'adverb phrase (ADVP)',depth:4,ord:3,dep:'adverbial modifier (advmod)',dd:2},
+ {w:'for',pos:'preposition (IN)',con:'prepositional phrase (PP)',depth:4,ord:4,dep:'preposition (prep)',dd:2},
+ {w:'the',pos:'determiner (DT)',con:'noun phrase (NP)',depth:5,ord:5,dep:'determiner (det)',dd:4},
+ {w:'weekend',pos:'noun (NN)',con:'noun phrase (NP)',depth:5,ord:6,dep:'object of preposition (pobj)',dd:3}];
+ const types=[
+  ['NP neuron',w=>w.con.startsWith('noun phrase'),COL.const,'Fires before any word inside a noun phrase ("They", "the", "weekend"), regardless of part of speech. A constituent neuron, like Cell 3 in Fig 1f but for NP.'],
+  ['Depth-5 neuron',w=>w.depth===5,COL.depth,'Fires for deeply nested words, whatever they are. "the" and "weekend" sit five levels down. A constituency-depth neuron, like Cell 65.'],
+  ['Verb neuron',w=>w.pos.startsWith('verb'),COL.pos,'Fires before verbs only: "came". A part-of-speech neuron, like Cell 16 (modal verbs).'],
+  ['Subject neuron',w=>w.dep.startsWith('nominal subject'),COL.dep,'Fires for the grammatical subject: "They". A dependency neuron. In "the weekend came", it would fire for "weekend".'],
+  ['Dep-depth-2 neuron',w=>w.dd===2,COL.ddepth,'Fires for words hanging directly off the main verb: "They", "home", "for". Mostly different cells from the constituency-depth ones (Fig 2c Venn).']];
+ let cw=0,ct=0;const wb=$('wbtns'),nb=$('nbtns');
+ words.forEach((w,i)=>{const b=document.createElement('button');b.type='button';b.textContent=w.w;b.addEventListener('click',()=>{cw=i;render()});wb.appendChild(b)});
+ types.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.textContent=t[0];b.addEventListener('click',()=>{ct=i;render()});nb.appendChild(b)});
+ function render(){[...wb.children].forEach((b,i)=>b.setAttribute('aria-pressed',i===cw?'true':'false'));[...nb.children].forEach((b,i)=>b.setAttribute('aria-pressed',i===ct?'true':'false'));
+  const w=words[cw];const F=[['Part of speech',w.pos],['Constituent',w.con],['Constituency depth',w.depth],['Ordinal position',w.ord],['Dependency',w.dep],['Dependency depth',w.dd]];
+  $('feat').innerHTML=F.map(f=>'<div><div class="k">'+f[0]+'</div><div class="v">'+f[1]+'</div></div>').join('');
+  const s=$('ras');while(s.firstChild)s.removeChild(s.firstChild);const t=types[ct];const r=rng(7+ct);
+  words.forEach((wd,i)=>{const x=20+i*103;const on=t[1](wd);S('rect',{x:x,y:20,width:90,height:100,rx:6,fill:on?t[2]:'var(--soft)',opacity:on?0.25:1},s);
+   const n=on?9+Math.floor(r()*4):1+Math.floor(r()*2);for(let k=0;k<n;k++){const xx=x+8+r()*74;S('line',{x1:xx,y1:40,x2:xx,y2:100,stroke:on?t[2]:'var(--muted)','stroke-width':2},s)}
+   T(s,x+45,140,wd.w,i===cw?'b a':'b','middle');T(s,x+45,158,on?'fires':'quiet','m s','middle')});
+  $('raswhy').textContent='Simulated spikes in the 400–100 ms before each word. '+t[3]}
+ render();})();
+
+/* embeddings */
+(function(){const s=$('emb');const m=[['Syntactic','one-hot grammar labels','"dog" = noun + NP + subj…','#c0392b'],['Semantic','word2vec meaning','"dog" ≈ near "cat", "puppy"','#1e8449'],['Syntactic + semantic','both concatenated','grammar role + meaning','#7d3c98'],['Contextual','Vicuna-7B hidden states','"dog" in this sentence','#2856c2']];
+ m.forEach((b,i)=>{const x=10+i*212;S('rect',{x:x,y:20,width:196,height:110,rx:8,class:'box'},s);S('rect',{x:x,y:20,width:196,height:6,rx:3,fill:b[3]},s);T(s,x+12,52,b[0],'b');T(s,x+12,74,b[1],'m s');T(s,x+12,96,b[2],'s');
+  for(let k=0;k<8;k++)S('rect',{x:x+12+k*20,y:108,width:16,height:12,fill:b[3],opacity:0.2+((k*37+i*11)%7)/9},s);
+  S('line',{x1:x+98,y1:132,x2:x+98,y2:160,class:'lm'},s)});
+ S('rect',{x:10,y:162,width:840,height:34,rx:6,class:'box'},s);T(s,430,184,'PCA → 30 dims → ridge regression → predict held-out sentence → correlate with real firing = predictivity','s','middle');
+ T(s,430,228,'leave-one-sentence-out cross-validation, per session','m s','middle');})();
+
+/* predictivity bars */
+(function(){const s=$('pred');const d=[['Syntactic',0.012,'#c0392b'],['Semantic',0.01,'#1e8449'],['Syn+sem',0.015,'#7d3c98'],['Contextual',0.05,'#2856c2']];
+ const Y=v=>210-v*3000;S('line',{x1:40,y1:210,x2:330,y2:210,class:'lm'},s);[0,0.02,0.04,0.06].forEach(v=>T(s,36,Y(v)+4,v.toFixed(2),'m s','end'));
+ d.forEach((b,i)=>{const x=60+i*68;S('rect',{x:x,y:Y(b[1]),width:46,height:210-Y(b[1]),fill:b[2]},s);T(s,x+23,228,b[0],'s','middle')});
+ T(s,40,20,'population predictivity (r)','m s');T(s,265,Y(0.05)-8,'best','a s','middle');})();
+
+/* context length */
+(function(){const s=$('ctx');const X=n=>50+n*26,Y=v=>210-v*3200;S('line',{x1:44,y1:210,x2:330,y2:210,class:'lm'},s);S('line',{x1:44,y1:30,x2:44,y2:210,class:'lm'},s);
+ [0,0.02,0.04].forEach(v=>T(s,40,Y(v)+4,v.toFixed(2),'m s','end'));[0,5,10].forEach(n=>T(s,X(n),228,n,'m s','middle'));T(s,190,248,'preceding words given to the LLM','m s','middle');
+ let d='';for(let n=0;n<=10;n+=0.1){const v=0.012+0.03*(1-Math.exp(-n/2.2));d+=(n===0?'M':'L')+X(n).toFixed(1)+','+Y(v).toFixed(1)}S('path',{d:d,class:'lc','stroke-width':2.5},s);
+ for(let n=2;n<=10;n++){const v=0.012+0.03*(1-Math.exp(-n/2.2));S('circle',{cx:X(n),cy:Y(v),r:3.5,style:'fill:var(--cool)'},s)}
+ S('line',{x1:X(5),y1:40,x2:X(5),y2:210,class:'la','stroke-dasharray':'3 3'},s);T(s,X(5)+4,48,'plateau ≈ 5 words','a s');})();
+
+/* heatmap */
+(function(){const s=$('heat');const nx=40,ny=32,x0=60,y0=20,cw=12,ch=6.5;
+ for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const t=-2+i*0.1,L=j;const v=Math.exp(-Math.pow((t+1)/0.7,2))*Math.exp(-Math.pow((L-14)/9,2))+0.12*Math.exp(-Math.pow((t-1.2)/0.4,2));
+  const c=Math.min(1,v);S('rect',{x:x0+i*cw,y:y0+j*ch,width:cw+0.5,height:ch+0.5,fill:'rgb('+Math.round(20+235*c)+','+Math.round(10+190*Math.pow(c,1.6))+','+Math.round(60+60*c-40*c*c)+')'},s)}
+ const X=t=>x0+(t+2)/0.1*cw;S('line',{x1:X(0),y1:y0,x2:X(0),y2:y0+ny*ch,stroke:'#fff','stroke-dasharray':'3 3'},s);
+ [-2,-1,0,1,2].forEach(t=>T(s,X(t),y0+ny*ch+16,t+' s','m s','middle'));T(s,X(0),y0+ny*ch+32,'time relative to word onset','m s','middle');
+ [0,10,20,30].forEach(L=>T(s,x0-6,y0+L*ch+4,L,'m s','end'));const t=T(s,0,0,'LLM layer','m s','middle');t.setAttribute('transform','translate(22,'+(y0+ny*ch/2)+') rotate(-90)');
+ T(s,X(-1),y0+14*ch-18,'peak ≈ −1 s, middle layers','s','middle').setAttribute('style','fill:#fff');})();
+
+/* radar */
+(function(){const s=$('radar');const feats=['Constituents','Closing level','Const. depth','Dep. depth','Dependencies','Pitch','Position','Parts of speech'];
+ const L=[0.95,0.8,0.75,0.6,0.55,0.5,0.55,0.7],R=[0.6,0.55,0.5,0.4,0.35,0.45,0.4,0.45];
+ const draw=(cx,vals,title,col)=>{const r=100;[0.33,0.66,1].forEach(f=>S('circle',{cx:cx,cy:150,r:r*f,class:'lr'},s));
+  feats.forEach((f,i)=>{const a=-Math.PI/2+i*2*Math.PI/8;S('line',{x1:cx,y1:150,x2:cx+r*Math.cos(a),y2:150+r*Math.sin(a),class:'lr'},s);if(cx<300)T(s,cx+(r+14)*Math.cos(a),150+(r+14)*Math.sin(a)+4,f,'m s',Math.cos(a)>0.3?'start':Math.cos(a)<-0.3?'end':'middle')});
+  let d='';vals.forEach((v,i)=>{const a=-Math.PI/2+i*2*Math.PI/8;d+=(i?'L':'M')+(cx+r*v*Math.cos(a)).toFixed(1)+','+(150+r*v*Math.sin(a)).toFixed(1)});S('path',{d:d+'Z',fill:col,'fill-opacity':0.3,stroke:col,'stroke-width':2},s);T(s,cx,20,title,'b','middle')};
+ draw(190,L,'Left hemisphere','#c9440e');draw(480,R,'Right hemisphere','#2856c2');})();
+
+/* AP vs LFP */
+(function(){const s=$('aplfp');const d=[['Sites/neurons selective',50,23],['Strongly tuned (z ≥ 2)',8.5,1.2]];
+ const X=v=>220+v*5;d.forEach((b,i)=>{const y=50+i*100;T(s,210,y+14,b[0],'s','end');S('rect',{x:X(0),y:y-4,width:X(b[1])-X(0),height:20,fill:'#e67e22'},s);T(s,X(b[1])+6,y+11,b[1]+'% of neurons','s');
+  S('rect',{x:X(0),y:y+22,width:Math.max(2,X(b[2])-X(0)),height:20,fill:'#2e86c1'},s);T(s,X(b[2])+6,y+37,b[2]+'% of LFP sites','s')});
+ T(s,220,240,'Neuron vs LFP tuning at the same site: r = 0.21 (weak)','m s');})();
+})();
+</script>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="language-of-thought.html"><small>← Previous note</small><span>In search of the brain&#x27;s language of thought</span></a><a class="next" href="icms.html"><small>Next note →</small><span>Neural mechanisms of intracortical microstimulation</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

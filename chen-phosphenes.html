@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shape perception from 1,024 electrodes in visual cortex · Maha Nawaz</title>
+<meta name="description" content="Two monkeys recognise lines, motion and letters made purely from V1 stimulation, on the first try. The proof of concept behind cortical visual prostheses."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="Shape perception from 1,024 electrodes in visual cortex"><meta property="og:description" content="Two monkeys recognise lines, motion and letters made purely from V1 stimulation, on the first try. The proof of concept behind cortical visual prostheses.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: same lab-notebook reading column as the ICMS explainer (~68ch, figures slightly wider). Color story from the paper itself: V1 blue (stimulate), V4 violet (record), phosphene amber (what the monkey sees). */
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --ink:#18212e; --muted:#5b6778; --rule:#d9dfe7;
+  --v1:#2563c9; --v4:#7a4fd0; --phos:#d98a00; --glow:#ffd36b; --accent:#0f8a7e; --hl:#fff3c4; --bad:#c2453b;
+  --screen:#1b2230; --screenink:#c9d3e0;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --surface:#161d27; --ink:#e4e9f0; --muted:#97a3b4; --rule:#2a3442;
+  --v1:#6fa2ff; --v4:#b293ff; --phos:#f2b13a; --glow:#ffd36b; --accent:#3cc7b7; --hl:#3a3418; --bad:#ff7a70;
+  --screen:#0a0e14; --screenink:#9fb0c4; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --surface:#161d27; --ink:#e4e9f0; --muted:#97a3b4; --rule:#2a3442;
+  --v1:#6fa2ff; --v4:#b293ff; --phos:#f2b13a; --glow:#ffd36b; --accent:#3cc7b7; --hl:#3a3418; --bad:#ff7a70;
+  --screen:#0a0e14; --screenink:#9fb0c4; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.62;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-block:0 80px}
+.wrap{max-width:760px;margin:0 auto}
+header.top{padding-block:56px 28px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(34px,6vw,52px);font-weight:700;letter-spacing:-.015em;margin-top:10px}
+h2{font-size:clamp(26px,4vw,34px);font-weight:700;margin-top:8px}
+h3{font-size:20px;font-weight:600;margin-top:28px}
+p{margin:14px 0}
+.lede{font-size:19px}
+.meta{color:var(--muted);font-size:15px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+nav.toc a{font-family:var(--mono);font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--rule);border-radius:999px;padding:5px 11px;background:var(--surface)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+section{padding-block:44px 8px;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:0}
+.fignum{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:16px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.svgscroll{overflow-x:auto}
+.panels{list-style:none;padding:0;margin:18px 0;display:grid;gap:12px}
+.panels li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.panels li > div{min-width:0}
+.pl{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--ink);margin-top:2px}
+.take{background:var(--hl);border-radius:8px;padding:12px 16px;margin:20px 0;font-size:16px}
+.take b{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+.analogy{border-left:3px solid var(--accent);padding:2px 0 2px 14px;margin:18px 0}
+.analogy::before{content:"Analogy";display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.v1{color:var(--v1);font-weight:600}.v4{color:var(--v4);font-weight:600}.ph{color:var(--phos);font-weight:600}
+.mono{font-family:var(--mono);font-size:.88em}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid var(--rule)}
+th{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13.5px}
+tr.hi td{background:var(--hl)}
+.tablewrap{overflow-x:auto}
+.control{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:10px;font-family:var(--mono);font-size:13px}
+.control input[type=range]{flex:1;min-width:160px;accent-color:var(--v1)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg button{font-family:var(--mono);font-size:12.5px;background:var(--surface);color:var(--ink);border:0;padding:6px 12px;cursor:pointer}
+.seg button + button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.readout{display:flex;flex-wrap:wrap;gap:18px;font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+.readout b{color:var(--ink)}
+svg text{font-family:var(--mono);fill:currentColor}
+svg .lbl{font-size:12px}
+svg .sm{font-size:10.5px}
+svg .muted{fill:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid2 > *{min-width:0}
+@media (max-width:620px){.grid2{grid-template-columns:1fr}}
+.gloss dt{font-family:var(--display);font-weight:600;margin-top:12px}
+.gloss dd{margin:2px 0 0 0}
+.qcard{border:1px solid var(--rule);background:var(--surface);border-radius:12px;padding:6px 20px;margin:22px 0}
+.qcard ol{padding-left:20px}
+.qcard li{margin:10px 0}
+footer{color:var(--muted);font-size:14px;padding-top:30px}
+a{color:var(--accent)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+:root{--bg:#FFF8EA;--surface:#FFFDF7;--ink:#1D2F66;--muted:#56628A;--rule:#E8DCC2;--accent:#B65200;--hl:#FFE7B0;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--display:'Bitter',Georgia,serif;--body:'Bitter',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15224B;--surface:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--accent:#FFA043;--hl:#4A3E1C;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15224B;--surface:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--accent:#FFA043;--hl:#4A3E1C;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-B">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+<div class="mn-series" aria-label="Series"><b>Writing into the brain</b><span>Part 2 of 2</span><a href="icms.html">1. Hughes, Chen, Grill &amp; Kozai 2026</a><span aria-current="page">2. Chen et al. 2020</span></div>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Reading notes · Science · 4 Dec 2020</div>
+  <h1>Shape perception from 1,024 electrodes in monkey visual cortex, explained figure by figure</h1>
+  <p class="meta">Chen, Wang, Fernández &amp; Roelfsema · Netherlands Institute for Neuroscience · vol. 370, pp. 1191–1196 · doi:10.1126/science.abd7435</p><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · October 14, 2026</span></div>
+  <p class="lede">Zap one spot in the visual cortex and you see a dot of light, a <b class="ph">phosphene</b>. People have known that since the 1960s. This paper asks the next question, the one any visual prosthesis depends on: <em>if you zap many spots at once, does the brain combine the dots into a shape?</em> Two monkeys with over a thousand implanted electrodes answered yes. They recognized lines, motion and letters made purely from stimulation, on the very first try.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#primer">0 · Primer</a><a href="#hw">The implant</a><a href="#fig1">Fig 1 · Electrode map</a><a href="#fig2">Fig 2 · Single dots</a><a href="#fig3">Fig 3 · Pairs &amp; motion</a><a href="#fig4">Fig 4 · Letters</a><a href="#disc">Discussion</a><a href="#nl">Neuralink link</a><a href="#gloss">Glossary</a>
+  </nav>
+</header>
+
+<!-- ============ PRIMER ============ -->
+<section id="primer">
+  <div class="fignum">Before the figures</div>
+  <h2>Five things you need to know</h2>
+  <p><b>1. V1 is a map of what you see.</b> The primary visual cortex (<span class="v1">V1</span>) at the back of the brain is laid out like a screen. Neighbouring points of cortex respond to neighbouring points in the visual field. This is called <b>retinotopy</b>. The map is flipped: the <em>left</em> hemisphere handles the <em>right</em> half of vision, and the top of V1 handles the <em>lower</em> half. That is why every dot in this paper shows up in the lower-right of the monkey's view.</p>
+  <p><b>2. Every electrode "owns" one spot.</b> The spot in the visual field that makes a neuron fire is its <b>receptive field (RF)</b>. Measure the RF under each electrode and you have a lookup table: electrode #417 ↔ 3° right, 2° down.</p>
+  <p><b>3. Stimulate an electrode and a dot appears at its RF.</b> That dot is a phosphene. Phosphenes from V1 are mostly small white or grey dots, sometimes coloured. They range from a pinpoint to about 2 cm across at arm's length.</p>
+
+  <figure>
+    <div class="svgscroll"><svg id="retinoSvg" viewBox="0 0 700 250" role="img" aria-label="Left: a patch of V1 cortex with three electrodes A, B, C. Right: the lower-right quadrant of the visual field with three phosphenes at the matching positions."></svg></div>
+    <figcaption>The core idea. Three electrodes in V1 (left) map to three spots in the visual field (right). Stimulate A, B and C together and, if the brain combines them, the monkey should see a line.</figcaption>
+  </figure>
+
+  <p><b>4. V4 sits downstream of V1.</b> <span class="v4">V4</span> is a higher visual area that receives V1's output and handles shape. If stimulation in V1 is strong enough to be "seen", the signal should show up in V4. The authors use this as a built-in meter for perception.</p>
+  <p><b>5. Monkeys answer with their eyes.</b> They can't talk, so every task ends with a <b>saccade</b>, a fast eye movement to a target. An eye tracker records where they looked. "Look where the dot was", "look up for vertical", "look at the T-target if you saw a T". Correct answers earn juice.</p>
+
+  <div class="take"><b>The bet.</b> Earlier human work used electrodes on the brain's <em>surface</em>. These need milliamps, light up millimetres of cortex, and blur into big blobs. This paper uses electrodes that <em>penetrate</em> the cortex. They need about 100× less current, activate a few hundred µm of tissue, and give sharp, small dots. With enough of them you get a dot-matrix display.</div>
+</section>
+
+<!-- ============ HARDWARE ============ -->
+<section id="hw">
+  <div class="fignum">Methods · the implant</div>
+  <h2>1,024 channels: 16 Utah arrays on one titanium pedestal</h2>
+  <div class="grid2">
+    <figure>
+      <svg id="arraySvg" viewBox="0 0 340 260" role="img" aria-label="One Utah array: an 8 by 8 grid of silicon needles, each 1.5 mm long, on a small square base."></svg>
+      <figcaption><b>One Utah array.</b> An 8×8 bed of silicon needles, 64 electrodes, with 1.5 mm shanks so the tips sit in V1's middle layers. Sixteen arrays × 64 = 1,024 channels.</figcaption>
+    </figure>
+    <figure>
+      <svg id="layoutSvg" viewBox="0 0 340 260" role="img" aria-label="Brain outline with 14 arrays in V1 and 2 arrays in V4, all wired to a pedestal on the skull."></svg>
+      <figcaption><b>Where they went.</b> 14 arrays in <span class="v1">V1</span> (896 electrodes) for stimulating, and 2 in <span class="v4">V4</span> (128 electrodes) for recording only. All wires run to a titanium pedestal on the skull. The system is wired, not wireless.</figcaption>
+    </figure>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th class="num">Monkey L</th><th class="num">Monkey A</th></tr></thead>
+    <tbody>
+      <tr><td>V1 electrodes with a measurable RF</td><td class="num">820 / 896</td><td class="num">616 / 896</td></tr>
+      <tr><td>V4 electrodes with a measurable RF</td><td class="num">120 / 128</td><td class="num">92 / 128</td></tr>
+      <tr><td>V1 coverage (distance from center of gaze)</td><td class="num">≤ 9°</td><td class="num">≤ 5°</td></tr>
+      <tr><td>V4 coverage</td><td class="num">≤ 5°</td><td class="num">≤ 15°</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">For scale, your thumbnail at arm's length covers about 1.5–2° of visual field. So this implant covers the central part of one quadrant, where vision is sharpest.</p>
+  <p><b>How RFs were measured.</b> Bars of light swept across a screen while the authors recorded each electrode. The moment an electrode fired tells you where its RF is. Movies S1 and S2 in the paper show this.</p>
+</section>
+
+<!-- ============ FIG 1 ============ -->
+<section id="fig1">
+  <div class="fignum">Figure 1</div>
+  <h2>Location of electrodes and receptive fields</h2>
+  <p>Figure 1 is the "pixel map". It shows where each electrode's RF sits in the visual field, and then where the monkey <em>actually</em> saw the dot when that electrode was stimulated.</p>
+  <ul class="panels">
+    <li><span class="pl">A</span><div><b>3D brain of monkey L.</b> Coloured squares are the arrays on the left hemisphere. V1 sits at the back; the two V4 arrays sit just in front of it.</div></li>
+    <li><span class="pl">B</span><div><b>Close-up with array numbers</b> for both monkeys. The numbers are only labels (the order they were wired to the pedestal). Each array gets a colour that is reused in C–F.</div></li>
+    <li><span class="pl">C/D</span><div><b>RF centers.</b> One dot per electrode, coloured by array, plotted in the visual field. 0,0 is where the monkey is looking; the axes run right (x) and down (y) in degrees. Dots from the same array cluster together. That clustering <em>is</em> retinotopy: one 4×4 mm array covers one patch of the visual field.</div></li>
+    <li><span class="pl">E/F</span><div><b>Average saccade end points.</b> Where the monkey moved its eyes after each electrode was stimulated. The same colour clusters appear in the same arrangement, so the phosphenes land where the RFs predict. The whole pattern is <b>shrunk toward the center</b>, a systematic undershoot that Fig 2 I/J measures.</div></li>
+  </ul>
+  <figure>
+    <div class="control"><span>Show</span>
+      <div class="seg" role="group" aria-label="Which data to show">
+        <button id="f1rf" aria-pressed="true">RF centers (C)</button><button id="f1sac" aria-pressed="false">Saccade end points (E)</button><button id="f1both" aria-pressed="false">Both</button>
+      </div>
+    </div>
+    <div class="svgscroll"><svg id="fig1Svg" viewBox="0 0 640 400" role="img" aria-label="Recreation of panels C and E for monkey L: coloured clusters of receptive field centers in the lower-right visual field, and saccade end points that follow the same layout but sit closer to the center."></svg></div>
+    <figcaption><b>Schematic recreation of C and E (monkey L).</b> Cluster positions follow the paper's figure; individual dots are simulated. Switch to "Both" to see each electrode's arrow from its RF (where the dot <em>should</em> be) to where the eyes landed: same direction, about 77% of the distance.</figcaption>
+  </figure>
+  <div class="take"><b>Takeaway.</b> Each electrode works as a pixel at a known address. The monkey sees the dot in the right direction, but reports it a bit closer to center than the RF predicts.</div>
+</section>
+
+<!-- ============ FIG 2 ============ -->
+<section id="fig2">
+  <div class="fignum">Figure 2</div>
+  <h2>Saccade-to-phosphene: can the monkey see one dot, and how much current does it take?</h2>
+  <p>Figure 2 has three jobs. It measures the <b>threshold</b> current for each electrode (B, C). It shows that <span class="v4">V4</span> activity predicts that threshold without asking the monkey anything (D–H). And it checks that the dot appears in the right place (I, J).</p>
+
+  <h3>Panel A · the task</h3>
+  <figure>
+    <div class="svgscroll"><svg id="taskSvg" viewBox="0 0 700 262" role="img" aria-label="Task timeline: fixate 300 to 700 ms; then either a 167 ms stimulation and the monkey looks at the phosphene, or no stimulation and the monkey keeps fixating."></svg></div>
+    <figcaption>Half the trials have stimulation and half don't. On blank trials the correct answer is to keep looking at the center. A monkey that always jumped its eyes would score 50%, so this catches guessing.</figcaption>
+  </figure>
+
+  <h3>Panels B, E, F · threshold, measured two ways</h3>
+  <ul class="panels">
+    <li><span class="pl">B</span><div><b>Psychometric curve</b> (behaviour) for one V1 electrode. X is current; Y is the % of stimulation trials where the monkey made the saccade. It is an S-curve. <b>C₅₀ = 12.6 µA</b> is the current where the monkey reports the dot half the time. That is the electrode's threshold.</div></li>
+    <li><span class="pl">E</span><div><b>V4 activity over time</b> for currents from 7 to 23 µA (one line each). Dashed lines mark the analysis window right after stimulation. Bigger current gives a bigger V4 bump. At 7–9 µA there is almost nothing.</div></li>
+    <li><span class="pl">F</span><div><b>Neurometric curve</b> (brain). V4 activity vs current gives another S-curve. <b>R₅₀ = 12.4 µA</b>, nearly identical to the behavioural 12.6 µA. Across currents, V4 level and hit rate correlate at r = 0.94.</div></li>
+  </ul>
+  <figure>
+    <div class="control"><label for="cur">V1 current</label><input id="cur" type="range" min="0" max="25" step="0.2" value="12.6"><span id="curv" style="min-width:70px">12.6 µA</span></div>
+    <div class="grid2">
+      <svg id="psySvg" viewBox="0 0 340 230" role="img" aria-label="Psychometric curve of hit rate versus current with threshold 12.6 microamps, overlaid with V4 response curve with threshold 12.4 microamps; a marker follows the slider."></svg>
+      <svg id="phosSvg" viewBox="0 0 340 230" role="img" aria-label="Simulated monkey's-eye view: a fixation dot and a phosphene whose brightness rises with current."></svg>
+    </div>
+    <div class="readout"><span>P(monkey reports dot): <b id="pOut"></b></span><span>V4 response (% of max): <b id="vOut"></b></span><span id="zone"></span></div>
+    <figcaption><b>Try the slider.</b> Left: the behavioural curve (amber, C₅₀ 12.6 µA) and the V4 curve (violet, R₅₀ 12.4 µA) for the paper's example electrode, drawn as fitted S-curves. Right: a cartoon of what the monkey sees. Below about 8 µA there's no dot. Around 12–13 µA it's a coin flip. Above about 18 µA the dot is always there.</figcaption>
+  </figure>
+
+  <h3>Panel C · thresholds across all electrodes</h3>
+  <p>A cumulative plot: for any current on the x-axis, what fraction of electrodes have a threshold below it.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th class="num">Monkey L (N = 184)</th><th class="num">Monkey A (N = 164)</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Median threshold</td><td class="num">23 µA</td><td class="num">50 µA</td></tr>
+      <tr><td>Middle 50% of electrodes (IQR)</td><td class="num">6–40 µA</td><td class="num">43–58 µA</td></tr>
+    </tbody>
+  </table></div>
+  <p>For comparison, surface electrodes in earlier human work needed <b>milliamps</b>, roughly 1,000+ µA. Small currents mean small activated volumes, which means sharp dots, and many electrodes can run at once without the fields merging.</p>
+
+  <h3>Panels D, G, H · V4 as a built-in perception meter</h3>
+  <ul class="panels">
+    <li><span class="pl">D</span><div><b>The setup.</b> Stimulate in <span class="v1">V1</span>, record in <span class="v4">V4</span>. The stimulation creates a huge electrical artifact in the recording, which the authors removed before measuring the real neural response.</div></li>
+    <li><span class="pl">G</span><div><b>The key panel.</b> One dot per electrode: V4-based threshold (R₅₀, x) vs behaviour-based threshold (C₅₀, y). They fall on a straight line. <b>r = 0.98</b> in monkey L (169 electrodes) and <b>r = 0.96</b> in monkey A (64 electrodes).</div></li>
+    <li><span class="pl">H</span><div><b>Split electrodes into three groups</b> by threshold: low (blue), medium (red), high (yellow). Top row is behaviour, bottom row is V4. The curves have the same shape and the same left-to-right order. So V4 tracks perception across the whole curve, not just at the 50% point.</div></li>
+  </ul>
+  <div class="analogy">Calibrating 1,000 electrodes by asking a blind patient "did you see it?" 50 times each is 50,000 questions. That's days of tedious testing. Panel G says you can instead watch a downstream brain area "light up" and read the threshold off it, potentially while the person is doing something else. It's like tuning a radio by watching the signal meter instead of asking a listener.</div>
+
+  <h3>Panels I, J · is the dot in the right place?</h3>
+  <ul class="panels">
+    <li><span class="pl">I</span><div><b>Direction (polar angle).</b> Saccade angle vs RF angle. r = 0.77 (L) and 0.67 (A). The dots point the right way.</div></li>
+    <li><span class="pl">J</span><div><b>Distance (eccentricity).</b> Saccade distance vs RF distance. r = 0.90 (L) and 0.72 (A). The blue fit line is <em>flatter</em> than the dashed 1:1 line: the eyes landed at 77 ± 18% (L) and 71 ± 21% (A) of the way to the RF. The undershoot was larger for weak currents.</div></li>
+  </ul>
+  <figure>
+    <div class="svgscroll"><svg id="underSvg" viewBox="0 0 700 220" role="img" aria-label="Undershoot diagram: from the fixation point, an arrow to where the receptive field is and a shorter arrow at the same angle to where the eyes landed, about 77 percent of the distance."></svg></div>
+    <figcaption>Right direction, short distance. Eye movements to faint targets often fall short even in normal vision. It could also mean phosphenes look slightly closer to center than the RF map predicts. A human prosthesis would need to calibrate for this.</figcaption>
+  </figure>
+  <div class="take"><b>Takeaway.</b> Single electrodes reliably make visible dots at 10s of µA, in the right place. V4 recordings predict each electrode's threshold almost perfectly, which removes the main obstacle to calibrating a thousand-channel implant.</div>
+</section>
+
+<!-- ============ FIG 3 ============ -->
+<section id="fig3">
+  <div class="fignum">Figure 3</div>
+  <h2>Two dots and a moving dot: the first composite percepts</h2>
+  <p>Now the real question. Do several phosphenes at once combine into something with <em>structure</em>? The simplest structure is two dots: are they side by side or stacked? The simplest change over time is motion: which way did the dot move?</p>
+
+  <h3>A–D · orientation task</h3>
+  <ul class="panels">
+    <li><span class="pl">A</span><div><b>The task.</b> Fixate for 300 ms. Two electrodes fire <em>simultaneously</em> for 167 ms. After a 233 ms blank, two targets appear. <b>Vertical pair → look at the upper target. Horizontal pair → look at the lower target.</b> Before the implant, the monkeys were trained on the same task with real dots on a screen.</div></li>
+    <li><span class="pl">B</span><div><b>One example session</b> in monkey A with 4 electrodes (two pairs). Left: RF positions, orange = horizontal pair, purple = vertical pair. Right: running accuracy, 88% horizontal and 91% vertical, high from the start.</div></li>
+    <li><span class="pl">C</span><div><b>Histograms of accuracy across electrode sets.</b> Green = stimulation, blue = real dots on screen; dashed line = chance (50%). Every session used electrode pairs the monkey had <em>never</em> experienced.</div></li>
+    <li><span class="pl">D</span><div><b>The anti-cheating check.</b> Accuracy across the first 30 trials with a new electrode set. It is flat and above chance from the beginning.</div></li>
+  </ul>
+  <figure>
+    <div class="control"><span>Stimulate</span>
+      <div class="seg" role="group" aria-label="Electrode pair">
+        <button id="oriV" aria-pressed="true">Vertical pair</button><button id="oriH" aria-pressed="false">Horizontal pair</button>
+      </div>
+    </div>
+    <div class="svgscroll"><svg id="oriSvg" viewBox="0 0 700 220" role="img" aria-label="Orientation task: the phosphene pair on the left, and the correct saccade target on the right — up for vertical, down for horizontal."></svg></div>
+    <figcaption>Pick a pair. Left: the two phosphenes the monkey sees, in the lower-right field. Right: the response screen and the correct saccade.</figcaption>
+  </figure>
+
+  <h3>E–H · direction-of-motion task</h3>
+  <ul class="panels">
+    <li><span class="pl">E</span><div><b>The task.</b> Three electrodes are stimulated <em>one after another</em> (each for a fixed time, so a sequence of N lasts 150·N ms), like frames of a flip book. The RFs form a short line going top→bottom, bottom→top, left→right or right→left. The monkey reports the direction.</div></li>
+    <li><span class="pl">F</span><div><b>Example set</b> in monkey A: 92% and 94% correct for the two directions.</div></li>
+    <li><span class="pl">G</span><div><b>Histograms</b> across electrode sets, stimulation vs visual.</div></li>
+    <li><span class="pl">H</span><div><b>First 30 trials</b>: flat again, so no learning curve.</div></li>
+  </ul>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>Task</th><th></th><th class="num">Stimulation</th><th class="num">Real dots</th><th class="num">First trial above chance</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="2">Orientation</td><td>Monkey L</td><td class="num">70 ± 13% (N=19)</td><td class="num">83 ± 10%</td><td class="num">trial 1</td></tr>
+      <tr><td>Monkey A</td><td class="num">64 ± 18% (N=11)</td><td class="num">79 ± 15%</td><td class="num">trial 4</td></tr>
+      <tr><td rowspan="2">Motion</td><td>Monkey L</td><td class="num">76 ± 17% (N=13)</td><td class="num">74 ± 11%</td><td class="num">trial 1</td></tr>
+      <tr><td>Monkey A</td><td class="num">69 ± 16% (N=19)</td><td class="num">89 ± 11%</td><td class="num">trial 4</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">N = number of electrode sets. Chance = 50%. All stimulation accuracies are significantly above chance (p ≤ 0.026).</p>
+
+  <h3>Why the "first trial" column matters most</h3>
+  <figure>
+    <div class="svgscroll"><svg id="learnSvg" viewBox="0 0 700 230" role="img" aria-label="Two hypotheses for accuracy across the first 30 trials: a dashed learning curve starting at 50 percent and rising, versus the observed flat line near 70 percent from trial 1."></svg></div>
+    <figcaption>The monkeys got juice for correct answers, so they <em>could</em> have learned by trial and error ("this weird tingle → look up"). That would look like the dashed curve: chance at first, climbing over time. The data look like the solid line: right from the start, with no improvement between trials 1–10 and 21–30.</figcaption>
+  </figure>
+  <div class="take"><b>Takeaway.</b> Simultaneous stimulation produces <em>spatial layout</em> (which way two dots line up). Stimulation in sequence produces <em>motion</em>. The monkeys transferred what they'd learned with real dots straight to the stimulation version, so the percepts must look like real dots arranged in space.</div>
+</section>
+
+<!-- ============ FIG 4 ============ -->
+<section id="fig4">
+  <div class="fignum">Figure 4</div>
+  <h2>Letter recognition: the headline result</h2>
+  <ul class="panels">
+    <li><span class="pl">A</span><div><b>The task.</b> Fixate for 300 ms. <b>8, 10 or 15 electrodes fire at the same time</b> for 167 ms (50 pulses at 300 Hz), chosen so their RFs trace one of two letters. After a 433 ms blank, two targets appear and the monkey looks at the one tied to that letter. Before the implant, the monkeys learned 16 letters on screen, including sparse dot versions designed to look like phosphene vision.</div></li>
+    <li><span class="pl">B</span><div><b>Example: T vs L</b> with 8 electrodes each (orange and purple RF centers). Accuracy 89% for T, 96% for L.</div></li>
+    <li><span class="pl">C</span><div><b>Histograms</b> across electrode sets, stimulation (green) vs real dot letters (blue).</div></li>
+    <li><span class="pl">D</span><div><b>Accuracy over trials</b> for stimulation (green) and visual (blue) versions, plus the crucial <b>control</b> in grey.</div></li>
+  </ul>
+
+  <figure>
+    <div class="control"><span>Stimulate</span>
+      <div class="seg" role="group" aria-label="Electrode set">
+        <button id="ltT" aria-pressed="true">T set</button><button id="ltL" aria-pressed="false">L set</button><button id="ltR" aria-pressed="false">Control (random)</button>
+      </div>
+    </div>
+    <div class="grid2">
+      <svg id="cortexSvg" viewBox="0 0 320 260" role="img" aria-label="An 8 by 8 Utah array grid seen from above with the chosen electrodes highlighted; in V1 they look scattered, not letter-shaped."></svg>
+      <svg id="viewSvg" viewBox="0 0 320 260" role="img" aria-label="What the monkey sees: glowing phosphenes at the receptive field positions, forming a letter T or L, or a random scatter in the control."></svg>
+    </div>
+    <figcaption><b>Left: which electrodes fire</b> (across several V1 arrays; drawn as one schematic grid). On the cortex they don't look like a letter, because the retinotopic map is warped. <b>Right: where their RFs are</b>, which is where the phosphenes appear. Electrodes were chosen <em>backwards</em> from the desired image: "I want a dot here → which electrode's RF is here?" The control picks electrodes whose RFs form no letter.</figcaption>
+  </figure>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th class="num">Stimulation</th><th class="num">Real dot letters</th><th class="num">First trial above chance</th><th class="num">Random-pattern control</th></tr></thead>
+    <tbody>
+      <tr><td>Monkey L</td><td class="num">81 ± 18% (N=9)</td><td class="num">88 ± 5%</td><td class="num">trial 3</td><td class="num">48.2%</td></tr>
+      <tr><td>Monkey A</td><td class="num">71 ± 18% (N=10)</td><td class="num">93 ± 4%</td><td class="num">trial 7</td><td class="num">46.9%</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The control logic (panel D, grey)</h3>
+  <p>A skeptic would say the monkeys simply learned "pattern X → left target" by trial and error. The authors tested this directly, twice.</p>
+  <ul class="panels">
+    <li><span class="pl">1</span><div><b>Random electrode sets.</b> Non-overlapping groups whose RFs formed no letter (10 sets per monkey). The monkeys had to learn arbitrary pattern → target links. After 100 trials they were still at chance: 48.2% and 46.9%.</div></li>
+    <li><span class="pl">2</span><div><b>Unfamiliar visual dot patterns.</b> The same idea with real dots on screen: 50.5% and 49.9%. Still chance.</div></li>
+  </ul>
+  <p>So these monkeys <em>can't</em> learn an arbitrary mapping in a few trials. When they get letters right by trial 3–7, the only explanation left is that the stimulated pattern <b>looked like the letter they already knew</b>.</p>
+  <div class="take"><b>Takeaway.</b> Firing 8–15 V1 electrodes at once produces a recognizable letter. That is the first demonstration of real shape vision from simultaneous intracortical stimulation, and the core proof of concept for a cortical visual prosthesis.</div>
+</section>
+
+<!-- ============ DISCUSSION ============ -->
+<section id="disc">
+  <div class="fignum">Discussion</div>
+  <h2>Why it worked, and what's still missing</h2>
+  <h3>Three ingredients</h3>
+  <ul class="panels">
+    <li><span class="pl">1</span><div><b>Lots of electrodes over a continuous region.</b> Simulations of phosphene vision suggest a few hundred electrodes are enough to read letters, while fluent reading and finding objects in clutter may need <em>thousands</em>. 1,000+ over one quadrant was enough for simple shapes.</div></li>
+    <li><span class="pl">2</span><div><b>Penetrating electrodes.</b> Thresholds of 23–50 µA vs milliamps for surface electrodes. Each one activates neurons within a few hundred µm of the tip, giving smaller, sharper dots. A direct comparison of surface vs penetrating phosphenes in the same subject hasn't been done yet.</div></li>
+    <li><span class="pl">3</span><div><b>Training with dot shapes beforehand.</b> The monkeys already knew what sparse dot letters look like, so they recognized stimulation letters immediately. A blind patient would need an equivalent rehabilitation program.</div></li>
+  </ul>
+  <h3>Limitations the authors list</h3>
+  <ul class="panels">
+    <li><span class="pl">a</span><div><b>Stimulation was worse than real vision</b>, and some electrode sets were near chance. Individual phosphenes vary in size, brightness, colour and apparent depth, and you can't control those yet.</div></li>
+    <li><span class="pl">b</span><div><b>Dots merge.</b> Two electrodes a few hundred µm apart can fuse into one phosphene. This caps the useful pixel density.</div></li>
+    <li><span class="pl">c</span><div><b>Scale.</b> Human V1 is about 25–30 cm² per hemisphere. A useful implant must cover far more of it with enough density.</div></li>
+    <li><span class="pl">d</span><div><b>Engineering.</b> Needs wireless high-channel-count links and long-lasting, biocompatible electrodes that minimize scarring (gliosis), tissue trauma and encapsulation.</div></li>
+  </ul>
+  <p class="meta"><b>Conflict of interest:</b> Roelfsema and Chen co-founded Phosphoenix, a visual-prosthesis startup, and filed a related patent. Coauthor Eduardo Fernández led the 2021 human study with a 96-channel array in a blind volunteer's visual cortex.</p>
+</section>
+
+<!-- ============ NEURALINK ============ -->
+<section id="nl">
+  <div class="fignum">Connection</div>
+  <h2>How this maps onto Blindsight</h2>
+  <p>Blindsight is the same idea as this paper: a camera feeds a processor, which stimulates electrodes in visual cortex to make phosphene images. The differences are in hardware and patients.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>Chen et al. 2020</th><th>Neuralink Blindsight</th></tr></thead>
+    <tbody>
+      <tr><td>Electrodes</td><td>Rigid silicon Utah arrays, 1.5 mm shanks</td><td>Flexible polymer threads placed by the R1 robot</td></tr>
+      <tr><td>Link</td><td>Wired, through a skull pedestal</td><td>Fully implanted, wireless</td></tr>
+      <tr><td>Channels</td><td>1,024 (896 stimulate, 128 record)</td><td>~1,000 on the current N1; larger counts on the roadmap</td></tr>
+      <tr><td>Subjects</td><td>Sighted monkeys, months of dot-letter training</td><td>Blind humans, some blind for decades or from birth</td></tr>
+      <tr><td>Calibration</td><td>Psychophysics + V4 readout</td><td>Unknown; the same chip can record and stimulate</td></tr>
+    </tbody>
+  </table></div>
+  <div class="qcard">
+    <h3>Questions this paper left me with</h3>
+    <ol>
+      <li><b>Automatic calibration.</b> Do they read thresholds from recorded brain activity, like the V4 trick, instead of asking the patient about every electrode?</li>
+      <li><b>Phosphene merging.</b> At their thread spacing, how close can two stimulation sites get before the dots fuse?</li>
+      <li><b>Where the dots land.</b> How do they correct for the undershoot and for mismatches between an electrode's RF and where the person actually sees the dot?</li>
+      <li><b>Rehabilitation.</b> These monkeys trained for months on dot letters first. What is the plan for people blind since birth, whose V1 has never had normal visual input?</li>
+      <li><b>Long-term stability.</b> Utah array thresholds drift as scar tissue builds. Do flexible threads keep thresholds stable over years?</li>
+    </ol>
+  </div>
+  <p class="meta">See also my notes on <a href="icms.html">ICMS, Figure by Figure</a>, for <em>why</em> 10–50 µA activates a small, sparse set of neurons around each tip.</p>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="gloss">
+  <div class="fignum">Reference</div>
+  <h2>Glossary</h2>
+  <dl class="gloss">
+    <dt>Phosphene</dt><dd>A dot of light seen without light entering the eye, here caused by stimulating visual cortex.</dd>
+    <dt>V1 / V4</dt><dd>Primary visual cortex, the first cortical stop for visual input and a fine-grained map of the visual field; and a higher visual area downstream that handles shape and colour.</dd>
+    <dt>Receptive field (RF)</dt><dd>The patch of the visual field that drives a given neuron or electrode.</dd>
+    <dt>Retinotopy</dt><dd>The orderly mapping of neighbouring visual-field points onto neighbouring cortex.</dd>
+    <dt>Eccentricity / polar angle</dt><dd>Polar coordinates for the visual field: distance from the center of gaze (degrees) and direction around it.</dd>
+    <dt>Saccade</dt><dd>A fast eye movement from one point to another. The monkeys' "answer".</dd>
+    <dt>C₅₀ / R₅₀</dt><dd>Current at which behaviour reaches 50% detection (C₅₀), or V4 activity reaches 50% of its maximum (R₅₀).</dd>
+    <dt>Psychometric / neurometric curve</dt><dd>Performance vs stimulus strength, measured from behaviour or from neural activity.</dd>
+    <dt>MUA</dt><dd>Multi-unit activity: the combined spiking of many neurons near an electrode tip.</dd>
+    <dt>Utah array</dt><dd>A 4×4 mm silicon bed of needle electrodes (here 8×8, 1.5 mm long), the standard human research implant.</dd>
+    <dt>Critical trial (c)</dt><dd>The first trial number at which accuracy across electrode sets is significantly above chance (binomial test).</dd>
+  </dl>
+</section>
+<footer>Figure redraws are schematic recreations for understanding; numbers in the text and tables are from the paper.</footer>
+</div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+function clear(s){while(s.firstChild)s.removeChild(s.firstChild);}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function glowDef(svg,id){const d=el("defs",{},svg);const g=el("radialGradient",{id:id},d);el("stop",{offset:"0%",style:"stop-color:#fffbe8;stop-opacity:1"},g);el("stop",{offset:"35%",style:"stop-color:var(--glow);stop-opacity:.95"},g);el("stop",{offset:"100%",style:"stop-color:var(--glow);stop-opacity:0"},g);return d;}
+function arrowDef(svg,id,color){let d=svg.querySelector("defs")||el("defs",{},svg);const m=el("marker",{id:id,viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"7",markerHeight:"7",orient:"auto-start-reverse"},d);el("path",{d:"M0,0 L10,5 L0,10 z",style:"fill:"+color},m);}
+function screen(svg,x,y,w,h){return el("rect",{x:x,y:y,width:w,height:h,rx:8,style:"fill:var(--screen);stroke:var(--rule)"},svg);}
+function fix(svg,x,y){el("circle",{cx:x,cy:y,r:3.5,style:"fill:var(--screenink)"},svg);}
+function phos(svg,x,y,r,gid,op){el("circle",{cx:x,cy:y,r:r,fill:"url(#"+gid+")",opacity:op==null?1:op},svg);}
+
+/* ---------- Primer: retinotopy ---------- */
+(function(){const s=document.getElementById("retinoSvg");glowDef(s,"gRet");arrowDef(s,"aRet","var(--muted)");
+  el("rect",{x:20,y:30,width:250,height:180,rx:14,style:"fill:var(--surface);stroke:var(--v1);stroke-width:1.5"},s);
+  el("text",{x:145,y:22,"text-anchor":"middle",class:"lbl",style:"fill:var(--v1)"},s,"V1 cortex (left hemisphere)");
+  for(let i=0;i<9;i++)el("path",{d:`M${40+i*26} 50 q 8 70 0 150`,style:"stroke:var(--rule);fill:none"},s);
+  const pts=[["A",80,80],["B",140,120],["C",200,160]];
+  pts.forEach(p=>{el("circle",{cx:p[1],cy:p[2],r:7,style:"fill:var(--v1)"},s);el("text",{x:p[1]-18,y:p[2]+4,class:"lbl"},s,p[0]);});
+  screen(s,400,30,280,180);
+  el("line",{x1:420,y1:50,x2:660,y2:50,style:"stroke:var(--screenink);stroke-dasharray:3 4;opacity:.5"},s);
+  el("line",{x1:420,y1:50,x2:420,y2:200,style:"stroke:var(--screenink);stroke-dasharray:3 4;opacity:.5"},s);
+  fix(s,420,50);el("text",{x:428,y:44,class:"sm",style:"fill:var(--screenink)"},s,"gaze");
+  const vp=[["A",500,90],["B",560,130],["C",620,170]];
+  vp.forEach(p=>{phos(s,p[1],p[2],20,"gRet");el("text",{x:p[1]+16,y:p[2]-10,class:"lbl",style:"fill:var(--screenink)"},s,p[0]);});
+  el("text",{x:540,y:22,"text-anchor":"middle",class:"lbl"},s,"lower-right visual field");
+  el("path",{d:"M280 120 C 330 120, 340 120, 390 120",style:"stroke:var(--muted);stroke-width:1.5;fill:none","marker-end":"url(#aRet)"},s);
+  el("text",{x:335,y:110,"text-anchor":"middle",class:"sm muted"},s,"stimulate");
+  el("text",{x:335,y:240,"text-anchor":"middle",class:"sm muted"},s,"A + B + C at once → a line?");
+})();
+
+/* ---------- Utah array ---------- */
+(function(){const s=document.getElementById("arraySvg");
+  const pts=[];for(let j=7;j>=0;j--)for(let i=0;i<8;i++){pts.push([70+i*22+j*11,70-j*7]);}
+  el("path",{d:"M64 74 L238 74 L315 25 L141 25 Z",style:"fill:var(--rule);stroke:var(--muted)"},s);
+  pts.forEach(p=>{el("line",{x1:p[0],y1:p[1],x2:p[0],y2:p[1]+130,style:"stroke:var(--muted);stroke-width:2"},s);el("circle",{cx:p[0],cy:p[1]+130,r:2,style:"fill:var(--v1)"},s);});
+  el("line",{x1:30,y1:74,x2:30,y2:204,style:"stroke:var(--ink)"},s);el("line",{x1:25,y1:74,x2:35,y2:74,style:"stroke:var(--ink)"},s);el("line",{x1:25,y1:204,x2:35,y2:204,style:"stroke:var(--ink)"},s);
+  el("text",{x:22,y:144,class:"lbl","text-anchor":"end",transform:"rotate(-90 22 144)"},s,"");
+  el("text",{x:36,y:226,class:"lbl"},s,"1.5 mm shanks");
+  el("text",{x:200,y:226,class:"lbl"},s,"8 × 8 = 64 tips");
+  el("text",{x:200,y:244,class:"sm muted"},s,"blue = stimulating tip");
+})();
+
+/* ---------- Layout ---------- */
+(function(){const s=document.getElementById("layoutSvg");
+  el("path",{d:"M40 160 C 30 90, 110 40, 190 45 C 270 50, 320 100, 310 160 C 300 210, 230 225, 170 220 C 100 215, 48 205, 40 160 Z",style:"fill:var(--surface);stroke:var(--muted);stroke-width:1.5"},s);
+  el("text",{x:60,y:110,class:"sm muted"},s,"front");el("text",{x:262,y:200,class:"sm muted"},s,"back");
+  let k=0;for(let r=0;r<3;r++)for(let c=0;c<5;c++){if(k>=14)break;const x=200+c*20-r*6,y=110+r*22;el("rect",{x:x,y:y,width:15,height:15,rx:2,style:"fill:var(--v1);opacity:.85"},s);k++;}
+  [[160,118],[162,140]].forEach(p=>el("rect",{x:p[0],y:p[1],width:15,height:15,rx:2,style:"fill:var(--v4)"},s));
+  el("rect",{x:113,y:12,width:60,height:22,rx:4,style:"fill:var(--muted)"},s);
+  el("text",{x:143,y:27,"text-anchor":"middle",class:"sm",style:"fill:var(--bg)"},s,"pedestal");
+  el("path",{d:"M150 34 C 170 70, 210 80, 230 108",style:"stroke:var(--muted);fill:none;stroke-dasharray:3 3"},s);
+  el("path",{d:"M140 34 C 140 70, 160 90, 167 117",style:"stroke:var(--muted);fill:none;stroke-dasharray:3 3"},s);
+  el("text",{x:262,y:100,class:"lbl",style:"fill:var(--v1)"},s,"V1 ×14");
+  el("text",{x:96,y:160,class:"lbl",style:"fill:var(--v4)"},s,"V4 ×2");
+  el("text",{x:170,y:250,"text-anchor":"middle",class:"sm muted"},s,"left hemisphere, schematic");
+})();
+
+/* ---------- Fig 1 ---------- */
+const ARR=[[1,0.3,0.9,"#e5484d"],[4,0.5,0.3,"#30a46c"],[5,0.25,0.5,"#f76b15"],[6,1.2,0.35,"#7fc241"],[7,1.0,1.1,"#b8860b"],[8,1.8,1.3,"#a0522d"],[16,2.6,1.6,"#e86a9a"],[15,3.6,1.3,"#f06ad8"],[14,4.2,1.9,"#c026a3"],[12,1.4,2.6,"#5b5bd6"],[13,2.8,2.7,"#8e4ec6"],[11,6.6,3.4,"#2f6fde"],[10,5.6,3.9,"#3e9be0"],[9,1.6,4.2,"#12a5b8"]];
+const R1=rng(7);const DATA=[];
+ARR.forEach(a=>{const n=40,sd=0.22+0.06*Math.hypot(a[1],a[2]);for(let i=0;i<n;i++){const x=Math.max(0.02,a[1]+gauss(R1)*sd),y=Math.max(0.02,a[2]+gauss(R1)*sd*0.8);const g=0.77+gauss(R1)*0.06;DATA.push({a:a,x:x,y:y,sx:Math.max(0,x*g+gauss(R1)*0.22),sy:Math.max(0,y*g+gauss(R1)*0.22)});}});
+let f1mode="rf";
+function drawFig1(){const s=document.getElementById("fig1Svg");clear(s);arrowDef(s,"aF1","var(--ink)");
+  const ox=60,oy=40,k=60;
+  [2,4,6,8].forEach(e=>{el("path",{d:`M${ox+e*k} ${oy} A ${e*k} ${e*k} 0 0 1 ${ox} ${oy+e*k}`,style:"stroke:var(--rule);fill:none;stroke-dasharray:4 4"},s);});
+  el("line",{x1:ox,y1:oy,x2:ox+560,y2:oy,style:"stroke:var(--muted)"},s);el("line",{x1:ox,y1:oy,x2:ox,y2:oy+340,style:"stroke:var(--muted)"},s);
+  for(let i=0;i<=9;i+=1){el("line",{x1:ox+i*k,y1:oy-4,x2:ox+i*k,y2:oy,style:"stroke:var(--muted)"},s);if(i%2==0)el("text",{x:ox+i*k,y:oy-9,"text-anchor":"middle",class:"sm muted"},s,i+"°");}
+  for(let j=0;j<=5;j++){el("line",{x1:ox-4,y1:oy+j*k,x2:ox,y2:oy+j*k,style:"stroke:var(--muted)"},s);if(j%2==0)el("text",{x:ox-8,y:oy+j*k+4,"text-anchor":"end",class:"sm muted"},s,j+"°");}
+  el("text",{x:ox+560,y:oy+18,"text-anchor":"end",class:"sm muted"},s,"→ right of gaze");
+  el("text",{x:ox+8,y:oy+340,class:"sm muted"},s,"↓ below gaze");
+  el("circle",{cx:ox,cy:oy,r:5,style:"fill:var(--ink)"},s);
+  const showRF=f1mode!=="sac",showS=f1mode!=="rf";
+  DATA.forEach(d=>{const c=d.a[3];
+    if(showRF)el("circle",{cx:ox+d.x*k,cy:oy+d.y*k,r:3.2,fill:c,opacity:f1mode==="both"?.35:.85},s);
+    if(showS)el("rect",{x:ox+d.sx*k-2.6,y:oy+d.sy*k-2.6,width:5.2,height:5.2,fill:c,opacity:.85},s);});
+  if(f1mode==="both")ARR.forEach(a=>{el("line",{x1:ox+a[1]*k,y1:oy+a[2]*k,x2:ox+a[1]*0.77*k,y2:oy+a[2]*0.77*k,style:"stroke:var(--ink);stroke-width:1.4","marker-end":"url(#aF1)"},s);});
+  ARR.forEach(a=>{const f=showRF?1:0.77;el("text",{x:ox+a[1]*f*k+(a[1]<1.5?14:18),y:oy+a[2]*f*k-10,class:"lbl",style:"fill:"+a[3]+";font-weight:600"},s,a[0]);});
+  el("text",{x:620,y:390,"text-anchor":"end",class:"sm muted"},s,f1mode==="rf"?"● RF centers":f1mode==="sac"?"■ saccade end points":"● RF  ■ saccade  → shift of each array's mean");
+}
+function setSeg(ids,on){ids.forEach(id=>document.getElementById(id).setAttribute("aria-pressed",id===on?"true":"false"));}
+[["f1rf","rf"],["f1sac","sac"],["f1both","both"]].forEach(p=>document.getElementById(p[0]).addEventListener("click",()=>{f1mode=p[1];setSeg(["f1rf","f1sac","f1both"],p[0]);drawFig1();}));
+drawFig1();
+
+/* ---------- Fig 2 task ---------- */
+(function(){const s=document.getElementById("taskSvg");glowDef(s,"gTask");arrowDef(s,"aTask","var(--muted)");arrowDef(s,"aEye","var(--accent)");
+  const W=130,H=86;
+  screen(s,20,72,W,H);fix(s,85,115);el("text",{x:85,y:180,"text-anchor":"middle",class:"lbl"},s,"Fixate");el("text",{x:85,y:196,"text-anchor":"middle",class:"sm muted"},s,"300–700 ms");
+  screen(s,250,12,W,H);fix(s,315,55);phos(s,345,78,16,"gTask");el("text",{x:315,y:118,"text-anchor":"middle",class:"lbl"},s,"V1 stimulation");el("text",{x:315,y:132,"text-anchor":"middle",class:"sm muted"},s,"167 ms");
+  screen(s,250,140,W,H);fix(s,315,183);el("text",{x:315,y:246,"text-anchor":"middle",class:"lbl"},s,"no stimulation");
+  screen(s,480,12,W,H);fix(s,545,55);el("circle",{cx:575,cy:78,r:4,style:"fill:none;stroke:var(--screenink);stroke-dasharray:2 2"},s);
+  el("line",{x1:548,y1:58,x2:570,y2:74,style:"stroke:var(--accent);stroke-width:2.5","marker-end":"url(#aEye)"},s);
+  el("text",{x:545,y:118,"text-anchor":"middle",class:"lbl"},s,"look at the dot ✔");
+  screen(s,480,140,W,H);fix(s,545,183);el("circle",{cx:545,cy:183,r:10,style:"fill:none;stroke:var(--accent);stroke-width:2"},s);
+  el("text",{x:545,y:246,"text-anchor":"middle",class:"lbl"},s,"keep fixating ✔");
+  el("path",{d:"M150 105 C 200 90, 210 60, 246 56",style:"stroke:var(--muted);fill:none","marker-end":"url(#aTask)"},s);
+  el("path",{d:"M150 125 C 200 140, 210 180, 246 183",style:"stroke:var(--muted);fill:none","marker-end":"url(#aTask)"},s);
+  el("text",{x:200,y:68,class:"sm muted"},s,"50%");el("text",{x:200,y:178,class:"sm muted"},s,"50%");
+  el("line",{x1:382,y1:55,x2:476,y2:55,style:"stroke:var(--muted)","marker-end":"url(#aTask)"},s);
+  el("line",{x1:382,y1:183,x2:476,y2:183,style:"stroke:var(--muted)","marker-end":"url(#aTask)"},s);
+  el("text",{x:620,y:60,class:"sm muted"},s,"hit");el("text",{x:620,y:180,class:"sm muted"},s,"correct");el("text",{x:620,y:192,class:"sm muted"},s,"reject");
+})();
+
+/* ---------- Fig 2 psychometric ---------- */
+const beh=I=>1/(1+Math.exp(-(I-12.6)/1.5)), v4=I=>1/(1+Math.exp(-(I-12.4)/1.9));
+function drawPsy(I){const s=document.getElementById("psySvg");clear(s);
+  const x0=44,y0=190,w=280,h=160,X=i=>x0+i/25*w,Y=p=>y0-p*h;
+  el("line",{x1:x0,y1:y0,x2:x0+w,y2:y0,style:"stroke:var(--muted)"},s);el("line",{x1:x0,y1:y0,x2:x0,y2:y0-h,style:"stroke:var(--muted)"},s);
+  [0,5,10,15,20,25].forEach(t=>{el("line",{x1:X(t),y1:y0,x2:X(t),y2:y0+4,style:"stroke:var(--muted)"},s);el("text",{x:X(t),y:y0+16,"text-anchor":"middle",class:"sm muted"},s,t);});
+  [0,50,100].forEach(t=>{el("text",{x:x0-6,y:Y(t/100)+4,"text-anchor":"end",class:"sm muted"},s,t);el("line",{x1:x0,y1:Y(t/100),x2:x0+w,y2:Y(t/100),style:"stroke:var(--rule)"},s);});
+  el("text",{x:x0+w/2,y:y0+32,"text-anchor":"middle",class:"sm muted"},s,"current (µA)");
+  el("text",{x:12,y:y0-h/2,"text-anchor":"middle",class:"sm muted",transform:`rotate(-90 12 ${y0-h/2})`},s,"% (hit rate / V4)");
+  let pb="",pv="";for(let i=0;i<=250;i++){const c=i/10;pb+=(i?"L":"M")+X(c).toFixed(1)+" "+Y(beh(c)).toFixed(1);pv+=(i?"L":"M")+X(c).toFixed(1)+" "+Y(v4(c)).toFixed(1);}
+  el("path",{d:pv,style:"stroke:var(--v4);stroke-width:2;fill:none;stroke-dasharray:5 3"},s);
+  el("path",{d:pb,style:"stroke:var(--phos);stroke-width:2.5;fill:none"},s);
+  el("line",{x1:X(12.6),y1:y0,x2:X(12.6),y2:y0-h,style:"stroke:var(--muted);stroke-dasharray:3 3"},s);
+  el("text",{x:X(12.6)+4,y:y0-h+10,class:"sm muted"},s,"C₅₀ 12.6");
+  el("text",{x:X(19),y:Y(0.82),class:"sm",style:"fill:var(--phos)"},s,"behaviour");
+  el("text",{x:X(15.5),y:Y(0.42),class:"sm",style:"fill:var(--v4)"},s,"V4");
+  el("circle",{cx:X(I),cy:Y(beh(I)),r:5.5,style:"fill:var(--phos);stroke:var(--surface);stroke-width:2"},s);
+  el("circle",{cx:X(I),cy:Y(v4(I)),r:4.5,style:"fill:var(--v4);stroke:var(--surface);stroke-width:2"},s);
+  const p=document.getElementById("phosSvg");clear(p);glowDef(p,"gPh");screen(p,10,10,320,210);fix(p,90,60);
+  const pr=beh(I);phos(p,230,150,14+22*Math.min(1,I/22),"gPh",pr);
+  el("text",{x:24,y:206,class:"sm",style:"fill:var(--screenink)"},p,"monkey's view (cartoon)");
+  document.getElementById("curv").textContent=I.toFixed(1)+" µA";
+  document.getElementById("pOut").textContent=Math.round(pr*100)+"%";
+  document.getElementById("vOut").textContent=Math.round(v4(I)*100)+"%";
+  document.getElementById("zone").innerHTML=pr<0.1?"<b>below threshold</b>":pr<0.9?"<b>near threshold: sometimes seen</b>":"<b>reliably seen</b>";
+}
+const cur=document.getElementById("cur");cur.addEventListener("input",()=>drawPsy(+cur.value));drawPsy(12.6);
+
+/* ---------- Undershoot ---------- */
+(function(){const s=document.getElementById("underSvg");glowDef(s,"gU");arrowDef(s,"aU1","var(--muted)");arrowDef(s,"aU2","var(--accent)");
+  screen(s,20,10,660,200);const fx=80,fy=40,ang=Math.atan2(140,480),L=Math.hypot(480,140);
+  fix(s,fx,fy);el("text",{x:fx-8,y:fy-10,class:"sm",style:"fill:var(--screenink)"},s,"fixation");
+  const rx=fx+480,ry=fy+140;phos(s,rx,ry,22,"gU");el("text",{x:rx+18,y:ry-14,class:"lbl",style:"fill:var(--screenink)"},s,"RF (100%)");
+  el("line",{x1:fx,y1:fy,x2:rx-6,y2:ry-2,style:"stroke:var(--screenink);stroke-dasharray:4 4;opacity:.7"},s);
+  const sx=fx+480*0.77,sy=fy+140*0.77;
+  el("line",{x1:fx,y1:fy+8,x2:sx,y2:sy+8,style:"stroke:var(--accent);stroke-width:3","marker-end":"url(#aU2)"},s);
+  el("circle",{cx:sx,cy:sy+8,r:6,style:"fill:none;stroke:var(--accent);stroke-width:2"},s);
+  el("text",{x:sx-10,y:sy+34,"text-anchor":"middle",class:"lbl",style:"fill:var(--accent)"},s,"eyes land (~77%)");
+})();
+
+/* ---------- Orientation ---------- */
+let ori="V";
+function drawOri(){const s=document.getElementById("oriSvg");clear(s);glowDef(s,"gO");arrowDef(s,"aO","var(--accent)");arrowDef(s,"aO2","var(--muted)");
+  screen(s,20,20,280,180);fix(s,60,50);
+  const c=[190,130];const pts=ori==="V"?[[c[0],c[1]-30],[c[0],c[1]+30]]:[[c[0]-30,c[1]],[c[0]+30,c[1]]];
+  pts.forEach(p=>phos(s,p[0],p[1],20,"gO"));
+  el("text",{x:34,y:192,class:"sm",style:"fill:var(--screenink)"},s,"stimulation · 167 ms");
+  el("line",{x1:312,y1:110,x2:390,y2:110,style:"stroke:var(--muted)","marker-end":"url(#aO2)"},s);
+  el("text",{x:350,y:100,"text-anchor":"middle",class:"sm muted"},s,"233 ms blank");
+  screen(s,400,20,280,180);fix(s,540,110);
+  const up=[540,50],dn=[540,170];
+  [up,dn].forEach(p=>el("circle",{cx:p[0],cy:p[1],r:7,style:"fill:none;stroke:var(--screenink);stroke-width:1.5"},s));
+  el("text",{x:560,y:54,class:"sm",style:"fill:var(--screenink)"},s,"vertical");el("text",{x:560,y:174,class:"sm",style:"fill:var(--screenink)"},s,"horizontal");
+  const t=ori==="V"?up:dn;el("line",{x1:540,y1:110+(ori==="V"?-8:8),x2:t[0],y2:t[1]+(ori==="V"?12:-12),style:"stroke:var(--accent);stroke-width:3","marker-end":"url(#aO)"},s);
+  el("text",{x:414,y:192,class:"sm",style:"fill:var(--screenink)"},s,"response · look "+(ori==="V"?"up":"down"));
+}
+document.getElementById("oriV").addEventListener("click",()=>{ori="V";setSeg(["oriV","oriH"],"oriV");drawOri();});
+document.getElementById("oriH").addEventListener("click",()=>{ori="H";setSeg(["oriV","oriH"],"oriH");drawOri();});
+drawOri();
+
+/* ---------- Learning curve ---------- */
+(function(){const s=document.getElementById("learnSvg");
+  const x0=60,y0=190,w=600,h=160,X=t=>x0+(t-1)/29*w,Y=p=>y0-p/100*h;
+  el("line",{x1:x0,y1:y0,x2:x0+w,y2:y0,style:"stroke:var(--muted)"},s);el("line",{x1:x0,y1:y0,x2:x0,y2:y0-h,style:"stroke:var(--muted)"},s);
+  [1,10,20,30].forEach(t=>{el("text",{x:X(t),y:y0+16,"text-anchor":"middle",class:"sm muted"},s,t);});
+  [0,50,100].forEach(p=>el("text",{x:x0-8,y:Y(p)+4,"text-anchor":"end",class:"sm muted"},s,p+"%"));
+  el("text",{x:x0+w/2,y:y0+32,"text-anchor":"middle",class:"sm muted"},s,"trial number with a new electrode set");
+  el("line",{x1:x0,y1:Y(50),x2:x0+w,y2:Y(50),style:"stroke:var(--muted);stroke-dasharray:2 4"},s);
+  el("text",{x:x0+w,y:Y(50)+14,"text-anchor":"end",class:"sm muted"},s,"chance");
+  let a="",b="";for(let t=1;t<=30;t++){a+=(t>1?"L":"M")+X(t)+" "+Y(50+28*(1-Math.exp(-(t-1)/7)));b+=(t>1?"L":"M")+X(t)+" "+Y(69+3*Math.sin(t*1.7)+2*Math.cos(t*0.9));}
+  el("path",{d:a,style:"stroke:var(--bad);stroke-width:2;fill:none;stroke-dasharray:6 4"},s);
+  el("path",{d:b,style:"stroke:var(--accent);stroke-width:2.5;fill:none"},s);
+  el("text",{x:X(9),y:Y(36),class:"sm",style:"fill:var(--bad)"},s,"dashed: if learning by trial & error (hypothetical)");
+  el("text",{x:X(13),y:Y(80),class:"sm",style:"fill:var(--accent)"},s,"observed: above chance from the start");
+})();
+
+/* ---------- Letters ---------- */
+const LET={T:[[0,0],[1,0],[2,0],[3,0],[4,0],[2,1],[2,2],[2,3]],L:[[0,0],[0,1],[0,2],[0,3],[0,4],[1,4],[2,4],[3,4]],R:[[0,1],[3,0],[4,3],[1,4],[2,2.4],[4,1],[0.6,3],[3,4]]};
+const R2=rng(31);const CELL={};["T","L","R"].forEach(k=>{const used=new Set();CELL[k]=LET[k].map(()=>{let c;do{c=Math.floor(R2()*64);}while(used.has(c));used.add(c);return c;});});
+let let_="T";
+function drawLet(){const c=document.getElementById("cortexSvg");clear(c);
+  const col=let_==="R"?"var(--muted)":"var(--v1)";
+  el("text",{x:160,y:20,"text-anchor":"middle",class:"lbl"},c,"V1 electrodes (top view)");
+  for(let i=0;i<64;i++){const x=56+(i%8)*28,y=36+Math.floor(i/8)*26;const on=CELL[let_].includes(i);
+    el("circle",{cx:x,cy:y,r:on?8:3.5,style:on?"fill:"+col:"fill:var(--rule)"},c);}
+  el("text",{x:160,y:252,"text-anchor":"middle",class:"sm muted"},c,LET[let_].length+" electrodes · 50 pulses at 300 Hz");
+  const v=document.getElementById("viewSvg");clear(v);glowDef(v,"gL");screen(v,10,10,300,240);fix(v,40,36);
+  for(let i=0;i<6;i++)for(let j=0;j<6;j++)el("circle",{cx:110+i*32,cy:70+j*32,r:1.6,style:"fill:var(--screenink);opacity:.35"},v);
+  LET[let_].forEach(p=>phos(v,110+p[0]*36,70+p[1]*36,17,"gL"));
+  el("text",{x:24,y:240,class:"sm",style:"fill:var(--screenink)"},v,let_==="R"?"control: no letter → monkeys at chance":"phosphenes at the RFs → letter "+let_);
+}
+[["ltT","T"],["ltL","L"],["ltR","R"]].forEach(p=>document.getElementById(p[0]).addEventListener("click",()=>{let_=p[1];setSeg(["ltT","ltL","ltR"],p[0]);drawLet();}));
+drawLet();
+})();
+</script>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="icms.html"><small>← Previous note</small><span>Neural mechanisms of intracortical microstimulation</span></a><a class="next" href="reading-the-pam.html"><small>Next note →</small><span>Reading the PAM</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

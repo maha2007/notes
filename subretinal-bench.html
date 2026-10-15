@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Subretinal pixel bench · Maha Nawaz</title>
+<meta name="description" content="A tabletop rig that reproduces the PRIMA implant&#x27;s physics chain, from near-infrared light to charge in saline, and measures charge density per pulse."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="Subretinal pixel bench"><meta property="og:description" content="A tabletop rig that reproduces the PRIMA implant&#x27;s physics chain, from near-infrared light to charge in saline, and measures charge density per pulse.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EBEFF1; --surface:#FBFCFC; --surface-2:#DFE7EA; --sunk:#E4EAED;
+  --ink:#0E1A20; --ink-2:#33454F; --muted:#69808B; --rule:#C4D1D7; --rule-2:#D7E0E4;
+  --ir:#9C1B2C; --ir-soft:rgba(156,27,44,.10);
+  --sig:#0A6470; --sig-soft:rgba(10,100,112,.09);
+  --warn:#8A5300;
+  --f-disp:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --f-body:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A1115; --surface:#111B20; --surface-2:#18242A; --sunk:#0E181D;
+    --ink:#DFE9ED; --ink-2:#B2C3CB; --muted:#7E949F; --rule:#25343B; --rule-2:#1D2A30;
+    --ir:#F0707C; --ir-soft:rgba(240,112,124,.13);
+    --sig:#5AC8D0; --sig-soft:rgba(90,200,208,.11);
+    --warn:#DCA544;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A1115; --surface:#111B20; --surface-2:#18242A; --sunk:#0E181D;
+  --ink:#DFE9ED; --ink-2:#B2C3CB; --muted:#7E949F; --rule:#25343B; --rule-2:#1D2A30;
+  --ir:#F0707C; --ir-soft:rgba(240,112,124,.13);
+  --sig:#5AC8D0; --sig-soft:rgba(90,200,208,.11);
+  --warn:#DCA544;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:56px 28px 96px}
+.col{max-width:70ch}
+h1,h2,h3,.eyebrow,.num,th,.chip,figcaption b{font-family:var(--f-disp)}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.04;letter-spacing:-.022em;font-weight:700;margin:0 0 14px;text-wrap:balance}
+h2{font-size:25px;letter-spacing:-.012em;font-weight:700;margin:0 0 6px;text-wrap:balance}
+h3{font-size:17px;letter-spacing:-.005em;font-weight:600;margin:0 0 4px}
+p{margin:0 0 16px}
+a{color:var(--sig)}
+.eyebrow{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.lede{font-size:19px;line-height:1.55;color:var(--ink-2)}
+.rule{height:1px;background:var(--rule);border:0;margin:0}
+
+/* header spec strip */
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:34px 0 0}
+.specs div{background:var(--surface);padding:12px 14px}
+.specs dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+.specs dd{font-family:var(--f-mono);font-size:16px;font-weight:500;margin:0;font-variant-numeric:tabular-nums;color:var(--ink)}
+.specs dd small{font-size:11px;color:var(--muted);font-weight:400}
+
+section{margin:56px 0 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-top:2px solid var(--ink);padding-top:12px;margin-bottom:22px}
+.sec-head .mark{font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--ir);letter-spacing:.08em;padding-top:3px}
+.sec-head p{margin:4px 0 0;color:var(--muted);font-size:15px}
+
+figure{margin:30px 0 34px;padding:0}
+.figbox{background:var(--surface);border:1px solid var(--rule);padding:18px 18px 6px;overflow-x:auto}
+svg{max-width:100%;height:auto;display:block;min-width:640px}
+figcaption{font-size:14.5px;line-height:1.5;color:var(--ink-2);margin-top:12px;max-width:76ch}
+figcaption b{font-weight:600;color:var(--ink)}
+.figlabel{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+
+/* svg text classes */
+.t-title{font-family:var(--f-disp);font-size:13px;font-weight:600;fill:var(--ink)}
+.t-sub{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
+.t-arrow{font-family:var(--f-mono);font-size:9.5px;fill:var(--sig)}
+.t-note{font-family:var(--f-mono);font-size:10.5px;fill:var(--ink-2)}
+.t-ir{font-family:var(--f-mono);font-size:10.5px;fill:var(--ir)}
+.t-warn{font-family:var(--f-mono);font-size:10.5px;fill:var(--warn)}
+.t-ax{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.box{fill:var(--surface-2);stroke:var(--rule);stroke-width:1.4}
+.wire{stroke:var(--sig);stroke-width:1.8;fill:none}
+.lead{stroke:var(--rule);stroke-width:1;fill:none}
+.beam{stroke:var(--ir);stroke-width:1.4;stroke-dasharray:5 4;fill:none}
+
+/* steps */
+.steps{display:grid;gap:0;border-top:1px solid var(--rule)}
+.step{display:grid;grid-template-columns:64px 1fr;gap:20px;padding:22px 0;border-bottom:1px solid var(--rule-2)}
+.num{font-family:var(--f-mono);font-size:20px;font-weight:500;color:var(--ir);font-variant-numeric:tabular-nums;padding-top:2px}
+.step p{margin:0 0 10px;max-width:68ch}
+.why{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--sunk);border-left:2px solid var(--sig);padding:10px 14px;max-width:70ch}
+.why span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--sig);padding-top:4px}
+.why em{font-style:normal;font-size:15px;line-height:1.5;color:var(--ink-2)}
+.phase{font-family:var(--f-mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);background:var(--bg);padding:26px 0 8px;border-bottom:1px solid var(--rule)}
+.phase b{color:var(--ink);font-weight:500}
+
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:8px 0 0}
+th{font-size:10.5px;font-family:var(--f-mono);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:500;padding:0 12px 8px 0;border-bottom:1px solid var(--rule)}
+td{padding:10px 12px 10px 0;border-bottom:1px solid var(--rule-2);vertical-align:top;color:var(--ink-2)}
+td:first-child{color:var(--ink);width:24%}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;width:10%}
+.tblwrap{overflow-x:auto}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:8px}
+.card{background:var(--surface);border:1px solid var(--rule);padding:16px 18px}
+.card h3{margin-bottom:6px}
+.card p{font-size:15px;margin:0;color:var(--ink-2)}
+.card .chip{display:inline-block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--rule);color:var(--muted);margin-bottom:9px}
+.card.hot{border-color:var(--ir)}
+.card.hot .chip{border-color:var(--ir);color:var(--ir)}
+
+ul.plain{margin:0 0 16px;padding-left:20px}
+ul.plain li{margin-bottom:8px;max-width:68ch}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--sunk);padding:1px 5px;border:1px solid var(--rule-2)}
+.callout{border:1px solid var(--ir);background:var(--ir-soft);padding:16px 18px;margin:24px 0;max-width:76ch}
+.callout p{margin:0;font-size:15.5px}
+.callout .chip{display:block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ir);margin-bottom:7px}
+footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+footer a{color:var(--muted)}
+@media (max-width:640px){
+  .wrap{padding:36px 18px 70px}
+  .step{grid-template-columns:40px 1fr;gap:12px}
+  .num{font-size:16px}
+}
+</style>
+<style>
+:root{--bg:#FFF8EA;--surface:#FFFDF7;--surface-2:#FBEED3;--sunk:#FBEED3;--ink:#1D2F66;--ink-2:#34446F;--muted:#56628A;--rule:#E8DCC2;--rule-2:#F0E6D0;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--f-disp:'Bitter',Georgia,serif;--f-body:'Bitter',Georgia,serif;--f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15224B;--surface:#1D2F66;--surface-2:#243A78;--sunk:#243A78;--ink:#FFF5D9;--ink-2:#E9E1CB;--muted:#C3C8DA;--rule:#33498A;--rule-2:#2A3F7E;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15224B;--surface:#1D2F66;--surface-2:#243A78;--sunk:#243A78;--ink:#FFF5D9;--ink-2:#E9E1CB;--muted:#C3C8DA;--rule:#33498A;--rule-2:#2A3F7E;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-C">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+
+<div class="wrap">
+
+<header class="col">
+  <p class="eyebrow">Build plan · photovoltaic retinal stimulation</p>
+  <h1>Subretinal Pixel Bench</h1><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · September 8, 2026</span></div>
+  <p class="lede">A tabletop rig that reproduces the physics chain inside the PRIMA implant — near-infrared light in, charge into saline out — and measures the one number that decides whether such a device can work at all: <b>charge density per pulse</b>, against the electrochemical ceiling above it and the neural threshold below it.</p>
+</header>
+
+<dl class="specs">
+  <div><dt>Pixels</dt><dd>378</dd></div>
+  <div><dt>Pitch</dt><dd>100 <small>µm</small></dd></div>
+  <div><dt>Chip</dt><dd>2 <small>mm × 30 µm</small></dd></div>
+  <div><dt>Wavelength</dt><dd>880 <small>nm</small></dd></div>
+  <div><dt>Peak irradiance</dt><dd>3.5 <small>mW/mm²</small></dd></div>
+  <div><dt>Pulse</dt><dd>≤10 <small>ms</small></dd></div>
+  <div><dt>Frame rate</dt><dd>30 <small>Hz</small></dd></div>
+  <div><dt>Diodes / pixel</dt><dd>2 <small>in series</small></dd></div>
+</dl>
+<p class="figlabel" style="margin-top:8px">The device you are modelling. Every one of these numbers is a target your bench should be able to reach or explain missing.</p>
+
+<!-- ============ 1. THE CHAIN ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">01</div>
+    <div><h2>What the chain actually is</h2><p>Where each stage sits, and what crosses each boundary</p></div>
+  </div>
+
+  <div class="col">
+    <p>In dry AMD and retinitis pigmentosa the photoreceptors die but the bipolar and ganglion cells beneath them survive. Stimulate those survivors in the pattern light would have produced and the brain receives an image. The hard part is getting <em>both power and image data</em> into a chip under the retina with no wires through the eye wall.</p>
+    <p>PRIMA's answer is to make every pixel its own solar cell. The implant is entirely passive: photons land on a pixel, that pixel's own photodiodes convert them to current, and that current drives charge into the tissue directly underneath. Image and power arrive on the same beam. Infrared because the patient must not see it, and because far more optical power can cross the pupil safely at 880 nm than in the visible.</p>
+  </div>
+
+  <figure>
+    <p class="figlabel">Figure 1 — signal chain</p>
+    <div class="figbox">
+      <svg viewBox="0 0 1060 220" role="img" aria-label="Signal chain: scene to camera to encoder to near-infrared projector to photodiode pixel in saline, with a measurement branch taking charge per pulse and electrode potential.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g color="var(--sig)">
+          <line x1="162" y1="100" x2="226" y2="100" stroke="currentColor" stroke-width="1.6" marker-end="url(#a1)"/>
+          <line x1="380" y1="100" x2="444" y2="100" stroke="currentColor" stroke-width="1.6" marker-end="url(#a1)"/>
+          <line x1="598" y1="100" x2="662" y2="100" stroke="currentColor" stroke-width="1.6" marker-end="url(#a1)"/>
+          <line x1="816" y1="100" x2="880" y2="100" stroke="currentColor" stroke-width="1.6" marker-end="url(#a1)"/>
+          <line x1="950" y1="142" x2="950" y2="166" stroke="currentColor" stroke-width="1.6" marker-end="url(#a1)"/>
+        </g>
+        <text class="t-arrow" x="194" y="88" text-anchor="middle">light</text>
+        <text class="t-arrow" x="412" y="88" text-anchor="middle">30 Hz</text>
+        <text class="t-arrow" x="630" y="88" text-anchor="middle">8 levels</text>
+        <text class="t-arrow" x="848" y="88" text-anchor="middle" fill="var(--ir)">880 nm</text>
+
+        <rect class="box" x="16" y="58" width="146" height="84" rx="2"/>
+        <text class="t-title" x="89" y="88" text-anchor="middle">Scene</text>
+        <text class="t-sub" x="89" y="107" text-anchor="middle">the world</text>
+        <text class="t-sub" x="89" y="122" text-anchor="middle">in front of you</text>
+
+        <rect class="box" x="234" y="58" width="146" height="84" rx="2"/>
+        <text class="t-title" x="307" y="88" text-anchor="middle">Camera</text>
+        <text class="t-sub" x="307" y="107" text-anchor="middle">goggle-mounted</text>
+        <text class="t-sub" x="307" y="122" text-anchor="middle">global shutter</text>
+
+        <rect class="box" x="452" y="58" width="146" height="84" rx="2"/>
+        <text class="t-title" x="525" y="88" text-anchor="middle">Encoder</text>
+        <text class="t-sub" x="525" y="107" text-anchor="middle">contrast + edges</text>
+        <text class="t-sub" x="525" y="122" text-anchor="middle">→ few grey levels</text>
+
+        <rect class="box" x="670" y="58" width="146" height="84" rx="2" stroke="var(--ir)"/>
+        <text class="t-title" x="743" y="88" text-anchor="middle">NIR projector</text>
+        <text class="t-sub" x="743" y="107" text-anchor="middle">880 nm, ≤10 ms</text>
+        <text class="t-sub" x="743" y="122" text-anchor="middle">≤3.5 mW/mm²</text>
+
+        <rect class="box" x="880" y="58" width="146" height="84" rx="2" stroke="var(--sig)"/>
+        <text class="t-title" x="953" y="88" text-anchor="middle">Pixel in PBS</text>
+        <text class="t-sub" x="953" y="107" text-anchor="middle">2 photodiodes</text>
+        <text class="t-sub" x="953" y="122" text-anchor="middle">+ electrode pair</text>
+
+        <rect class="box" x="800" y="166" width="248" height="44" rx="2" fill="var(--sig-soft)" stroke="var(--sig)"/>
+        <text class="t-note" x="924" y="186" text-anchor="middle">charge / pulse · electrode potential</text>
+        <text class="t-sub" x="924" y="201" text-anchor="middle">this is the deliverable</text>
+      </svg>
+    </div>
+    <figcaption><b>Your bench builds the last two boxes first.</b> Stages 1–3 are software and a webcam; you can bolt them on in a weekend at the end. Stages 4–5 are the physics, and the measurement branch hanging off stage 5 is the entire scientific content of the project.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 2. THE CELL ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">02</div>
+    <div><h2>The physical bench</h2><p>What sits where, and one deliberate departure from the real device</p></div>
+  </div>
+
+  <div class="col">
+    <p>The real implant puts the photodiodes <em>in</em> the tissue. On a bench that would mean sealing semiconductors in saline on day one, which is a packaging project, not a physics project — and when a reading goes wrong you won't know whether the optics, the seal, or the electrochemistry failed.</p>
+    <p>So for Phase 1 and 2, <b>keep the diodes dry.</b> Illuminate them in air, and run two wires down into the cell to a pair of electrodes. Electrically it is the identical loop. You give up per-pixel locality, which you don't need until you build an array in Phase 3 — and by then you'll know what "working" looks like.</p>
+  </div>
+
+  <figure>
+    <p class="figlabel">Figure 2 — bench layout, cross-section</p>
+    <div class="figbox">
+      <svg viewBox="0 0 1250 450" role="img" aria-label="Cross-section of the bench: an 880 nm LED illuminates two photodiodes in series mounted dry above the cell; two wires run down into a saline cell containing a small active electrode, a large return electrode, and an Ag/AgCl reference; the whole rig sits in a light-tight enclosure.">
+        <rect x="8" y="8" width="1234" height="424" rx="5" fill="none" stroke="var(--rule)" stroke-width="1.2" stroke-dasharray="7 5"/>
+        <text class="t-sub" x="24" y="28">light-tight enclosure — black felt over a cardboard box is fine</text>
+
+        <!-- source -->
+        <rect class="box" x="110" y="44" width="170" height="38" rx="2" stroke="var(--ir)"/>
+        <text class="t-title" x="195" y="68" text-anchor="middle">880 nm LED + driver</text>
+
+        <!-- beam -->
+        <polygon points="165,84 225,84 252,146 138,146" fill="var(--ir-soft)"/>
+        <line class="beam" x1="165" y1="84" x2="138" y2="146"/>
+        <line class="beam" x1="225" y1="84" x2="252" y2="146"/>
+        <text class="t-ir" x="300" y="118">invisible beam</text>
+
+        <!-- PD board -->
+        <rect class="box" x="130" y="146" width="130" height="14"/>
+        <rect x="152" y="132" width="28" height="14" fill="var(--sig-soft)" stroke="var(--sig)" stroke-width="1.4"/>
+        <rect x="204" y="132" width="28" height="14" fill="var(--sig-soft)" stroke="var(--sig)" stroke-width="1.4"/>
+        <line class="wire" x1="180" y1="139" x2="204" y2="139"/>
+        <rect class="box" x="180" y="160" width="30" height="36"/>
+        <line class="lead" x1="195" y1="212" x2="195" y2="200"/>
+        <text class="t-note" x="195" y="226" text-anchor="middle">2 × BPW34 in series — dry, in air</text>
+        <text class="t-sub" x="195" y="241" text-anchor="middle">on a manual XY stage</text>
+
+        <!-- wires -->
+        <path class="wire" d="M262,168 H590 V300"/>
+        <path class="wire" d="M262,186 H700 M700,186 a10,10 0 0 1 20,0 M720,186 H760 V336"/>
+        <text class="t-arrow" x="330" y="163">active lead</text>
+        <text class="t-arrow" x="330" y="205">return lead</text>
+
+        <!-- reference -->
+        <rect class="box" x="662" y="104" width="96" height="26" rx="2"/>
+        <text class="t-sub" x="710" y="121" text-anchor="middle">Ag/AgCl ref</text>
+        <line x1="710" y1="130" x2="710" y2="282" stroke="var(--muted)" stroke-width="1.8"/>
+        <rect x="702" y="282" width="16" height="9" fill="var(--muted)"/>
+
+        <!-- cell -->
+        <path d="M520,210 V400 H800 V210" fill="none" stroke="var(--ink-2)" stroke-width="2.2"/>
+        <rect x="522" y="248" width="276" height="150" fill="var(--sig-soft)"/>
+        <line x1="522" y1="248" x2="798" y2="248" stroke="var(--sig)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- electrodes -->
+        <rect x="578" y="300" width="24" height="8" fill="var(--sig)"/>
+        <g stroke="var(--ink-2)" stroke-width="1.6" fill="none">
+          <rect x="735" y="336" width="50" height="12"/>
+          <line x1="747" y1="336" x2="747" y2="348"/><line x1="760" y1="336" x2="760" y2="348"/><line x1="773" y1="336" x2="773" y2="348"/>
+        </g>
+
+        <!-- callouts -->
+        <g class="lead">
+          <path d="M830,258 H802"/><path d="M830,306 H606"/><path d="M830,344 H789"/>
+        </g>
+        <text class="t-note" x="838" y="252">PBS, pH 7.4, 0.9 % NaCl</text>
+        <text class="t-sub" x="838" y="267">room temp, unstirred, N₂-purged if you can</text>
+        <text class="t-note" x="838" y="300">active electrode — Pt, area A</text>
+        <text class="t-sub" x="838" y="315">A is the denominator of every result. Measure it.</text>
+        <text class="t-note" x="838" y="338">return electrode — Pt mesh, area ≫ A</text>
+        <text class="t-sub" x="838" y="353">so all the interesting chemistry happens at A</text>
+        <text class="t-sub" x="838" y="378">reference carries no current —</text>
+        <text class="t-sub" x="838" y="392">it only tells you where zero is</text>
+
+        <text class="t-ir" x="530" y="424">light never touches the liquid in Phase 1–2</text>
+      </svg>
+    </div>
+    <figcaption><b>Three electrodes, not two.</b> Current flows between the active and return electrodes; the Ag/AgCl reference sits in the same solution drawing essentially no current, purely so that the potential you record has a fixed, known zero. Two-electrode measurements conflate the two interfaces and are the single most common reason a beginner's electrochemistry data cannot be interpreted.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 3. CIRCUIT ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">03</div>
+    <div><h2>The circuit, and why two diodes</h2><p>Including the part of the circuit that is made of saltwater</p></div>
+  </div>
+
+  <div class="col">
+    <p>There is no power supply in this loop. The diodes are the source — that is the whole idea — which means the available voltage is fixed by silicon physics at roughly 0.5 V per junction, and the electrode–electrolyte interface needs closer to 0.8–1 V before meaningful charge moves. One diode will not do it. This is exactly why the real implant stacks two per pixel, and you should discover it on your own bench before you read it anywhere.</p>
+    <p>The interface itself is a circuit element, and it is the important one. Model it as a double-layer capacitance <code>C_dl</code> in parallel with a faradaic resistance <code>R_f</code>, in series with the solution resistance <code>R_s</code>. Charge that flows through <code>C_dl</code> is reversible and harmless. Charge that flows through <code>R_f</code> is a chemical reaction: it dissolves your electrode and damages tissue. Your entire safety argument is the ratio between them.</p>
+  </div>
+
+  <figure>
+    <p class="figlabel">Figure 3 — measurement circuit, with the electrode–electrolyte interface drawn out</p>
+    <div class="figbox">
+      <svg viewBox="0 0 1060 420" role="img" aria-label="Circuit: two photodiodes in series drive an active electrode; the electrolyte is modelled as a double-layer capacitance in parallel with a faradaic resistance, in series with solution resistance, returning through a large return electrode; a sense resistor measures current and a unity-gain buffer measures electrode potential against the Ag/AgCl reference.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--ir)"/>
+          </marker>
+        </defs>
+
+        <!-- photodiodes -->
+        <g stroke="var(--ink)" stroke-width="1.8" fill="none">
+          <polygon points="118,102 118,138 150,120" fill="var(--surface-2)"/>
+          <line x1="150" y1="100" x2="150" y2="140"/>
+          <polygon points="208,102 208,138 240,120" fill="var(--surface-2)"/>
+          <line x1="240" y1="100" x2="240" y2="140"/>
+        </g>
+        <line class="wire" x1="150" y1="120" x2="208" y2="120"/>
+        <g stroke="var(--ir)" stroke-width="1.4">
+          <line x1="112" y1="66" x2="128" y2="94" marker-end="url(#a3)"/>
+          <line x1="146" y1="66" x2="162" y2="94" marker-end="url(#a3)"/>
+          <line x1="202" y1="66" x2="218" y2="94" marker-end="url(#a3)"/>
+          <line x1="236" y1="66" x2="252" y2="94" marker-end="url(#a3)"/>
+        </g>
+        <text class="t-ir" x="180" y="54" text-anchor="middle">880 nm</text>
+        <text class="t-note" x="180" y="172" text-anchor="middle">2 × Si photodiode, series</text>
+        <text class="t-sub" x="180" y="187" text-anchor="middle">no bias — the pixel IS the source</text>
+        <text class="t-sub" x="180" y="202" text-anchor="middle">V_oc ≈ 0.5 V each → ≈ 1.0 V total</text>
+
+        <!-- solution region -->
+        <rect x="330" y="86" width="450" height="196" rx="3" fill="var(--sig-soft)" stroke="var(--sig)" stroke-width="1" stroke-dasharray="5 4"/>
+        <text class="t-sub" x="344" y="104">PBS</text>
+
+        <!-- active electrode -->
+        <path class="wire" d="M240,120 H400 V150"/>
+        <rect x="376" y="150" width="48" height="9" fill="var(--sig)"/>
+        <text class="t-note" x="400" y="140" text-anchor="middle">active</text>
+
+        <!-- interface network -->
+        <path class="wire" d="M400,159 V186"/>
+        <path class="wire" d="M400,186 H434 M400,186 V236 H434"/>
+        <!-- Cdl -->
+        <g stroke="var(--sig)" stroke-width="2.2" fill="none">
+          <line x1="452" y1="174" x2="452" y2="198"/>
+          <line x1="464" y1="174" x2="464" y2="198"/>
+        </g>
+        <line class="wire" x1="434" y1="186" x2="452" y2="186"/>
+        <line class="wire" x1="464" y1="186" x2="510" y2="186"/>
+        <text class="t-note" x="480" y="166">C_dl — reversible</text>
+        <!-- Rf -->
+        <rect x="440" y="226" width="46" height="20" fill="var(--surface)" stroke="var(--ir)" stroke-width="1.8"/>
+        <line class="wire" x1="434" y1="236" x2="440" y2="236"/>
+        <line class="wire" x1="486" y1="236" x2="510" y2="236"/>
+        <text class="t-ir" x="463" y="266" text-anchor="middle">R_f — irreversible</text>
+        <path class="wire" d="M510,186 V236 M510,211 H548"/>
+        <!-- Rs -->
+        <rect x="548" y="201" width="52" height="20" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.8"/>
+        <text class="t-note" x="574" y="194" text-anchor="middle">R_s</text>
+        <line class="wire" x1="600" y1="211" x2="700" y2="211"/>
+        <path class="wire" d="M700,211 V166"/>
+        <rect x="676" y="157" width="48" height="9" fill="var(--ink-2)"/>
+        <text class="t-note" x="700" y="150" text-anchor="middle">return</text>
+
+        <text class="t-sub" x="400" y="302" text-anchor="middle">everything inside the dashed box is saltwater</text>
+
+        <!-- return path with sense resistor -->
+        <path class="wire" d="M700,157 V132 H812 V352 H286 V352"/>
+        <path class="wire" d="M286,352 H60 V120 H118"/>
+        <rect x="380" y="342" width="60" height="20" fill="var(--surface)" stroke="var(--sig)" stroke-width="1.8"/>
+        <text class="t-sub" x="410" y="356" text-anchor="middle">R_sense</text>
+        <text class="t-sub" x="410" y="378" text-anchor="middle">100 Ω, 0.1 % — keep it small or it steals your voltage</text>
+
+        <!-- ch1 tap -->
+        <g class="lead"><path d="M380,342 V308 H510"/><path d="M440,342 V318 H510"/></g>
+        <rect class="box" x="510" y="300" width="150" height="34" rx="2" stroke="var(--sig)"/>
+        <text class="t-sub" x="585" y="315" text-anchor="middle">Ch 1 — current</text>
+        <text class="t-sub" x="585" y="328" text-anchor="middle">I = V/R_sense</text>
+
+        <!-- reference + buffer -->
+        <line x1="620" y1="86" x2="620" y2="140" stroke="var(--muted)" stroke-width="1.8"/>
+        <rect x="600" y="132" width="40" height="9" fill="var(--muted)"/>
+        <text class="t-sub" x="620" y="80" text-anchor="middle">Ag/AgCl</text>
+        <g stroke="var(--ink-2)" stroke-width="1.6" fill="var(--surface)">
+          <polygon points="850,96 850,148 896,122"/>
+        </g>
+        <path class="lead" d="M424,150 V62 H836 V110 H850"/>
+        <path class="lead" d="M620,90 H844 V134 H850"/>
+        <text class="t-sub" x="872" y="126" text-anchor="middle">×1</text>
+        <rect class="box" x="912" y="104" width="132" height="36" rx="2" stroke="var(--sig)"/>
+        <text class="t-sub" x="978" y="120" text-anchor="middle">Ch 2 — potential</text>
+        <text class="t-sub" x="978" y="133" text-anchor="middle">vs Ag/AgCl</text>
+        <line class="wire" x1="896" y1="122" x2="912" y2="122"/>
+        <text class="t-sub" x="978" y="158" text-anchor="middle">buffer &gt; 1 GΩ input</text>
+        <text class="t-sub" x="978" y="172" text-anchor="middle">or the reference drifts</text>
+
+        <text class="t-note" x="838" y="230">Ch 1 gives you charge.</text>
+        <text class="t-note" x="838" y="248">Ch 2 gives you safety.</text>
+        <text class="t-sub" x="838" y="266">You need both traces on every pulse.</text>
+      </svg>
+    </div>
+    <figcaption><b>Read the loop, not the boxes.</b> Photocurrent leaves the diode stack, crosses into the solution through <code>C_dl</code> (good) or <code>R_f</code> (bad), travels through the bulk resistance <code>R_s</code>, and returns through a deliberately oversized return electrode. <code>R_sense</code> sits in the return leg because that is the only place a series resistor can go without a differential amplifier floating at electrode potential.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 4. READING THE DATA ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">04</div>
+    <div><h2>How to read a single pulse</h2><p>The trace that separates safe charge from damage</p></div>
+  </div>
+
+  <div class="col">
+    <p>This is the figure to internalise before you take any data, because it tells you what you are looking at. Everything in a stimulation transient happens in a fixed order, and each feature has a distinct physical cause.</p>
+  </div>
+
+  <figure>
+    <p class="figlabel">Figure 4 — annotated voltage transient (Ch 2)</p>
+    <div class="figbox">
+      <svg viewBox="0 0 1060 400" role="img" aria-label="Annotated electrode potential transient: an instantaneous access voltage step at pulse onset, a polarization ramp while the double layer charges, a matching step back at pulse end, a slow self-discharge, and a residual offset indicating irreversible charge.">
+        <!-- light pulse -->
+        <text class="t-ir" x="60" y="44">880 nm</text>
+        <path d="M60,72 H190 V44 H470 V72 H900" fill="none" stroke="var(--ir)" stroke-width="2"/>
+        <text class="t-sub" x="330" y="38" text-anchor="middle" fill="var(--ir)">5 ms pulse</text>
+
+        <!-- axes -->
+        <line x1="120" y1="110" x2="120" y2="330" stroke="var(--rule)" stroke-width="1.4"/>
+        <line x1="120" y1="330" x2="900" y2="330" stroke="var(--rule)" stroke-width="1.4"/>
+        <text class="t-ax" x="112" y="120" text-anchor="end">0 V</text>
+        <text class="t-ax" x="112" y="300" text-anchor="end">−</text>
+        <text class="t-ax" x="510" y="350" text-anchor="middle">time</text>
+
+        <!-- water window -->
+        <line x1="120" y1="292" x2="900" y2="292" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="6 5"/>
+        <text class="t-warn" x="136" y="286">water window limit — beyond this you electrolyse saline</text>
+
+        <!-- trace -->
+        <path d="M120,140 H190 V182 L470,258 V214 C540,232 640,246 760,150 L900,146"
+              fill="none" stroke="var(--sig)" stroke-width="2.4"/>
+        <line x1="120" y1="140" x2="900" y2="140" stroke="var(--sig)" stroke-width="1" stroke-dasharray="3 5" opacity=".55"/>
+
+        <!-- annotations -->
+        <g class="lead">
+          <path d="M210,182 H268"/>
+          <path d="M330,120 V208"/>
+          <path d="M478,224 H556 V262"/>
+          <path d="M300,300 V222"/>
+          <path d="M872,146 V224 H812"/>
+        </g>
+        <text class="t-note" x="274" y="178">V_a = I·R_s — instantaneous</text>
+        <text class="t-sub" x="274" y="193">solution resistance, not the electrode. Subtract it.</text>
+        <text class="t-note" x="338" y="114">polarization ramp — charging C_dl</text>
+        <text class="t-sub" x="338" y="129">a straight ramp means purely capacitive: good</text>
+        <text class="t-note" x="560" y="272">same step back</text>
+        <text class="t-sub" x="560" y="287">same magnitude as V_a</text>
+        <text class="t-note" x="150" y="308">if the ramp bends or flattens here,</text>
+        <text class="t-ir" x="150" y="323">faradaic current has started</text>
+        <text class="t-note" x="700" y="228">residual offset</text>
+        <text class="t-sub" x="700" y="246">charge that never came back →</text>
+        <text class="t-ir" x="700" y="261">irreversible reaction happened</text>
+      </svg>
+    </div>
+    <figcaption><b>The measurement you report is not a single number but a pair.</b> Integrate Ch 1 over the pulse to get charge, divide by the active electrode area to get charge density in µC/cm². Then use this Ch 2 trace to say whether that charge was reversible. A charge-density figure quoted without the transient behind it is uninterpretable, and anyone who works on stimulation hardware will ask for it immediately.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 5. PHASE 1 vs 2 ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">05</div>
+    <div><h2>What the projector adds — and why not on day one</h2></div>
+  </div>
+
+  <div class="col">
+    <p>A <b>DLP</b> is the chip inside an ordinary office projector: a grid of microscopic aluminium mirrors, each tilting ±12° thousands of times a second. Tilt one way and light from the source goes out the lens; tilt the other and it goes into a beam dump. Grey levels come from the fraction of each frame a mirror spends "on". It is a spatial light modulator — it stamps an image onto whatever light you point at it, and nothing more.</p>
+    <p>A <b>DLP evaluation board</b> is that chip sold on a small PCB with its driver ASIC and an HDMI or USB input, so engineers can prototype with it. Your laptop sees it as a second monitor. Don't substitute a consumer projector: those carry an IR-cut filter in the light path by design, plus fixed frame timing and colour processing you cannot disable — all three of which break this experiment.</p>
+  </div>
+
+  <figure>
+    <p class="figlabel">Figure 5 — the only thing that changes between phases</p>
+    <div class="figbox">
+      <svg viewBox="0 0 1060 260" role="img" aria-label="Phase 1 uses a microcontroller-driven 880 nm LED and a diffuser; Phase 2 inserts a digital micromirror device between the LED and a projection lens. Everything downstream is identical in both.">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--sig)"/>
+          </marker>
+        </defs>
+        <text class="t-sub" x="16" y="34">PHASE 1 — one intensity, no image</text>
+        <rect class="box" x="16" y="44" width="150" height="52" rx="2"/>
+        <text class="t-title" x="91" y="68" text-anchor="middle">MCU / AD3</text>
+        <text class="t-sub" x="91" y="84" text-anchor="middle">gated PWM</text>
+        <rect class="box" x="216" y="44" width="150" height="52" rx="2" stroke="var(--ir)"/>
+        <text class="t-title" x="291" y="68" text-anchor="middle">880 nm LED</text>
+        <text class="t-sub" x="291" y="84" text-anchor="middle">constant current</text>
+        <rect class="box" x="416" y="44" width="150" height="52" rx="2"/>
+        <text class="t-title" x="491" y="68" text-anchor="middle">Diffuser</text>
+        <text class="t-sub" x="491" y="84" text-anchor="middle">uniform field</text>
+        <g stroke="var(--sig)" stroke-width="1.6">
+          <line x1="166" y1="70" x2="212" y2="70" marker-end="url(#a5)"/>
+          <line x1="366" y1="70" x2="412" y2="70" marker-end="url(#a5)"/>
+          <line x1="566" y1="70" x2="742" y2="70" marker-end="url(#a5)"/>
+        </g>
+
+        <text class="t-sub" x="16" y="164">PHASE 3 — the same light, now patterned</text>
+        <rect class="box" x="16" y="174" width="150" height="52" rx="2"/>
+        <text class="t-title" x="91" y="198" text-anchor="middle">Laptop HDMI</text>
+        <text class="t-sub" x="91" y="214" text-anchor="middle">encoder output</text>
+        <rect class="box" x="216" y="174" width="150" height="52" rx="2" stroke="var(--ir)"/>
+        <text class="t-title" x="291" y="198" text-anchor="middle">880 nm LED</text>
+        <text class="t-sub" x="291" y="214" text-anchor="middle">same part</text>
+        <rect class="box" x="416" y="174" width="150" height="52" rx="2" stroke="var(--ir)" stroke-width="2.6" fill="var(--ir-soft)"/>
+        <text class="t-title" x="491" y="196" text-anchor="middle">DMD</text>
+        <text class="t-sub" x="491" y="211" text-anchor="middle">mirror array + lens</text>
+        <text class="t-ir" x="491" y="248" text-anchor="middle">the only new part</text>
+        <g stroke="var(--sig)" stroke-width="1.6">
+          <line x1="166" y1="200" x2="212" y2="200" marker-end="url(#a5)"/>
+          <line x1="366" y1="200" x2="412" y2="200" marker-end="url(#a5)"/>
+          <line x1="566" y1="200" x2="742" y2="200" marker-end="url(#a5)"/>
+        </g>
+
+        <rect class="box" x="746" y="44" width="298" height="182" rx="2" stroke="var(--sig)" fill="var(--sig-soft)"/>
+        <text class="t-title" x="895" y="118" text-anchor="middle">Identical downstream</text>
+        <text class="t-sub" x="895" y="140" text-anchor="middle">photodiodes → electrodes → PBS</text>
+        <text class="t-sub" x="895" y="156" text-anchor="middle">→ R_sense, buffer, two scope channels</text>
+      </svg>
+    </div>
+    <figcaption><b>Build the right-hand box first and never touch it again.</b> If the measurement chain is already characterised and stable, then when the DMD arrives every new number it produces is attributable to the optics. Change one side at a time.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 6. STEPS ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">06</div>
+    <div><h2>Build order</h2><p>Fifteen steps, each with the reason it comes where it does</p></div>
+  </div>
+
+  <div class="phase"><b>Phase 0</b> — calibrate before you measure &nbsp;·&nbsp; ~1 weekend</div>
+  <div class="steps">
+
+    <div class="step"><div class="num">01</div><div>
+      <h3>Build the light-tight enclosure, and set your IR safety practice</h3>
+      <p>A cardboard box lined with black felt, with a hand port. Get IR-blocking eyewear before the LED arrives, not after.</p>
+      <div class="why"><span>Why first</span><em>880 nm is invisible, so your blink and aversion reflexes do not fire — the one genuine hazard here is dangerous precisely because it looks like nothing is happening. The enclosure earns its place twice: silicon photodiodes respond broadly across the near-IR, so room light and especially any incandescent source adds a large DC pedestal that swamps your signal.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">02</div><div>
+      <h3>Characterise the source: drive current → optical power → irradiance at the plane of the diode</h3>
+      <p>Borrow a power meter from a lab for an afternoon. Record power at several drive currents, measure the illuminated spot area, and convert to mW/mm². Keep the LED on a fixed mount and never move it afterwards.</p>
+      <div class="why"><span>Why now</span><em>Every result you produce is expressed per unit irradiance, and PRIMA's ceiling is a specific number — 3.5 mW/mm². Without an absolute calibration your dataset is a set of arbitrary units that cannot be compared to any published device, which is most of what makes the project worth showing.</em></div>
+    </div></div>
+  </div>
+
+  <div class="phase"><b>Phase 1</b> — dry electrical &nbsp;·&nbsp; ~1 weekend</div>
+  <div class="steps">
+    <div class="step"><div class="num">03</div><div>
+      <h3>Photodiode in the dark: I–V curve and dark current</h3>
+      <p>With the enclosure closed, sweep and record. Confirm your amplifier's noise floor sits well below the currents you expect (tens of nA to a few µA).</p>
+      <div class="why"><span>Why</span><em>This is your instrument baseline. If you skip it you will later spend a weekend chasing a "signal" that is your own amplifier's offset drift.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">04</div><div>
+      <h3>Photocurrent versus irradiance, into a known resistor</h3>
+      <p>Sweep across the full irradiance range from step 2. Plot photocurrent against mW/mm² and check linearity.</p>
+      <div class="why"><span>Why before saline</span><em>This establishes the responsivity of your actual part in your actual geometry, and gives you a current budget. When the electrochemistry later behaves oddly you will know whether the light side is delivering what it should, because you measured it in isolation first.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">05</div><div>
+      <h3>Open-circuit voltage of one, two and three diodes in series</h3>
+      <p>Measure <code>V_oc</code> for each configuration, still dry.</p>
+      <div class="why"><span>Why this is the good step</span><em>You will find roughly 0.5 V per junction, largely independent of how hard you drive the light — because <code>V_oc</code> depends only logarithmically on illumination. That is the constraint that forces PRIMA to stack diodes. Seeing it on the bench, and being able to say why more light does not fix it, is the most instructive result of Phase 1.</em></div>
+    </div></div>
+  </div>
+
+  <div class="phase"><b>Phase 2</b> — wet electrochemistry, the core of the project &nbsp;·&nbsp; ~3–4 weekends</div>
+  <div class="steps">
+    <div class="step"><div class="num">06</div><div>
+      <h3>Assemble the three-electrode cell</h3>
+      <p>PBS at pH 7.4. A small platinum active electrode of accurately known geometric area, a platinum mesh return electrode with area at least fifty times larger, and an Ag/AgCl reference. Chloridise your own silver wire if buying a reference is out of budget.</p>
+      <div class="why"><span>Why the size asymmetry</span><em>Current density is what drives electrochemistry, so making the return electrode much larger keeps its interface far from any interesting regime. All the chemistry then happens at the one electrode whose area you know, and every µC/cm² you report belongs to that electrode alone.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">07</div><div>
+      <h3>Baseline the electrode electrochemically, before any light</h3>
+      <p>Run electrochemical impedance spectroscopy across roughly 1 Hz–100 kHz, and a few cyclic voltammetry cycles inside the water window. Extract <code>R_s</code> and <code>C_dl</code>.</p>
+      <div class="why"><span>Why you need these two numbers</span><em>They are the parameters of Figure 3. You cannot decompose a transient into access voltage and polarization without knowing <code>R_s</code>, and you cannot say whether the charge you delivered was capacitive without knowing what <code>C_dl</code> should have absorbed. CV also verifies the electrode is clean and that its electrochemically active area matches its geometric area — those two differ by a surprising factor on rough platinum.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">08</div><div>
+      <h3>First light-driven pulse into saline</h3>
+      <p>Single 5 ms pulse. Capture Ch 1 and Ch 2 simultaneously. Save the raw trace.</p>
+      <div class="why"><span>Why</span><em>This is the first real datapoint of the project and the moment the whole chain is proven end to end. Archive the raw waveform, not a processed number — you will reinterpret it three times as your understanding improves.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">09</div><div>
+      <h3>Sweep irradiance and pulse width; build the charge-density dataset</h3>
+      <p>Integrate Ch 1 over each pulse, divide by the active area, and tabulate µC/cm² against irradiance and duration. Automate the sweep and the integration.</p>
+      <div class="why"><span>Why automate</span><em>The parameter space is two-dimensional and each point needs a settling interval, so this is hours of repetitive triggering and it is exactly the kind of measurement loop you already know how to script. It is also where a hand-run experiment quietly accumulates inconsistency.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">10</div><div>
+      <h3>Decompose every transient using Figure 4</h3>
+      <p>For each pulse, extract access voltage, polarization slope, and residual offset after decay. Flag any pulse whose ramp deviates from linear.</p>
+      <div class="why"><span>Why</span><em>Charge density alone is not a safety claim. This step is what converts a number into an argument — it tells you which fraction of the delivered charge was reversible, which is the only version of the number a device engineer will accept.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">11</div><div>
+      <h3>Find your electrode's ceiling empirically</h3>
+      <p>Raise charge density until the transient shows faradaic onset or the electrode potential leaves the water window (roughly −0.6 to +0.8 V vs Ag/AgCl on platinum). Record the threshold. Inspect the electrode afterwards.</p>
+      <div class="why"><span>Why measure rather than cite</span><em>The often-quoted limit for smooth platinum is around 0.35 µC/cm², but that figure is geometry- and waveform-dependent and your electrode is neither smooth nor identical to the one it came from. A measured ceiling on your own electrode is a result. A cited one is a footnote.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">12</div><div>
+      <h3>Upgrade the coating and repeat steps 7–11</h3>
+      <p>Electrodeposit PEDOT:PSS, or grow iridium oxide, onto an identical electrode. Rerun the full characterisation.</p>
+      <div class="why"><span>Why this is the strongest single result</span><em>Coatings raise the injectable charge ceiling by increasing effective surface area and adding reversible faradaic capacity — often by an order of magnitude. Showing the ceiling move on your own bench, with the before-and-after EIS to explain it, demonstrates you understand the actual materials lever every implant company pulls.</em></div>
+    </div></div>
+  </div>
+
+  <div class="phase"><b>Phase 3</b> — patterning, arrays, and the result &nbsp;·&nbsp; ~3–4 weekends</div>
+  <div class="steps">
+    <div class="step"><div class="num">13</div><div>
+      <h3>Add the DMD; build a small array; measure crosstalk</h3>
+      <p>Illuminate one pixel and measure the current at its neighbours. Report crosstalk as a fraction, against pitch and against the optical spot size.</p>
+      <div class="why"><span>Why crosstalk and not resolution</span><em>An array of passive photovoltaic pixels sharing an electrolyte is not the same thing as N independent pixels — current spreads through the solution, and neighbouring return paths couple. Crosstalk, not mirror count, is what actually limits achievable contrast, and measuring it is the step that turns "I built a projector" into "I characterised an array".</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">14</div><div>
+      <h3>Shrink the effective pixel and repeat</h3>
+      <p>Mask the diode area down and pair it with proportionally smaller electrodes, at several sizes. Rerun steps 9–11 at each. This produces the horizontal axis of Figure 6.</p>
+      <div class="why"><span>Why this is the whole point</span><em>Charge per pixel falls with collecting area while the charge density needed to reach the target neurons rises as the pixel gets small relative to its distance from them. Those two trends close the operating window at some pitch, and that pitch is the acuity limit of the entire technology. Producing that crossing point from your own measurements is the headline result.</em></div>
+    </div></div>
+
+    <div class="step"><div class="num">15</div><div>
+      <h3>Close the loop: camera → encoder → projector at 30 Hz</h3>
+      <p>Contrast enhancement, edge emphasis, mapping to your available grey levels, driving the DMD. Report end-to-end latency and where it is spent.</p>
+      <div class="why"><span>Why last</span><em>It is the least uncertain part of the project and the part most likely to expand to fill available time. Done at the end it completes the systems story; done at the start it eats the weekends the electrochemistry needed.</em></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============ 7. RESULT ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">07</div>
+    <div><h2>The figure you are working toward</h2></div>
+  </div>
+
+  <figure>
+    <p class="figlabel">Figure 6 — target result (schematic: the shape you are testing, not data)</p>
+    <div class="figbox">
+      <svg viewBox="0 0 1060 400" role="img" aria-label="Schematic plot of charge density against pixel pitch. Required charge density rises steeply as pitch shrinks; deliverable charge density is roughly flat. They cross at an intermediate pitch, and below that crossing no safe operating window exists.">
+        <line x1="130" y1="60" x2="130" y2="320" stroke="var(--rule)" stroke-width="1.4"/>
+        <line x1="130" y1="320" x2="960" y2="320" stroke="var(--rule)" stroke-width="1.4"/>
+        <text class="t-ax" x="130" y="352" text-anchor="middle">20</text>
+        <text class="t-ax" x="420" y="352" text-anchor="middle">55</text>
+        <text class="t-ax" x="705" y="352" text-anchor="middle">100</text>
+        <text class="t-ax" x="960" y="352" text-anchor="middle">140</text>
+        <text class="t-ax" x="545" y="378" text-anchor="middle">pixel pitch (µm)</text>
+        <text class="t-ax" x="118" y="70" text-anchor="end">high</text>
+        <text class="t-ax" x="118" y="316" text-anchor="end">low</text>
+        <text class="t-ax" x="60" y="200" text-anchor="middle" transform="rotate(-90 60 200)">charge density (µC/cm²)</text>
+
+        <!-- headroom between the two curves, right of the crossing -->
+        <path d="M420,200 C560,240 760,272 960,286 L960,178 C800,184 600,192 420,200 Z" fill="var(--sig-soft)"/>
+
+        <!-- safety ceiling -->
+        <line x1="130" y1="110" x2="960" y2="110" stroke="var(--warn)" stroke-width="1.8" stroke-dasharray="7 5"/>
+        <text class="t-warn" x="956" y="102" text-anchor="end">electrochemical ceiling — your step 11 number</text>
+
+        <!-- required -->
+        <path d="M130,80 C240,140 340,180 420,200 C560,240 760,272 960,286" fill="none" stroke="var(--ir)" stroke-width="2.6"/>
+        <text class="t-ir" x="176" y="72">required to reach threshold</text>
+
+        <!-- deliverable -->
+        <path d="M130,216 C300,208 380,204 420,200 C600,192 800,184 960,178" fill="none" stroke="var(--sig)" stroke-width="2.6"/>
+        <text class="t-note" x="600" y="172" fill="var(--sig)">deliverable at 3.5 mW/mm²</text>
+
+        <!-- headroom label -->
+        <text class="t-sub" x="770" y="238" text-anchor="middle">headroom — the operating window</text>
+
+        <!-- crossing -->
+        <line x1="420" y1="200" x2="420" y2="322" stroke="var(--ink-2)" stroke-width="1.2" stroke-dasharray="4 4"/>
+        <circle cx="420" cy="200" r="5" fill="var(--ink)"/>
+        <text class="t-note" x="432" y="300">acuity limit — the number your bench produces</text>
+        <text class="t-sub" x="432" y="315">below this pitch there is no safe operating window</text>
+        <text class="t-sub" x="150" y="268">no window: threshold demands more charge</text>
+        <text class="t-sub" x="150" y="282">than the pixel can safely deliver</text>
+
+        <!-- prima marker -->
+        <line x1="705" y1="188" x2="705" y2="322" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="t-sub" x="713" y="200">PRIMA ships here</text>
+      </svg>
+    </div>
+    <figcaption><b>Axes deliberately unnumbered — your data fills them in.</b> This is the claim the project exists to test, and it is a claim about a trade-off rather than a demonstration that something lights up. Anyone at Science, Neuralink or Precision reading this figure will immediately recognise that you understood the constraint governing their product: resolution is not limited by how small a pixel can be fabricated, but by where these two curves cross.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 8. BOM ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">08</div>
+    <div><h2>Bill of materials</h2><p>Approximate; assumes a borrowed power meter and access to a potentiostat</p></div>
+  </div>
+
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Item</th><th>Notes</th><th class="n">Phase</th><th class="n">Est. $</th></tr></thead>
+    <tbody>
+      <tr><td>Si photodiodes</td><td>BPW34 or similar; ~7.5 mm² active area, response peaks near 900 nm. Buy twenty.</td><td class="n">1</td><td class="n">20</td></tr>
+      <tr><td>NIR LED</td><td>850–880 nm. 850 nm parts are far easier to source and the photodiode response barely differs — say so in your writeup rather than quietly substituting.</td><td class="n">1</td><td class="n">15</td></tr>
+      <tr><td>Constant-current driver</td><td>MOSFET + sense resistor, gated by the MCU. Avoid PWM dimming — you need a clean rectangular optical pulse.</td><td class="n">1</td><td class="n">20</td></tr>
+      <tr><td>Analog Discovery 3 <span style="color:var(--muted)">or scope + function gen</span></td><td>Two synchronous channels plus a trigger output that fires the LED. Synchrony matters more than bandwidth here.</td><td class="n">1</td><td class="n">400</td></tr>
+      <tr><td>Low-bias-current op-amps</td><td>OPA192, LMP7721 or similar for the reference buffer. Input bias current is the spec that matters.</td><td class="n">2</td><td class="n">25</td></tr>
+      <tr><td>Platinum wire and mesh</td><td>0.25 mm wire for the active electrode, mesh for the return.</td><td class="n">2</td><td class="n">120</td></tr>
+      <tr><td>Ag/AgCl reference</td><td>Commercial, or chloridised silver wire for a few dollars if you accept more drift.</td><td class="n">2</td><td class="n">80</td></tr>
+      <tr><td>Potentiostat</td><td>Rodeostat for EIS and CV, or book time on a lab instrument.</td><td class="n">2</td><td class="n">300</td></tr>
+      <tr><td>PBS, glassware, epoxy, heat-shrink</td><td>Insulate everything except the defined active area — an uncontrolled area invalidates every µC/cm².</td><td class="n">2</td><td class="n">60</td></tr>
+      <tr><td>Manual XY stage and posts</td><td>Repeatable geometry between sessions.</td><td class="n">2</td><td class="n">90</td></tr>
+      <tr><td>DLP evaluation board</td><td>TI LightCrafter family. Confirm the DMD window transmits at your wavelength before ordering.</td><td class="n">3</td><td class="n">450</td></tr>
+      <tr><td>IR-blocking eyewear</td><td>Not optional.</td><td class="n">0</td><td class="n">40</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="figlabel" style="margin-top:14px">Phase 0–2 lands near $1,100 with the instrument, or roughly $300 if you can borrow a scope and a potentiostat. Phase 3 adds about $450.</p>
+</section>
+
+<!-- ============ 9. PITFALLS ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">09</div>
+    <div><h2>Failure modes, named in advance</h2><p>Each of these will cost you a weekend if you meet it without expecting it</p></div>
+  </div>
+
+  <div class="cards">
+    <div class="card hot"><span class="chip">Safety</span><h3>Invisible beam, no reflex</h3><p>At 880 nm your eye gives you no warning at all. Milliwatt LEDs are manageable; a laser diode at any real power is not something to align casually. Eyewear on, beam below eye level, enclosure closed.</p></div>
+    <div class="card"><span class="chip">Expected</span><h3>One diode won't drive the interface</h3><p>Roughly 0.5 V per junction, and more light barely helps. Plan for two in series from the start, and record the single-diode result anyway — it is a finding, not a false start.</p></div>
+    <div class="card"><span class="chip">Silent</span><h3>Reference electrode drift</h3><p>Any appreciable current through the reference destroys its potential. Buffer it with a genuinely high-impedance input, and re-check it against a second reference weekly.</p></div>
+    <div class="card"><span class="chip">Silent</span><h3>Uncontrolled electrode area</h3><p>A wire dipped into solution has whatever area the meniscus decides. Epoxy or heat-shrink everything but a defined tip, and state how you determined the area.</p></div>
+    <div class="card"><span class="chip">Silent</span><h3>Stray IR pedestal</h3><p>Silicon photodiodes see far more than you do. Any incandescent lamp, sunlight, or an IR remote in the room adds a DC offset. Work dark, or modulate and detect at the modulation frequency.</p></div>
+    <div class="card"><span class="chip">Procurement</span><h3>IR-cut filters everywhere</h3><p>Consumer projectors, most webcams and many lenses are deliberately blind at 880 nm. Check transmission at your wavelength before buying any optic.</p></div>
+    <div class="card"><span class="chip">Data</span><h3>Dissolved oxygen</h3><p>Oxygen reduction is a faradaic path that will show up in your transients and shift your apparent ceiling. Either purge with nitrogen or report that you did not, consistently.</p></div>
+    <div class="card"><span class="chip">Data</span><h3>Sense resistor too large</h3><p>You only have about a volt in the whole loop. A large sense resistor buys you signal and steals the voltage the interface needed. Pick it, then verify the loop still delivers the charge you expect.</p></div>
+  </div>
+</section>
+
+<!-- ============ 10. WRITEUP ============ -->
+<section>
+  <div class="sec-head">
+    <div class="mark">10</div>
+    <div><h2>What to publish</h2></div>
+  </div>
+
+  <div class="col">
+    <p>Write it as a short methods paper, not a build log. Four things carry it:</p>
+    <ul class="plain">
+      <li><b>Figure 6 with your own numbers on the axes</b> — the crossing point, and the pitch at which your window closes.</li>
+      <li><b>A before-and-after ceiling from step 12</b> — bare platinum versus coated, with the EIS that explains the difference.</li>
+      <li><b>One transient, fully decomposed</b> — access voltage, polarization, residual — showing you can tell reversible charge from damage.</li>
+      <li><b>The failure mode you hit and did not expect.</b> Every real bench has one. Including it is what makes a reader believe the rest of the numbers.</li>
+    </ul>
+    <p>Then state plainly what the bench cannot tell you: there are no neurons in it. You have measured the electrical and electrochemical half of the problem and bounded the space a real device must live in — which is a precise and defensible claim, and a far better one than an overreach about restoring vision.</p>
+  </div>
+
+  <div class="callout">
+    <span class="chip">Scope discipline</span>
+    <p>Phase 0–2 alone is a complete, defensible project with a real result. If the DMD never arrives, or the array never works, stop at step 12 and write up what you have. A finished small project beats an abandoned large one every time, and the electrochemistry is the half that is hard to fake.</p>
+  </div>
+</section>
+
+<footer>
+  Device specifications from the PRIMA four-year clinical results (medRxiv 2023.11.12.23298227) and Palanker group work on photovoltaic subretinal prostheses. Electrode safety limits are geometry- and waveform-dependent — measure your own.
+</footer>
+
+</div>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="reading-the-pam.html"><small>← Previous note</small><span>Reading the PAM</span></a><a class="next" href="index.html"><small>All notes →</small><span>Reading notes</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

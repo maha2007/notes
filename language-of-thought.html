@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>In search of the brain&#x27;s language of thought · Maha Nawaz</title>
+<meta name="description" content="How the brain builds brand-new thoughts from old parts: map-like codes in the default mode network, sentence-like role slots in temporal and prefrontal cortex."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="In search of the brain&#x27;s language of thought"><meta property="og:description" content="How the brain builds brand-new thoughts from old parts: map-like codes in the default mode network, sentence-like role slots in temporal and prefrontal cortex.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: single reading column (~68ch) with wider figure panels; each section = one figure panel, prose then redrawn diagram */
+:root{
+  --paper:#EDF0F3; --panel:#FFFFFF; --ink:#17202C; --muted:#586374; --rule:#D2D8E0; --soft:#E2E7ED;
+  --accent:#C9440E; --cool:#2856C2;
+  --cortex:#2F343C; --cortex-ink:#ECEFF3; --cortex-line:#5C6573;
+  --display:'Bricolage Grotesque','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --body:'Literata',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:17px/1.62 var(--body);}
+.wrap{max-width:900px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(23px,3.4vw,30px);font-weight:700;margin-top:64px}
+h3{font-size:19px;font-weight:700;margin-top:36px}
+p{margin:12px 0}
+.eyebrow,.tag{font:500 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tag{color:var(--accent)}
+.cite{color:var(--muted);font-size:15px;margin-top:10px}
+.lede{font-size:19px;margin-top:20px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+nav.toc a{font:500 13px var(--mono);color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:5px 10px;border-radius:999px;background:var(--panel)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+.short{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:28px}
+.short ol{margin:8px 0 0;padding-left:20px;display:grid;gap:6px}
+.fig{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px;margin:22px 0}
+.fig .scroll{overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto}
+.fig .wide svg{min-width:640px}
+.cap{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
+.cap b{color:var(--ink);font-weight:600}
+.read{display:grid;gap:10px;margin:16px 0}
+.read div{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:baseline}
+.read dt,.read .k{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.ex{background:var(--soft);border-radius:8px;padding:12px 16px;margin:16px 0;font-size:16px}
+.ex .eyebrow{color:var(--cool)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.two>*{min-width:0}
+@media (max-width:640px){.two{grid-template-columns:1fr}.read div{grid-template-columns:1fr;gap:2px}}
+/* SVG text */
+svg text{font-family:var(--mono);font-size:12px;fill:var(--ink)}
+svg .m{fill:var(--muted)} svg .a{fill:var(--accent)} svg .c{fill:var(--cool)}
+svg .d{font-family:var(--display);font-weight:700;font-size:16px}
+svg .s{font-size:10.5px} svg .b{font-size:14px} svg .w{fill:var(--cortex-ink)}
+svg .ln{stroke:var(--ink);fill:none} svg .lm{stroke:var(--muted);fill:none} svg .lr{stroke:var(--rule);fill:none}
+svg .la{stroke:var(--accent);fill:none} svg .lc{stroke:var(--cool);fill:none}
+svg .box{fill:var(--paper);stroke:var(--rule)}
+svg .cx{fill:var(--cortex)}
+/* widgets */
+.ctrl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:12px;font:13px var(--mono)}
+.ctrl label{display:flex;align-items:center;gap:8px}
+input[type=range]{width:150px;accent-color:var(--accent)}
+button{font:500 13px var(--mono);background:var(--ink);color:var(--paper);border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.picker{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}
+.picker>*{min-width:0}
+@media (max-width:560px){.picker{grid-template-columns:1fr}}
+#swatch{width:150px;height:150px;border-radius:8px;border:1px solid var(--rule)}
+.sl{display:grid;gap:8px;font:13px var(--mono)}
+.sl label{display:grid;grid-template-columns:44px 1fr 48px;gap:10px;align-items:center}
+.sl input{width:100%}
+#pickout{margin-top:10px;font-size:16px}
+canvas#vor{display:block;width:100%;height:340px;border-radius:8px;touch-action:none;cursor:grab;background:var(--paper)}
+.eq{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.eq>div{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;min-width:0;background:var(--panel)}
+.eq .f{font:15px var(--mono);margin:6px 0;overflow-x:auto;white-space:nowrap}
+@media (max-width:640px){.eq{grid-template-columns:1fr}}
+.bar{height:14px;border-radius:3px;background:linear-gradient(90deg,#3a3f47 0%,#7a1c0c 18%,#c2300f 38%,#ef6a12 58%,#f8c43a 80%,#fffbe0 100%)}
+.barlab{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--muted);margin-top:4px}
+.swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:14px}
+.swatches span{display:flex;align-items:center;gap:8px}
+.swatches i{display:inline-block;width:26px;height:18px;border-radius:3px;border:1px solid var(--rule)}
+dl.gl{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;font-size:15px}
+dl.gl dt{font:500 13px var(--mono);color:var(--accent)} dl.gl dd{margin:0}
+@media (max-width:560px){dl.gl{grid-template-columns:1fr}}
+a{color:var(--cool)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style><style>
+.combo{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font:14px var(--mono)}
+.combo select{font:14px var(--mono);padding:6px 8px;border-radius:6px;border:1px solid var(--rule);background:var(--panel);color:var(--ink)}
+.out{font:16px var(--mono);margin-top:12px;padding:10px 12px;background:var(--soft);border-radius:6px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cmp>div{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;min-width:0;background:var(--panel)}
+@media (max-width:640px){.cmp{grid-template-columns:1fr}}
+.rns{display:grid;grid-template-columns:repeat(4,auto);gap:6px 16px;font:14px var(--mono);margin-top:10px;justify-content:start}
+.rns b{color:var(--accent)}
+input[type=number]{font:14px var(--mono);width:80px;padding:5px 8px;border-radius:6px;border:1px solid var(--rule);background:var(--panel);color:var(--ink)}
+.legend{display:grid;gap:8px;font-size:15px}
+.legend div{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start}
+.legend i{width:18px;height:18px;border-radius:4px;margin-top:3px}
+</style>
+<style>
+:root{--paper:#FFF8EA;--panel:#FFFDF7;--ink:#1D2F66;--muted:#56628A;--rule:#E8DCC2;--soft:#FBEED3;--accent:#B65200;--cool:#2A57B8;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--display:'Bitter',Georgia,serif;--body:'Bitter',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-A">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+<div class="mn-series" aria-label="Series"><b>Language &amp; thought</b><span>Part 3 of 4</span><a href="huth-semantic-maps.html">1. Huth et al. 2016</a><a href="language-network.html">2. Fedorenko, Ivanova &amp; Regev 2024</a><span aria-current="page">3. Frankland &amp; Greene 2020</span><a href="language-neurons.html">4. Cai et al. 2026</a></div>
+<div class="wrap">
+<header class="col">
+  <div class="eyebrow">Reading notes · Annual Review of Psychology 71, 273–303 (2020)</div>
+  <h1 style="margin-top:10px">In Search of the Brain's Language of Thought</h1>
+  <p class="cite">Frankland &amp; Greene · "Concepts and Compositionality" · Princeton / Harvard</p><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · October 13, 2026</span></div>
+  <p class="lede">Imagine Genghis Khan, Aretha Franklin and the Cleveland Cavaliers performing an opera on Maui. You've never thought that before, yet you just did, instantly. This review asks how the brain builds brand-new thoughts out of old parts.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#lot">Language of thought</a><a href="#fig1a">Fig 1a</a><a href="#fig1b">Fig 1b</a><a href="#combo">Combination</a><a href="#dmn">DMN canvas</a><a href="#grid">Grid cells</a><a href="#limits">Map limits</a><a href="#roles">Who did what</a><a href="#models">AI models</a><a href="#links">vs other papers</a>
+  </nav>
+  <div class="short">
+    <div class="eyebrow">The 60-second version</div>
+    <ol>
+      <li><b>The puzzle:</b> thought is compositional. Finite parts, recombined, give infinite ideas.</li>
+      <li><b>Fodor's answer (1975):</b> the mind has a "language of thought" (LoT): symbols plus rules for combining them, separate from English and from perception.</li>
+      <li><b>The authors' twist:</b> the brain uses <em>two</em> complementary formats. <b>Map-like</b> codes in the default mode network (DMN) and <b>sentence-like</b> codes in temporal and prefrontal cortex.</li>
+      <li><b>Maps</b> (grid-cell-style, continuous) are great for similarity, interpolation and simulation, but bad at explicit relations like "A &gt; B" or "A did X to B".</li>
+      <li><b>Sentences</b> (discrete role slots like agent/patient) handle who-did-what-to-whom and generalize to new combinations.</li>
+      <li>Slogan: <b>prefrontal "sentences" write the instructions; the DMN "map" is the canvas</b> the thought is painted on.</li>
+    </ol>
+  </div>
+</header>
+
+<section id="lot" class="col">
+  <h2>Background: compositionality and the language of thought</h2>
+  <p><b>Compositionality</b> (Frege): the meaning of a whole is a function of the meanings of its parts <em>and how they're combined</em>. Language does this: a few thousand words plus syntax give infinitely many sentences. Fodor proposed thought itself works this way, in an internal, <b>amodal</b> (not tied to any sense or to any spoken language) symbolic code.</p>
+  <p>Two properties come for free with such a system:</p>
+  <div class="read">
+    <div><span class="k">Productivity</span><span>You can think endlessly many new thoughts: "Abraham Lincoln serenaded by nineteen purple penguins on an aircraft carrier sailing down the Nile."</span></div>
+    <div><span class="k">Systematicity</span><span>If you can think "the doctor needs an accountant", you can think "the accountant needs a doctor". Same parts, roles swapped.</span></div>
+  </div>
+  <div class="ex"><div class="eyebrow">The phrasebook contrast</div>A tourist's phrasebook has "Where is the train station?" and "Please take me to the hospital", but not "Please take me to the train station". Stored wholes don't recombine. The LoT says we are not phrasebook thinkers.</div>
+</section>
+<div class="fig">
+  <div class="eyebrow" style="margin-bottom:10px">Try it: one relation, reusable parts</div>
+  <div class="combo">
+    <select id="r" aria-label="relation"><option value="needs">needs</option><option value="chased">chased</option><option value="serenaded">serenaded</option><option value="is brighter than">is brighter than</option></select>
+    <span>(</span><select id="x" aria-label="first role"></select><span>,</span><select id="y" aria-label="second role"></select><span>)</span>
+    <button id="swap" type="button" class="ghost">Swap roles</button>
+  </div>
+  <div class="out" id="lotout"></div>
+  <div class="cap">The structure <code>relation(x, y)</code> is stored once. Any concept can fill any slot, so 4 relations × 6 × 6 concepts already give 144 thoughts from 10 parts. Swapping x and y is systematicity. Notice "the dog chased the cat" and "the cat chased the dog" use identical parts but mean different things: meaning lives in the <em>binding</em> of concepts to roles.</div>
+</div>
+<div class="col">
+  <p><b>The catch:</b> Fodor's model was inspired by silicon computers with discrete symbols and addresses. Brains are "wet": noisy spikes, learned synapses. So how could neurons implement a symbol system? The review searches the neuroscience for candidate pieces.</p>
+</div>
+
+<section id="fig1a">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 1a · The framework</div>
+  <h2 style="margin-top:6px">Two formats for the same thought</h2>
+  <p>Figure 1a is a grid. Columns go from simple to complex thoughts. Rows are three ways of representing each one.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="f1a" viewBox="0 0 900 420" role="img" aria-label="Figure 1a redrawn: external language, language-like and map-like rows"></svg></div>
+    <div class="cap"><b>Fig 1a, redrawn.</b> The map row is the key innovation. "Dog" is a region in a dog space (here size × aggressiveness). "Big dog" isn't a new symbol; it's a move to the right of that space. "Chased" and a whole festival scene are points in richer, more abstract spaces.</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">Row 1</span><span><b>External language</b>: the words you hear or say.</span></div>
+    <div><span class="k">Row 2</span><span><b>Language-like</b> (classic LoT): discrete symbols in a structure. <code>big(dog)</code>, <code>chased(dog, cat)</code>. Compact, explicit, roles are clear.</span></div>
+    <div><span class="k">Row 3</span><span><b>Map-like</b>: a position in a continuous space where nearby = similar. Rich and graded: a lapdog is close to a golden retriever on size but far from a doberman on aggressiveness.</span></div>
+    <div><span class="k">Idea</span><span>Row 2 can serve as <b>instructions</b> for building Row 3, using knowledge stored in cognitive maps. <code>big(dog)</code> says "go to the dog region, then shift along size".</span></div>
+  </div>
+</section>
+
+<section id="fig1b">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 1b · Mapping it onto the brain</div>
+  <h2 style="margin-top:6px">Where each kind of evidence lands</h2>
+  <p>Fig 1b plots results from many studies as coloured dots on the brain (each is a 6 mm sphere at a reported peak), then links each colour back to a cell of Fig 1a.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="f1b" viewBox="0 0 900 260" role="img" aria-label="Figure 1b mapping colours to brain regions and representation formats"></svg></div>
+    <div class="cap"><b>Fig 1b, redrawn as a lookup table.</b> Solid outline = direct evidence for that format; dotted = the authors' more speculative interpretation.</div>
+  </div>
+  <div class="col">
+  <div class="legend">
+    <div><i style="background:#e0442e"></i><span><b>Red, item-level combination</b> ("big dog", "lake house"): medial prefrontal, posterior cingulate, angular gyrus, left anterior temporal lobe. Mostly <b>DMN</b>. Linked to the map row (dotted) and to the language-like <code>big(dog)</code> (dotted).</span></div>
+    <div><i style="background:#7ec8e8"></i><span><b>Light blue, grid codes</b>: same DMN regions show hexagonal grid signals when navigating space <em>and</em> abstract concept spaces. Solid link to the map-like "dog space".</span></div>
+    <div><i style="background:#f2d630"></i><span><b>Yellow, who did what to whom</b>: left mid superior temporal cortex and rostral prefrontal cortex. Solid link to <code>chased(dog, cat)</code> (language-like); dotted link to "chasing space".</span></div>
+    <div><i style="background:#4a3fa6"></i><span><b>Dark blue, episodic memory and simulation</b>: DMN regions that imagine past/future events. Dotted link to the festival scene, i.e. full event simulation.</span></div>
+  </div>
+  <p style="margin-top:16px"><b>Read it this way:</b> red, light blue and dark blue overlap heavily in the DMN, so the DMN looks like the map/simulation system. Yellow sits outside it, in temporal and frontal cortex, and looks like the sentence-like role system.</p>
+  </div>
+</section>
+
+<section id="combo">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Section · Conceptual combination</div>
+  <h2 style="margin-top:6px">Evidence that the brain combines concepts</h2>
+  <p>The basic experimental trick: compare a meaningful combination with a matched non-combination. Any region that responds more is a candidate "combiner".</p>
+  </div>
+  <div class="col tablewrap"><table>
+    <tr><th>Study</th><th>Contrast</th><th>Region(s)</th><th>Lesson</th></tr>
+    <tr><td>Graves 2010 (fMRI)</td><td><b>lake house</b> &gt; house lake</td><td>PCC, dmPFC, right angular gyrus</td><td>Plausible combinations engage DMN</td></tr>
+    <tr><td>Bemis &amp; Pylkkänen (MEG)</td><td><b>red boat</b> &gt; cup boat, xqz boat</td><td>Left anterior temporal (&lt;250 ms), then angular gyrus (~350 ms), mPFC (~400 ms)</td><td>Temporal lobe combines fast; DMN follows</td></tr>
+    <tr><td>Price 2015/16</td><td><b>plaid jacket</b> &gt; moss pony</td><td>Left angular gyrus</td><td>Atrophy there impairs combination; stimulation speeds it up (causal)</td></tr>
+    <tr><td>Westerlund &amp; Pylkkänen 2014</td><td>blue <b>boat</b> &gt; blue <b>canoe</b></td><td>Left anterior temporal</td><td>Response tracks how much the concept must be updated</td></tr>
+    <tr><td>Poortman &amp; Pylkkänen 2016</td><td>trees green and big vs trees small and big</td><td>Left ATL: within one object. Right ATL: across a set</td><td>Different binding types, different hemispheres</td></tr>
+    <tr><td>Pallier 2011</td><td>Constituent size 1 → 12 words</td><td>Temporal pole, mid-STS, TPJ</td><td>Grows with meaningful constituents, but not with Jabberwocky</td></tr>
+    <tr><td>Barron 2013 (adaptation)</td><td>Imagine <b>tea</b>, then <b>tea jelly</b></td><td>mPFC</td><td>Reduced response = the part is reused inside the whole</td></tr>
+  </table></div>
+  <div class="col">
+  <h3>Two examples worth slowing down for</h3>
+  <p><b>Blue boat vs blue canoe.</b> "Canoe" alone gets a bigger response than "boat" (it's more specific). But combined, <em>blue boat</em> beats <em>blue canoe</em>. Why? For "blue canoe" you just recolour a canoe. For "blue boat" you first have to pick what kind of boat (yacht? pirate ship?), then recolour it: a bigger trip through concept space.</p>
+  <p><b>Additive vs multiplicative combination</b> (Baron &amp; Osherson 2011). They asked how the brain pattern for <em>old woman</em> relates to the patterns for <em>old</em> and <em>woman</em>:</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="tensor" viewBox="0 0 760 230" role="img" aria-label="Additive versus multiplicative combination of activity patterns"></svg></div>
+    <div class="cap"><b>Toy 3-voxel patterns.</b> <b>Additive</b> (old + woman): both parts stay recoverable side by side, like two memories retrieved together. Found in mPFC. <b>Multiplicative</b> (old × woman): voxels respond only where both parts are active, creating a new conjoint pattern, as in Smolensky's tensor-product binding. Found in mid-anterior STS and PCC.</div>
+  </div>
+  <div class="col"><p>Why both matter: compositionality needs <b>independence</b> ("doctor" means the same thing in both doctor sentences) <em>and</em> <b>interaction</b> (gray hair is like white hair, but gray clouds are like black clouds). Additive codes preserve the parts; multiplicative ones capture the interaction.</p></div>
+</section>
+
+<section id="dmn" class="col">
+  <div class="tag" style="margin-top:64px">Section · Default mode network</div>
+  <h2 style="margin-top:6px">The DMN as an amodal "canvas"</h2>
+  <p>The DMN was first found as the set of regions more active at rest. Later it was tied to memory, imagining the future, navigation and theory of mind. Buckner's summary: it builds <b>simulations of possible events</b>. The review adds conceptual combination to the list and argues the DMN fits the LoT's first tenet: an <b>amodal</b> code.</p>
+  <div class="read">
+    <div><span class="k">Movies</span><span>Watching a TV episode evokes scene-specific DMN patterns, shared across people, which reappear when people later recall the scene aloud (Chen 2017).</span></div>
+    <div><span class="k">Cross-modal</span><span>Hearing someone <em>describe</em> the scenes evokes the same DMN patterns as watching them (Zadbood 2017).</span></div>
+    <div><span class="k">Words ⇄ pictures</span><span>A classifier trained on the word "apple" can recognize a picture of an apple from DMN patterns (Fairhall &amp; Caramazza 2013).</span></div>
+    <div><span class="k">Context</span><span>DMN integrates over long time spans and its activity jumps when the task context switches.</span></div>
+  </div>
+  <p><b>Key nuance:</b> the DMN probably doesn't <em>store</em> concept knowledge. That lives in domain-specific areas (e.g., tools vs animals). The DMN is a workspace that pulls knowledge in and arranges it for the current context. Hence "canvas", not "library".</p>
+  <p>Combining concepts is also more like inference than set intersection. A <em>small car</em> is bigger than a <em>big grapefruit</em>. To combine correctly you need background knowledge about how things usually are, which is the DMN's strength.</p>
+</section>
+
+<section id="grid">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Section · Grid cells and conceptual maps</div>
+  <h2 style="margin-top:6px">A navigation code reused for thinking</h2>
+  <p><b>Place cells</b> (hippocampus) fire at one location. <b>Grid cells</b> (entorhinal cortex) fire at many locations arranged in a repeating triangular lattice, like the centres of hexagons. Different modules use different spacings. Together they form an abstract coordinate system that's reused across environments.</p>
+  </div>
+  <div class="two">
+    <div class="fig" style="margin:0"><svg id="hex" viewBox="0 0 340 300" role="img" aria-label="Grid cell firing fields on a hexagonal lattice"></svg><div class="cap"><b>One grid cell's firing fields</b> as a rat explores a box. Each blob = a spot where the cell fires. Lines show the six-fold (60°) symmetry.</div></div>
+    <div class="fig" style="margin:0"><svg id="polar" viewBox="0 0 340 300" role="img" aria-label="Six-fold modulation of BOLD signal by movement direction"></svg><div class="cap"><b>The fMRI trick (Doeller 2010).</b> Moving along a grid axis (every 60°) gives a bit more signal than moving between axes. So BOLD vs direction has 6 bumps.</div></div>
+  </div>
+  <div class="fig">
+    <div class="eyebrow" style="margin-bottom:8px">Try it: Constantinescu 2016 "bird space"</div>
+    <div class="two">
+      <div><canvas id="bird" style="width:100%;height:260px;display:block;border-radius:8px;background:var(--soft)" aria-label="Bird with adjustable neck and leg length"></canvas></div>
+      <div>
+        <div class="sl" style="display:grid;gap:10px;font:13px var(--mono)">
+          <label for="ang" style="display:grid;grid-template-columns:90px 1fr 50px;gap:10px;align-items:center">Direction <input id="ang" type="range" min="0" max="360" step="1" value="15"><span id="angv">15°</span></label>
+        </div>
+        <svg id="birdmap" viewBox="0 0 300 220" style="width:100%;margin-top:8px" role="img" aria-label="Trajectory in neck-leg space"></svg>
+        <div class="out" id="birdout" style="font-size:14px"></div>
+      </div>
+    </div>
+    <div class="cap">Participants watched a bird morph: neck and legs stretched or shrank at a chosen ratio. That ratio is a <b>direction</b> in an abstract 2-D "neck × legs" space. No real space is involved, yet mPFC, PCC and angular gyrus (DMN regions) showed the same 6-fold signal as spatial navigation. Grid alignment angle here is set to 15° for the demo.</div>
+  </div>
+  <div class="col">
+  <p><b>Why this matters for combination:</b> forming <em>red boat</em> = start at "boat", move along the colour dimension. Grid-like codes do exactly this vector displacement in navigation. Maps also support distance and "betweenness": a fax machine sits between a photocopier and a phone, which practically invites inventing it. Shepard's law (generalization falls off exponentially with psychological distance) suggests metric spaces are everywhere in cognition.</p>
+  <p>Neural networks trained just to predict where they'll be next spontaneously develop grid-like units (Whittington 2018, Cueva &amp; Wei 2018, Banino 2018). And Webb et al. found that normalizing inputs to a learned map ("context normalization") lets networks <em>extrapolate</em> beyond their training range, as humans do.</p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Section · Limits of maps</div>
+  <h2 style="margin-top:6px">What a grid code can't easily do</h2>
+  <p>Fiete et al. (2008) showed grid codes are <b>modulo</b> codes, like a residue number system (RNS): a position is stored as its remainders after dividing by each module's period. This packs huge capacity into few cells and makes adding (moving) trivial. But it has a weakness.</p>
+  </div>
+  <div class="fig">
+    <div class="eyebrow">Try it: residue code with moduli 3, 5, 7 (covers 0–104)</div>
+    <div class="combo" style="margin-top:10px"><label for="na">a</label><input id="na" type="number" min="0" max="104" value="52"><label for="nb">b</label><input id="nb" type="number" min="0" max="104" value="25"></div>
+    <div class="rns" id="rnsout"></div>
+    <div class="cap" id="rnswhy"></div>
+  </div>
+  <div class="col">
+  <p>So a pure map struggles with explicit, directional relations: <b>a &gt; b</b>, "A is left of B", "A did X to B". Decimal notation fixes this by adding <em>positional syntax</em>: you can see 222 &gt; 52 from digit positions. That's a hint the brain also needs a sentence-like format.</p>
+  <div class="ex"><div class="eyebrow">Tversky's asymmetry</div>People say North Korea is more similar to China than China is to North Korea. In a true metric space, distance(A,B) = distance(B,A). Human similarity is directional, like a sentence with a subject and a reference point, not like a map.</div>
+  <p>And maps may only get you so far. You'd never wander into "Lincoln serenaded by penguins" on your own; reaching far-flung combinations may need explicit instructions from elsewhere.</p>
+  </div>
+</section>
+
+<section id="roles">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Section · Who did what to whom</div>
+  <h2 style="margin-top:6px">Finding sentence-like role slots in the brain</h2>
+  <p>"The dog bit the man" and "the man bit the dog" contain the same concepts. Activating <em>dog</em>, <em>man</em>, <em>bite</em> isn't enough; the brain must bind each to a role. This is the authors' own research (Frankland &amp; Greene 2015, 2019).</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="stc" viewBox="0 0 860 300" role="img" aria-label="Agent and patient subregions in left mid superior temporal cortex"></svg></div>
+    <div class="cap"><b>Schematic of the key result.</b> Two neighbouring patches of left mid superior temporal cortex (lmSTC). A medial patch carries "who did it" (agent) and a lateral patch carries "to whom" (patient). The classifier was trained on some verbs and tested on <em>new</em> verbs, so the role code is reused across events.</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">Exp 1</span><span>lmSTC patterns distinguish "the dog chased the cat" from "the cat chased the dog", in both active and passive voice. Sentences like "the baby kicked the grandfather" also modulate the amygdala via lmSTC.</span></div>
+    <div><span class="k">Exp 2</span><span>Separate agent and patient subregions. "Dog" in the patient region looks the same in "the cat chased the dog" and "the dog was bumped by the boy", despite different word order and verbs. That's reuse: a <b>variable slot with a filler</b>.</span></div>
+    <div><span class="k">2019</span><span>The roles follow the <em>event's</em> causal structure, not grammatical subject/object. And <b>rostral prefrontal cortex</b> (BA10) encodes <em>narrow</em> roles: dog-as-chaser vs dog-as-scratcher, which differ in posture and meaning.</span></div>
+    <div><span class="k">Patients</span><span>Damage to mid-left STS/STG impairs understanding who did what to whom, for sentences and pictures ("the circle kissed the square").</span></div>
+  </div>
+  <div class="col">
+  <h3>Broad vs narrow roles</h3>
+  <div class="cmp">
+    <div><div class="eyebrow">lmSTC · broad roles</div><p style="margin:6px 0 0;font-size:15px"><code>agent = dog</code><br>Abstract, generalizes to any verb, maps onto sentence syntax. Like a symbol in Fodor's LoT.</p></div>
+    <div><div class="eyebrow">rPFC · narrow roles</div><p style="margin:6px 0 0;font-size:15px"><code>chaser = dog</code><br>Specific, carries how the relation plays out in the world. The authors call these "clip art": recombinable pieces with built-in detail.</p></div>
+  </div>
+  <p style="margin-top:16px">Both regions sit <em>between</em> the flexible fronto-parietal control network and the DMN. The authors propose they're waypoints: compact "digital" codes that can generate, and be generated by, the rich "analog" scenes on the DMN canvas.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="arch" viewBox="0 0 860 220" role="img" aria-label="Proposed architecture: control network, sentence-like waypoints, DMN map canvas"></svg></div>
+    <div class="cap"><b>The proposed division of labour.</b> Lateral prefrontal cortex runs the program; temporal and prefrontal waypoints hold discrete role bindings; the DMN renders the context-rich, continuous simulation.</div>
+  </div>
+  <div class="col tablewrap"><table>
+    <tr><th></th><th>Sentence-like (digital)</th><th>Map-like (analog)</th></tr>
+    <tr><td>Units</td><td>Discrete variables (agent, patient)</td><td>Continuous dimensions</td></tr>
+    <tr><td>Good at</td><td>Explicit relations, a &gt; b, recombination, inference by form ("if the glorp was bipped by the glax, the glax bipped the glorp")</td><td>Similarity, interpolation, extrapolation, planning, simulation</td></tr>
+    <tr><td>Bad at</td><td>Graded nuance</td><td>Directional relations, arbitrary bindings</td></tr>
+    <tr><td>Brain</td><td>lmSTC, rPFC (+ control network)</td><td>DMN (mPFC, PCC, angular gyrus) with grid-like codes</td></tr>
+  </table></div>
+</section>
+
+<section id="models">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Section · Computational models</div>
+  <h2 style="margin-top:6px">How AI systems approach compositionality</h2>
+  </div>
+  <div class="col read">
+    <div><span class="k">Generative</span><span><b>Bayesian Program Learning</b> (Lake 2015): learns a new handwritten character from one example by representing it as a composition of reusable strokes. <b>β-VAEs</b> learn factorized latent variables (one unit per factor, e.g. size or colour), useful building blocks. Recurrent generative models predicting next location grow grid-like codes.</span></div>
+    <div><span class="k">Memory vs compute</span><span>Like a Turing machine, separate <em>what is stored</em> from <em>what operates on it</em>. Kriete 2013's prefrontal–basal ganglia model uses <b>pointers</b> into role-specific slots and learns to put "John" in the agent slot after only seeing him as patient. The <b>Differentiable Neural Computer</b> has a controller network that reads and writes to an external memory matrix.</span></div>
+    <div><span class="k">Cross-modal</span><span>Visual question answering (CLEVR: "What size is the square left of the green metal thing right of the cylinder?") reaches 97–99.5%. Text-to-image models drew "a herd of elephants flying in blue skies" without ever seeing it. Both map vision and language into a shared space, an engineering cousin of an amodal LoT.</span></div>
+    <div><span class="k">Authors' bet</span><span>Unconstrained deep nets learn whatever minimizes error. The authors think human-like generalization needs built-in variable binding and routing, and note that separating syntax and semantics in recurrent nets improves compositional generalization.</span></div>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="ptr" viewBox="0 0 760 200" role="img" aria-label="Pointer indirection: controller writes pointers into role slots that reference concepts in memory"></svg></div>
+    <div class="cap"><b>Indirection, the trick behind pointer models.</b> Role slots don't hold the full concept; they hold an address pointing to it. Any concept can go in any slot without retraining the slot, so "John as agent" works even if John was only ever seen as a patient.</div>
+  </div>
+</section>
+
+<section id="links" class="col">
+  <h2>How it fits with the other two papers</h2>
+  <div class="read">
+    <div><span class="k">Huth 2016</span><span>Cited here as evidence for distributed semantic maps. Huth's semantic areas in parietal, medial and prefrontal cortex largely overlap the DMN, the regions this review calls the conceptual "canvas". Huth's maps capture <em>what</em> is talked about, a map-like format, but not role binding (word co-occurrence can't tell "dog bites man" from "man bites dog").</span></div>
+    <div><span class="k">Fedorenko 2024</span><span>Strong agreement on the DMN: amodal, tracks narratives and situations over long time spans, not language-selective. A possible tension: Frankland &amp; Greene's agent/patient region in left mid superior temporal cortex lies near or within the language network. Fedorenko would ask whether it's language-specific. This review notes the role effects also appear for pictures and videos, but admits people may silently translate them into language. Fedorenko's localizer approach would settle it.</span></div>
+    <div><span class="k">Timeline</span><span>This review (2020) predates Fedorenko (2024), so it doesn't use her language/MD/ToM/DMN split.</span></div>
+  </div>
+  <h3>Caveats the authors themselves stress</h3>
+  <div class="read">
+    <div><span class="k">Speculative</span><span>Much of Fig 1b's mapping is dotted lines: interpretation, not proof.</span></div>
+    <div><span class="k">DMN is plural</span><span>The DMN is really several interleaved networks that group averages blur together.</span></div>
+    <div><span class="k">Indirect grid</span><span>Human grid evidence is mostly the indirect fMRI 6-fold signal, not recordings of grid cells in prefrontal cortex.</span></div>
+  </div>
+  <h3>Glossary</h3>
+  <dl class="gl">
+    <dt>LoT</dt><dd>Language of thought: an internal symbolic code with reusable parts and combination rules.</dd>
+    <dt>Amodal</dt><dd>Not tied to one sense or input type.</dd>
+    <dt>Agent / patient</dt><dd>The doer / the one done-to in an event.</dd>
+    <dt>Binding</dt><dd>Linking a filler (dog) to a role (agent).</dd>
+    <dt>Tensor product</dt><dd>Binding by multiplying two vectors, giving a conjoint pattern.</dd>
+    <dt>fMRI adaptation</dt><dd>Repeat a representation → weaker response. Used to detect reuse.</dd>
+    <dt>MVPA</dt><dd>Multi-voxel pattern analysis: decoding information from patterns rather than overall activation.</dd>
+    <dt>Grid cell</dt><dd>Neuron firing at the vertices of a hexagonal lattice.</dd>
+    <dt>RNS</dt><dd>Residue number system: numbers stored as remainders.</dd>
+    <dt>lmSTC / rPFC</dt><dd>Left mid superior temporal cortex / rostral prefrontal cortex (BA10).</dd>
+  </dl>
+</section>
+</div>
+
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';
+function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function T(p,x,y,str,cls,anchor){const e=S('text',{x:x,y:y,class:cls||'','text-anchor':anchor||'start'},p);e.textContent=str;return e}
+const $=id=>document.getElementById(id);
+function arrow(s,id,col){const d=S('defs',{},s);const m=S('marker',{id:id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},d);S('path',{d:'M0,0L10,5L0,10z',style:'fill:'+col},m)}
+
+/* LoT combo */
+(function(){const C=['the dog','the cat','the doctor','the accountant','Genghis Khan','Aretha Franklin'];
+ ['x','y'].forEach((id,k)=>{const sel=$(id);C.forEach((c,i)=>{const o=document.createElement('option');o.value=c;o.textContent=c.replace('the ','');if(i===k)o.selected=true;sel.appendChild(o)})});
+ function upd(){const r=$('r').value,x=$('x').value,y=$('y').value;$('lotout').innerHTML='<b>'+r.replace(/ /g,'_')+'</b>('+x.replace('the ','')+', '+y.replace('the ','')+')  →  "'+x.charAt(0).toUpperCase()+x.slice(1)+' '+r+' '+y+'."'}
+ ['r','x','y'].forEach(id=>$(id).addEventListener('change',upd));$('swap').addEventListener('click',()=>{const a=$('x').value;$('x').value=$('y').value;$('y').value=a;upd()});upd();})();
+
+/* Fig 1a */
+(function(){const s=$('f1a');const cols=[['"dog"','dog'],['"big dog"','big(dog)'],['"the dog chased the cat"','chased(dog, cat)'],['"the time the big dog chased the cat','f(dog, cat, pumpkin, festival…)']];
+ const rowY=[20,90,160],rowH=[60,60,250],labels=['External language','Language-like','Map-like'];
+ labels.forEach((l,i)=>{S('rect',{x:0,y:rowY[i],width:900,height:rowH[i],class:'box',opacity:i===2?1:0.9},s);T(s,10,rowY[i]+24,l,'b');});
+ cols.forEach((c,j)=>{const cx=230+j*170;T(s,cx,55,c[0],'s','middle');if(j===3)T(s,cx,70,'… during the harvest festival"','s','middle');T(s,cx,125,c[1],'a s','middle')});
+ const mini=(x0,title,pts,xl,yl,extra)=>{const y0=380,w=140,h=170;T(s,x0+w/2,185,title,'s','middle');S('line',{x1:x0,y1:y0,x2:x0+w,y2:y0,class:'lm'},s);S('line',{x1:x0,y1:y0,x2:x0,y2:y0-h,class:'lm'},s);T(s,x0+w/2,y0+16,xl,'m s','middle');const t=T(s,0,0,yl,'m s','middle');t.setAttribute('transform','translate('+(x0-8)+','+(y0-h/2)+') rotate(-90)');pts.forEach(p=>{S('circle',{cx:x0+p[0]*w,cy:y0-p[1]*h,r:p[3]||7,fill:p[4]||'var(--muted)',opacity:p[5]||0.85},s);T(s,x0+p[0]*w,y0-p[1]*h-11,p[2],'s','middle')});if(extra)extra(x0,y0,w,h)};
+ const dogs=[[0.18,0.25,'lapdog'],[0.3,0.85,'bulldog'],[0.85,0.8,'doberman'],[0.78,0.3,'retriever']];
+ mini(160,'Dog space',dogs,'size →','aggressiveness →');
+ mini(330,'Dog space',dogs.map(d=>d[0]>0.5?d.concat([9,'#e0442e',1]):d.concat([6,'var(--muted)',0.35])),'size →','aggressiveness →',(x0,y0,w,h)=>{S('rect',{x:x0+w*0.55,y:y0-h,width:w*0.45,height:h,fill:'#e0442e',opacity:0.1},s);T(s,x0+w*0.78,y0-h+14,'"big" region','a s','middle')});
+ mini(500,'Chasing space',[[0.3,0.6,'dog→cat',8,'#f2b630'],[0.55,0.45,'cat→mouse',7],[0.75,0.7,'boy→dog',7]],'dimension 1','dimension 2');
+ mini(670,'Event simulation',[[0.3,0.5,'dog',7,'var(--muted)'],[0.5,0.55,'cat',7,'var(--muted)'],[0.45,0.25,'pumpkins',7,'#e67e22'],[0.75,0.75,'festival',7,'#8e44ad']],'dimension 1','dimension 2',(x0,y0,w,h)=>{S('rect',{x:x0+8,y:y0-h+8,width:w-16,height:h-16,fill:'none',stroke:'#4a3fa6','stroke-dasharray':'4 3'},s)});})();
+
+/* Fig 1b table-diagram */
+(function(){const s=$('f1b');const cols=['dog','big(dog)','chased(dog, cat)','f(dog, cat, …)'];const cx=j=>260+j*170;
+ S('rect',{x:0,y:30,width:900,height:70,class:'box'},s);S('rect',{x:0,y:110,width:900,height:110,class:'box'},s);
+ T(s,10,70,'Language-like','b');T(s,10,170,'Map-like','b');
+ cols.forEach((c,j)=>{T(s,cx(j),70,c,'s','middle');T(s,cx(j),170,['dog space','dog space','chasing space','event scene'][j],'m s','middle')});
+ const box=(j,y,h,col,dash,pad)=>S('rect',{x:cx(j)-75-pad,y:y-pad,width:150+2*pad,height:h+2*pad,rx:8,fill:'none',stroke:col,'stroke-width':3,'stroke-dasharray':dash?'5 4':'none'},s);
+ box(1,45,40,'#e0442e',true,0);box(1,125,80,'#e0442e',true,0);box(1,125,80,'#7ec8e8',false,6);
+ box(2,45,40,'#f2d630',false,0);box(2,125,80,'#f2d630',true,0);box(3,45,40,'#4a3fa6',true,0);box(3,125,80,'#4a3fa6',true,0);
+ T(s,10,250,'solid = direct evidence    dashed = speculative link','m s');})();
+
+/* tensor */
+(function(){const s=$('tensor');const old=[1,0,0.6],wom=[0,1,0.6];
+ const vec=(x,y,v,lab,col)=>{T(s,x+20,y-8,lab,'s','middle');v.forEach((a,i)=>{S('rect',{x:x,y:y+i*34,width:40,height:30,rx:3,fill:col,opacity:0.15+0.85*a},s);T(s,x+20,y+i*34+19,a.toFixed(1),'s','middle')})};
+ vec(20,40,old,'old','#2856c2');T(s,80,95,'+','d','middle');vec(100,40,wom,'woman','#c9440e');T(s,160,95,'=','d','middle');vec(180,40,old.map((a,i)=>a+wom[i]),'additive','#7d3c98');
+ T(s,120,200,'parts still visible side by side','m s','middle');
+ vec(330,40,old,'old','#2856c2');T(s,390,95,'⊗','d','middle');
+ T(s,560,30,'tensor product: every pairing','s','middle');
+ for(let i=0;i<3;i++)for(let j=0;j<3;j++){const v=old[i]*wom[j];S('rect',{x:470+j*42,y:40+i*34,width:38,height:30,rx:3,fill:'#1e8449',opacity:0.12+0.88*v},s);T(s,489+j*42,59+i*34,v.toFixed(2),'s','middle')}
+ vec(410,40,wom,'',  '#c9440e');
+ T(s,560,200,'a new conjoint pattern: active only where both are','m s','middle');})();
+
+/* hex */
+(function(){const s=$('hex');const sp=58,ang=15*Math.PI/180;S('rect',{x:20,y:20,width:300,height:260,class:'box'},s);
+ const pts=[];for(let i=-6;i<8;i++)for(let j=-6;j<8;j++){let x=i*sp+j*sp/2,y=j*sp*Math.sqrt(3)/2;const xr=x*Math.cos(ang)-y*Math.sin(ang)+170,yr=x*Math.sin(ang)+y*Math.cos(ang)+150;if(xr>32&&xr<308&&yr>32&&yr<268)pts.push([xr,yr])}
+ pts.forEach(p=>{const g=S('circle',{cx:p[0],cy:p[1],r:16,fill:'#c9440e',opacity:0.25},s);S('circle',{cx:p[0],cy:p[1],r:8,fill:'#c9440e',opacity:0.8},s)});
+ let c=pts.reduce((a,p)=>Math.hypot(p[0]-170,p[1]-150)<Math.hypot(a[0]-170,a[1]-150)?p:a,pts[0]);
+ for(let k=0;k<6;k++){const a=ang+k*Math.PI/3;S('line',{x1:c[0],y1:c[1],x2:c[0]+sp*Math.cos(a),y2:c[1]+sp*Math.sin(a),class:'ln','stroke-width':1.5},s)}
+ T(s,170,295,'one grid cell, top view of the arena','m s','middle');})();
+
+/* polar */
+(function(){const s=$('polar');const cx=170,cy=150,R=95,phi=15;
+ [0.5,1].forEach(f=>S('circle',{cx:cx,cy:cy,r:R*f,class:'lr'},s));
+ let d='';for(let i=0;i<=360;i++){const th=i*Math.PI/180;const v=0.7+0.3*Math.cos(6*(th-phi*Math.PI/180));const x=cx+R*v*Math.cos(th),y=cy-R*v*Math.sin(th);d+=(i?'L':'M')+x.toFixed(1)+','+y.toFixed(1)}
+ S('path',{d:d+'Z',fill:'#2856c2','fill-opacity':0.15,stroke:'#2856c2','stroke-width':2},s);
+ for(let k=0;k<6;k++){const th=(phi+60*k)*Math.PI/180;S('line',{x1:cx,y1:cy,x2:cx+R*1.08*Math.cos(th),y2:cy-R*1.08*Math.sin(th),class:'la','stroke-dasharray':'3 3'},s)}
+ T(s,cx,22,'BOLD by movement direction','s','middle');T(s,cx,288,'peaks every 60° (aligned with grid)','m s','middle');})();
+
+/* bird space */
+(function(){const cv=$('bird'),ctx=cv.getContext('2d');const s=$('birdmap');let t=0;
+ function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+ function draw(){const W=cv.clientWidth,H=260,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+  const a=+$('ang').value*Math.PI/180;const ph=Math.sin(t)*0.5+0.5;const neck=40+ph*60*Math.sin(a)+30,leg=30+ph*60*Math.cos(a)+30;
+  const ink=css('--ink'),acc=css('--accent');const bx=W/2,by=H-20-leg;ctx.strokeStyle=ink;ctx.fillStyle=acc;ctx.lineWidth=4;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(bx-12,by+12);ctx.lineTo(bx-14,H-20);ctx.moveTo(bx+12,by+12);ctx.lineTo(bx+14,H-20);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(bx,by,42,24,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.moveTo(bx+30,by-10);ctx.lineTo(bx+40,by-10-neck);ctx.stroke();ctx.beginPath();ctx.arc(bx+44,by-14-neck,10,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.moveTo(bx+53,by-14-neck);ctx.lineTo(bx+68,by-10-neck);ctx.stroke()}
+ function map(){while(s.firstChild)s.removeChild(s.firstChild);const a=+$('ang').value;const cx=150,cy=110;
+  S('line',{x1:30,y1:cy,x2:270,y2:cy,class:'lr'},s);S('line',{x1:cx,y1:10,x2:cx,y2:210,class:'lr'},s);T(s,270,cy-6,'legs','m s','end');T(s,cx+6,20,'neck','m s');
+  for(let k=0;k<6;k++){const th=(15+60*k)*Math.PI/180;S('line',{x1:cx,y1:cy,x2:cx+95*Math.cos(th),y2:cy-95*Math.sin(th),class:'lc','stroke-dasharray':'2 4',opacity:0.6},s)}
+  const th=a*Math.PI/180;S('line',{x1:cx,y1:cy,x2:cx+90*Math.cos(th),y2:cy-90*Math.sin(th),class:'la','stroke-width':3},s);S('circle',{cx:cx+90*Math.cos(th),cy:cy-90*Math.sin(th),r:5,style:'fill:var(--accent)'},s);
+  const v=Math.cos(6*(th-15*Math.PI/180));$('angv').textContent=a+'°';
+  $('birdout').innerHTML='Predicted grid signal: <b>'+(v>0.5?'high':v<-0.5?'low':'medium')+'</b> ('+(0.7+0.3*v).toFixed(2)+')<br>'+(v>0.5?'Moving along a grid axis.':v<-0.5?'Moving between grid axes.':'In between.')}
+ $('ang').addEventListener('input',()=>{map();draw()});
+ const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function loop(){t+=0.03;draw();if(!reduce)requestAnimationFrame(loop)}map();loop();window.addEventListener('resize',draw);})();
+
+/* RNS */
+(function(){const M=[3,5,7];function upd(){let a=Math.max(0,Math.min(104,+$('na').value||0)),b=Math.max(0,Math.min(104,+$('nb').value||0));
+ const ra=M.map(m=>a%m),rb=M.map(m=>b%m),sum=(a+b)%105,rs=M.map((m,i)=>(ra[i]+rb[i])%m);
+ let h='<span></span>'+M.map(m=>'<span>mod '+m+'</span>').join('');
+ h+='<span>a = '+a+'</span>'+ra.map(x=>'<span>'+x+'</span>').join('');
+ h+='<span>b = '+b+'</span>'+rb.map(x=>'<span>'+x+'</span>').join('');
+ h+='<span>a + b</span>'+rs.map(x=>'<b>'+x+'</b>').join('');
+ $('rnsout').innerHTML=h;
+ $('rnswhy').innerHTML='<b>Adding is easy:</b> add each column separately and wrap around: ('+rs.join(', ')+') is exactly the code for '+sum+'. That\'s how grid cells update position as you move. <b>Comparing is hard:</b> is ('+ra.join(', ')+') bigger than ('+rb.join(', ')+')? Nothing in the digits tells you. a '+(a>b?'&gt;':a<b?'&lt;':'=')+' b, but you\'d need to decode back to ordinary numbers or memorize a table to know.'}
+ ['na','nb'].forEach(id=>$(id).addEventListener('input',upd));upd();})();
+
+/* STC */
+(function(){const s=$('stc');S('path',{d:'M60,180 C80,110 200,80 330,90 C420,96 470,130 470,170 C470,220 400,250 300,250 C190,250 70,235 60,180Z',class:'cx'},s);
+ S('ellipse',{cx:260,cy:150,rx:46,ry:30,fill:'#f2d630',opacity:0.9},s);S('ellipse',{cx:345,cy:185,rx:46,ry:30,fill:'#e67e22',opacity:0.9},s);
+ T(s,260,154,'agent','s','middle').setAttribute('style','fill:#222');T(s,345,189,'patient','s','middle').setAttribute('style','fill:#222');
+ T(s,265,40,'left mid superior temporal cortex (schematic)','m s','middle');T(s,215,110,'medial','w s','middle');T(s,395,232,'lateral','w s','middle');
+ const ex=[['TRAIN: "the dog chased the cat"','agent: dog','patient: cat'],['TEST (new verb): "the cat was bumped by the dog"','agent: dog ✓','patient: cat ✓'],['"the cat chased the dog"','agent: cat','patient: dog']];
+ ex.forEach((e,i)=>{const y=70+i*70;T(s,520,y,e[0],'s');T(s,520,y+18,e[1],'s').setAttribute('style','fill:#b7950b');T(s,660,y+18,e[2],'s').setAttribute('style','fill:#d35400')});
+ T(s,520,290,'Same "dog" pattern in the patient patch, any verb.','m s');})();
+
+/* architecture */
+(function(){const s=$('arch');arrow(s,'aa','var(--muted)');
+ const b=(x,w,col,t1,t2,t3)=>{S('rect',{x:x,y:40,width:w,height:130,rx:10,class:'box'},s);S('rect',{x:x,y:40,width:w,height:6,rx:3,fill:col},s);T(s,x+14,74,t1,'d');T(s,x+14,98,t2,'m s');T(s,x+14,116,t3,'m s')};
+ b(10,240,'#2856c2','Control (lateral PFC)','runs the program,','routes information');
+ b(310,240,'#f2d630','Sentence-like waypoints','lmSTC: agent / patient','rPFC: chaser / chasee');
+ b(610,240,'#7d3c98','Map-like canvas (DMN)','grid-like concept spaces,','context-rich simulation');
+ S('line',{x1:252,y1:105,x2:306,y2:105,class:'lm','stroke-width':2,'marker-end':'url(#aa)'},s);
+ S('line',{x1:552,y1:95,x2:606,y2:95,class:'lm','stroke-width':2,'marker-end':'url(#aa)'},s);S('line',{x1:606,y1:125,x2:552,y2:125,class:'lm','stroke-width':2,'marker-end':'url(#aa)'},s);
+ T(s,130,200,'"instructions"','m s','middle');T(s,430,200,'compact, digital','m s','middle');T(s,730,200,'rich, analog','m s','middle');})();
+
+/* pointer */
+(function(){const s=$('ptr');arrow(s,'ap','var(--accent)');
+ S('rect',{x:10,y:60,width:130,height:70,rx:8,class:'box'},s);T(s,75,90,'controller','b','middle');T(s,75,110,'(the program)','m s','middle');
+ const slots=['AGENT','PATIENT'];slots.forEach((r,i)=>{S('rect',{x:220,y:40+i*70,width:150,height:50,rx:6,class:'box'},s);T(s,236,62+i*70,r,'s');T(s,236,80+i*70,'→ addr #'+(i?'17':'42'),'a s')});
+ S('line',{x1:142,y1:85,x2:216,y2:65,class:'lm'},s);S('line',{x1:142,y1:105,x2:216,y2:135,class:'lm'},s);
+ S('rect',{x:470,y:20,width:270,height:160,rx:8,class:'box'},s);T(s,486,44,'memory (concepts)','b');
+ [['#17','cat'],['#23','doctor'],['#42','John'],['#58','pumpkin']].forEach((m,i)=>T(s,486,72+i*26,m[0]+'  '+m[1],m[0]==='#42'||m[0]==='#17'?'a s':'m s'));
+ S('line',{x1:372,y1:72,x2:480,y2:120,class:'la','stroke-width':1.5,'marker-end':'url(#ap)'},s);S('line',{x1:372,y1:142,x2:480,y2:68,class:'la','stroke-width':1.5,'marker-end':'url(#ap)'},s);})();
+})();
+</script>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="language-network.html"><small>← Previous note</small><span>The language network as a natural kind</span></a><a class="next" href="language-neurons.html"><small>Next note →</small><span>Language neurons, one by one</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

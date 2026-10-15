@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Reading notes · Maha Nawaz</title>
+<meta name="description" content="Papers I've read in neuroscience, neuroprosthetics and molecular biology, explained figure by figure with interactive diagrams.">
+<meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="Reading notes · Maha Nawaz"><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{--paper:#FFF8EA;--panel:#FFFDF7;--ink:#1D2F66;--muted:#56628A;--rule:#E8DCC2;--soft:#FBEED3;--accent:#B65200;--cool:#2A57B8;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--display:'Bitter',Georgia,serif;--body:'Bitter',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+
+.ix{max-width:1080px;margin:0 auto;padding:44px max(16px,env(safe-area-inset-left,0px)) 24px}
+.ix-hero{max-width:62ch}
+.ix-kick{font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mn-accent)}
+.ix h1{font-size:clamp(38px,7vw,64px);margin:8px 0 14px}
+.ix-lede{font-size:19px;line-height:1.6;color:var(--mn-ink);margin:0 0 10px}
+.ix-sub{font-size:16px;line-height:1.6;color:var(--mn-muted);margin:0}
+.ix-jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.ix-jump a{font:500 13px 'IBM Plex Mono',monospace;color:var(--mn-ink);text-decoration:none;border:1px solid var(--mn-rule);background:var(--mn-panel);border-radius:999px;padding:6px 12px}
+.ix-jump a:hover,.ix-jump a:focus-visible{border-color:var(--mn-accent);outline:none}
+.grp{margin-top:48px}
+.grp-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:2px solid var(--mn-ink);padding-top:14px;margin-bottom:16px}
+.grp-h h2{font-size:clamp(24px,3.4vw,30px);margin:0}
+.grp-h p{margin:0;color:var(--mn-muted);font-size:15.5px}
+.grp ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.grp ol.ordered{counter-reset:n}
+.grp ol.ordered .nc-meta::before{counter-increment:n;content:counter(n) " · "}
+.nc{display:flex;flex-direction:column;gap:8px;height:100%;background:var(--mn-panel);border:1px solid var(--mn-rule);border-radius:12px;padding:18px 18px 16px;text-decoration:none;color:var(--mn-ink);transition:border-color .15s,transform .15s}
+.nc:hover,.nc:focus-visible{border-color:var(--mn-accent);transform:translateY(-2px);outline:none}
+.nc-meta{font:500 11.5px 'IBM Plex Mono',monospace;letter-spacing:.05em;color:var(--mn-accent);text-transform:uppercase}
+.nc-t{font-family:'Bitter',Georgia,serif;font-weight:700;font-size:20px;line-height:1.25}
+.nc-b{font-size:15.5px;line-height:1.55;color:var(--mn-muted)}
+.nc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.nc-tags i{font:normal 500 11.5px 'IBM Plex Mono',monospace;background:var(--mn-soft);border-radius:999px;padding:3px 9px;color:var(--mn-ink)}
+@media (prefers-reduced-motion:reduce){.nc{transition:none}.nc:hover{transform:none}}
+</style>
+</head>
+<body class="fam-A">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html" aria-current="page">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+<main class="ix">
+<div class="ix-hero">
+<div class="ix-kick">Reading notes</div>
+<h1>Papers I've pulled apart</h1>
+<p class="ix-lede">When a paper grabs me, I don't stop at the abstract. I go figure by figure, redraw the panels, and build small interactive versions of the ideas until the mechanism clicks.</p>
+<p class="ix-sub">Mostly neuroscience and brain–computer interfaces, with some protein and DNA mechanics. Each note keeps the questions I got stuck on along the way.</p>
+<nav class="ix-jump" aria-label="Topics"><a href="#language">Language &amp; thought</a><a href="#neuroprosthetics">Writing into the brain</a><a href="#molecular">Molecular machines</a><a href="#builds">Build plans</a></nav>
+</div>
+<section class="grp" id="language"><div class="grp-h"><h2>Language &amp; thought</h2><p>Four papers on where meaning and grammar live in the brain, read in this order.</p></div><ol class="ordered"><li><a class="nc" href="huth-semantic-maps.html"><span class="nc-meta">Huth et al. 2016</span><span class="nc-t">Semantic maps that tile the cortex</span><span class="nc-b">Seven people listen to two hours of stories in an fMRI scanner, and meaning turns out to be painted across both hemispheres in a shared ~140-area atlas.</span><span class="nc-tags"><i>fMRI</i><i>encoding models</i><i>semantics</i></span></a></li><li><a class="nc" href="language-network.html"><span class="nc-meta">Fedorenko, Ivanova &amp; Regev 2024</span><span class="nc-t">The language network as a natural kind</span><span class="nc-b">Five left-hemisphere areas that do language and only language, sitting between perception below and reasoning above.</span><span class="nc-tags"><i>fMRI</i><i>localizers</i><i>language</i></span></a></li><li><a class="nc" href="language-of-thought.html"><span class="nc-meta">Frankland &amp; Greene 2020</span><span class="nc-t">In search of the brain&#x27;s language of thought</span><span class="nc-b">How the brain builds brand-new thoughts from old parts: map-like codes in the default mode network, sentence-like role slots in temporal and prefrontal cortex.</span><span class="nc-tags"><i>compositionality</i><i>grid cells</i><i>DMN</i></span></a></li><li><a class="nc" href="language-neurons.html"><span class="nc-meta">Cai et al. 2026</span><span class="nc-t">Language neurons, one by one</span><span class="nc-b">579 single neurons recorded while people chat: specialist cells for grammar, and an LLM that predicts them about a second before each word is spoken.</span><span class="nc-tags"><i>single units</i><i>LLMs</i><i>syntax</i></span></a></li></ol></section><section class="grp" id="neuroprosthetics"><div class="grp-h"><h2>Writing into the brain</h2><p>Stimulating cortex to put touch and vision back in.</p></div><ol><li><a class="nc" href="icms.html"><span class="nc-meta">Hughes, Chen, Grill &amp; Kozai 2026</span><span class="nc-t">Neural mechanisms of intracortical microstimulation</span><span class="nc-b">What actually fires when you push microamps into cortex: mostly axons, which is why the activated cells are sparse, scattered and fire backwards.</span><span class="nc-tags"><i>ICMS</i><i>BCI</i><i>biophysics</i></span></a></li><li><a class="nc" href="chen-phosphenes.html"><span class="nc-meta">Chen et al. 2020</span><span class="nc-t">Shape perception from 1,024 electrodes in visual cortex</span><span class="nc-b">Two monkeys recognise lines, motion and letters made purely from V1 stimulation, on the first try. The proof of concept behind cortical visual prostheses.</span><span class="nc-tags"><i>V1</i><i>phosphenes</i><i>visual prosthesis</i></span></a></li></ol></section><section class="grp" id="molecular"><div class="grp-h"><h2>Molecular machines</h2><p>Close reads of protein–nucleic acid mechanisms.</p></div><ol><li><a class="nc" href="reading-the-pam.html"><span class="nc-meta">Chen &amp; Doudna 2017</span><span class="nc-t">Reading the PAM</span><span class="nc-b">Which strand is which, what actually unzips, how two arginines read two guanines, and why one Cas9 cut needs two nucleases.</span><span class="nc-tags"><i>CRISPR</i><i>Cas9</i><i>protein–DNA</i></span></a></li></ol></section><section class="grp" id="builds"><div class="grp-h"><h2>Build plans</h2><p>Benches I&#x27;m designing to test what I read about.</p></div><ol><li><a class="nc" href="subretinal-bench.html"><span class="nc-meta">Build plan</span><span class="nc-t">Subretinal pixel bench</span><span class="nc-b">A tabletop rig that reproduces the PRIMA implant&#x27;s physics chain, from near-infrared light to charge in saline, and measures charge density per pulse.</span><span class="nc-tags"><i>retinal prosthesis</i><i>electrochemistry</i><i>build plan</i></span></a></li></ol></section>
+</main>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span>
+<span>Stanford EECS · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

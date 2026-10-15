@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Neural mechanisms of intracortical microstimulation · Maha Nawaz</title>
+<meta name="description" content="What actually fires when you push microamps into cortex: mostly axons, which is why the activated cells are sparse, scattered and fire backwards."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="Neural mechanisms of intracortical microstimulation"><meta property="og:description" content="What actually fires when you push microamps into cortex: mostly axons, which is why the activated cells are sparse, scattered and fire backwards.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: single reading column (~68ch) with figures that break slightly wider; a lab-notebook feel — blueprint paper, cathodic blue vs anodic red as the only two loud colors, matching the paper's own convention. */
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --ink:#18212e; --muted:#5b6778; --rule:#d9dfe7;
+  --cath:#2563c9; --anod:#d2423a; --accent:#0f8a7e; --hl:#fff3c4; --soma:#7a4fd0;
+  --l1:#c17bd0; --l23:#e8b04a; --l4:#3fa66a; --l5:#4a78d0; --l6:#9aa3ae;
+  --memb:#e8d9b8; --prot:#c6d4ea;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --surface:#161d27; --ink:#e4e9f0; --muted:#97a3b4; --rule:#2a3442;
+  --cath:#6fa2ff; --anod:#ff7a70; --accent:#3cc7b7; --hl:#3a3418; --soma:#b293ff;
+  --l1:#d79be4; --l23:#f0c167; --l4:#5cc488; --l5:#7ea2ec; --l6:#6c7682; --memb:#3d3624; --prot:#2f3e55; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --surface:#161d27; --ink:#e4e9f0; --muted:#97a3b4; --rule:#2a3442;
+  --cath:#6fa2ff; --anod:#ff7a70; --accent:#3cc7b7; --hl:#3a3418; --soma:#b293ff;
+  --l1:#d79be4; --l23:#f0c167; --l4:#5cc488; --l5:#7ea2ec; --l6:#6c7682; --memb:#3d3624; --prot:#2f3e55; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.62;padding-inline:18px;padding-block:0 80px}
+.wrap{max-width:760px;margin:0 auto}
+header.top{padding-block:56px 28px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(34px,6vw,52px);font-weight:700;letter-spacing:-.015em;margin-top:10px}
+h2{font-size:clamp(26px,4vw,34px);font-weight:700;margin-top:8px}
+h3{font-size:20px;font-weight:600;margin-top:28px}
+p{margin:14px 0}
+.lede{font-size:19px;color:var(--ink)}
+.meta{color:var(--muted);font-size:15px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+nav.toc a{font-family:var(--mono);font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--rule);border-radius:999px;padding:5px 11px;background:var(--surface)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+section{padding-block:44px 8px;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:0}
+.fignum{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:16px}
+figure svg{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.svgscroll{overflow-x:auto}
+.panels{list-style:none;padding:0;margin:18px 0;display:grid;gap:12px}
+.panels li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.panels li > div{min-width:0}
+.pl{font-family:var(--mono);font-weight:600;font-size:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--ink);margin-top:2px}
+.take{background:var(--hl);border-radius:8px;padding:12px 16px;margin:20px 0;font-size:16px}
+.take b{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+.cath{color:var(--cath);font-weight:600}.anod{color:var(--anod);font-weight:600}
+.mono{font-family:var(--mono);font-size:.88em}
+.eq{font-family:var(--mono);font-size:18px;text-align:center;margin:18px 0;padding:12px;border:1px dashed var(--rule);border-radius:8px}
+.analogy{border-left:3px solid var(--accent);padding:2px 0 2px 14px;margin:18px 0;color:var(--ink)}
+.analogy::before{content:"Analogy";display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid var(--rule)}
+th{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.control{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:10px;font-family:var(--mono);font-size:13px}
+.control input{flex:1;min-width:160px;accent-color:var(--cath)}
+.readout{display:flex;flex-wrap:wrap;gap:18px;font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+.readout b{color:var(--ink)}
+svg text{font-family:var(--mono);fill:currentColor}
+svg .lbl{font-size:12px}
+svg .sm{font-size:10.5px}
+svg .muted{fill:var(--muted)}
+.stroke{stroke:currentColor;fill:none}
+.c-cath{stroke:var(--cath);fill:none}.c-anod{stroke:var(--anod);fill:none}
+.f-cath{fill:var(--cath)}.f-anod{fill:var(--anod)}.f-soma{fill:var(--soma)}.f-acc{fill:var(--accent)}
+.t-cath{fill:var(--cath)!important}.t-anod{fill:var(--anod)!important}.t-acc{fill:var(--accent)!important}.t-soma{fill:var(--soma)!important}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid2 > *{min-width:0}
+@media (max-width:620px){.grid2{grid-template-columns:1fr}}
+.gloss dt{font-family:var(--display);font-weight:600;margin-top:12px}
+.gloss dd{margin:2px 0 0 0;color:var(--ink)}
+footer{color:var(--muted);font-size:14px;padding-top:30px}
+.qa{border:1px solid var(--rule);background:var(--surface);border-radius:12px;padding:20px 20px 10px;margin:30px 0}
+.qa > h3:first-of-type{margin-top:6px}
+.qa .q{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.qa .qtext{font-style:italic;color:var(--muted);margin:6px 0 4px;font-size:15.5px}
+.qa figure{background:var(--bg)}
+.qa h4{font-family:var(--display);font-size:17px;font-weight:600;margin:26px 0 0}
+.rule{border:1.5px solid var(--accent);border-radius:8px;padding:12px 16px;margin:16px 0;font-size:16.5px}
+.qlinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.qlinks a{font-size:14px;color:var(--accent)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13.5px}
+tr.hi td{background:var(--hl)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+<style>
+:root{--bg:#FFF8EA;--surface:#FFFDF7;--ink:#1D2F66;--muted:#56628A;--rule:#E8DCC2;--accent:#B65200;--hl:#FFE7B0;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--display:'Bitter',Georgia,serif;--body:'Bitter',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15224B;--surface:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--accent:#FFA043;--hl:#4A3E1C;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15224B;--surface:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--accent:#FFA043;--hl:#4A3E1C;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-B">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+<div class="mn-series" aria-label="Series"><b>Writing into the brain</b><span>Part 1 of 2</span><span aria-current="page">1. Hughes, Chen, Grill &amp; Kozai 2026</span><a href="chen-phosphenes.html">2. Chen et al. 2020</a></div>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Reading notes · Nature Biomedical Engineering · Feb 2026</div>
+  <h1>Neural mechanisms of intracortical microstimulation, explained figure by figure</h1>
+  <p class="meta">Hughes, Chen, Grill &amp; Kozai · Univ. of Pittsburgh / Duke · vol. 10, pp. 197–213 · doi:10.1038/s41551-025-01583-6</p><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · October 14, 2026</span></div>
+  <p class="lede">This review asks one question: when you push a tiny electric current into the brain through an implanted needle, <em>which</em> neurons fire, <em>why</em> those, and what does that mean for the sensation the person feels? The technique is called <b>ICMS</b>, short for intracortical microstimulation. It is the "write" half of a brain–computer interface. Decoding speech from brain signals is "reading"; ICMS is how you send touch or vision <em>back in</em>.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#primer">0 · Neuron primer</a><a href="#fig1">Fig 1 · Mechanisms</a><a href="#fig2">Fig 2 · Current vs distance</a><a href="#params">Pulse shape &amp; frequency</a><a href="#fig3">Fig 3 · Damage &amp; fatigue</a><a href="#fig4">Fig 4 · Cortex wiring</a><a href="#fig5">Fig 5 · What's next</a><a href="#table">Table 1</a><a href="#gloss">Glossary</a>
+  </nav>
+  <p class="meta" style="margin-top:18px">Questions I got stuck on, worked through in place:</p>
+  <div class="qlinks"><a href="#qa-battery">How the sodium trigger works</a> · <a href="#qa-af">The activating function, cathode vs anode</a> · <a href="#qa-sides">"Inside" and "off to the sides"</a> · <a href="#qa-chron">What a chronaxie is</a> · <a href="#qa-soma">Do cell bodies fire?</a> · <a href="#qa-bio">Biomimetic + multielectrode</a></div>
+</header>
+
+<!-- ============ PRIMER ============ -->
+<section id="primer">
+  <div class="fignum">Before the figures</div>
+  <h2>Five things you need to know about neurons</h2>
+  <p><b>1. A neuron is a leaky battery with a trigger.</b> Inside, it sits at about −70 mV relative to outside. Push it up to roughly −55 mV and it fires an <b>action potential</b>: an all-or-nothing voltage spike that travels down its output cable. Below threshold, nothing travels. That makes it a comparator with a threshold, much like a digital gate.</p>
+  <p><b>2. It has three parts.</b> <b>Dendrites</b> are the inputs. The <b>soma</b> (cell body) adds the inputs up. The <b>axon</b> is the output wire, often long and branching to reach other neurons far away. Where one neuron's axon meets the next neuron's dendrite is a <b>synapse</b>.</p>
+  <p><b>3. The trigger is made of sodium channels.</b> Tiny voltage-controlled gates (voltage-gated Na⁺ channels) open when the membrane voltage rises. Sodium ions rush in, the voltage rises further, more gates open, and the spike runs away. Axons are packed with these gates, which is why <b>axons are the easiest part to trigger</b>. Hold onto that fact. It explains most of this paper.</p>
+  <div class="qa" id="qa-battery">
+  <div class="q">Deep dive · a question I had</div>
+  <p class="qtext">"How does the sodium trigger work in more detail?"</p>
+  <h3>The battery: why the inside sits at −70 mV</h3>
+  <p>Think of the membrane as a charged capacitor with two kinds of voltage-controlled switches in it. Pumps in the membrane constantly move ions to build two concentration gradients: lots of Na⁺ outside, lots of K⁺ inside. At rest a few K⁺ leak channels are open. K⁺ trickles out down its gradient and carries positive charge with it, which leaves the inside at about −70 mV.</p>
+  <figure>
+    <div class="svgscroll"><svg id="batSvg" viewBox="0 0 700 230" role="img" aria-label="Ion gradients across the membrane: sodium is concentrated outside and pulls the voltage toward +55 mV when its channels open; potassium is concentrated inside and pulls toward -90 mV."></svg></div>
+    <figcaption>Each ion is like a battery waiting behind a switch. Open Na⁺ channels and the voltage is pulled toward about +55 mV. Open K⁺ channels and it is pulled toward about −90 mV. The membrane voltage at any moment is a tug-of-war between whichever switches are open.</figcaption>
+  </figure>
+  <p>The rest of this deep dive continues below: the channel's four states, the feedback loop, the spike, and why axons are the easiest target.</p>
+  </div>
+
+  <h3>Inside the sodium channel</h3>
+  <p>Each channel is a protein tunnel through the membrane with two gates in series, and both must be open for Na⁺ to pass. The <b>m-gate</b> (activation) sits on the outer end and is pulled open by a charged <b>voltage sensor</b> (the S4 segment) that slides up when the inside becomes more positive. The <b>h-gate</b> (inactivation) is a "ball on a chain" on the inside that swings in and plugs the tunnel about a millisecond later. One channel cycles through four states during every spike:</p>
+
+  <figure>
+    <div class="svgscroll">
+    <svg id="naSvg" viewBox="0 0 720 300" role="img" aria-label="Four states of a voltage-gated sodium channel: resting (sensor down, outer gate closed), activated (sensor up, outer gate open, sodium flows in), inactivated (inner ball plugs the pore), recovering (sensor back down, ball swinging back out)."></svg>
+    </div>
+    <figcaption><b>One sodium channel, four states.</b> Teal block = voltage sensor (carries + charges, so it moves with the membrane voltage). Black bar = m-gate. Purple ball = h-gate. Red circles = Na⁺ ions, which are crowded outside and want in.</figcaption>
+  </figure>
+
+  <ul class="panels">
+    <li><span class="pl">1</span><div><b>Resting (−70 mV).</b> The inside is negative, which attracts the sensor's + charges down. The sensor holds the m-gate shut. The h-gate hangs free, so the channel is <em>closed but ready</em>.</div></li>
+    <li><span class="pl">2</span><div><b>Activated (rising past −55 mV).</b> Something makes the inside less negative: a synaptic input, or an electrode pulse. The sensor's + charges are no longer held down, so it slides up and yanks the m-gate open in about 0.1 ms. Na⁺ pours in down its gradient, which makes the inside more positive, which opens <em>more</em> channels nearby.</div></li>
+    <li><span class="pl">3</span><div><b>Inactivated (peak, about +40 mV).</b> The h-gate is slower. About 1 ms in, the ball swings into the inner mouth and plugs it, even though the m-gate is still open. Na⁺ inflow stops. Meanwhile slower K⁺ channels open and let K⁺ out, pulling the voltage back down.</div></li>
+    <li><span class="pl">4</span><div><b>Recovering (undershoot, about −80 mV).</b> Back at negative voltage, the sensor drops and closes the m-gate. The ball takes a millisecond or two to un-plug. Until it does, the channel cannot open again, however hard you push. This is the <b>refractory period</b>, and it caps how fast a neuron can fire.</div></li>
+  </ul>
+
+  <div class="grid2">
+    <figure>
+      <svg id="fbSvg" viewBox="0 0 340 230" role="img" aria-label="Positive feedback loop: voltage rises, sodium gates open, sodium flows in, voltage rises more; the h-gate and potassium channels act as a delayed brake."></svg>
+      <figcaption><b>Why it's all-or-nothing.</b> Past threshold, the loop's gain exceeds 1 and the voltage runs away. The brake (h-gate + K⁺ channels) only engages about 1 ms later, which is why the spike has a fixed size and shape.</figcaption>
+    </figure>
+    <figure>
+      <svg id="apSvg" viewBox="0 0 340 230" role="img" aria-label="Action potential trace from -70 mV rising past the -55 mV threshold to about +38 mV, falling, undershooting to -84 mV, and returning; numbered markers 1-4 match the channel states."></svg>
+      <figcaption><b>The spike, with the channel states marked.</b> 1 resting → 2 activated (Na⁺ in, steep rise) → 3 inactivated (K⁺ out, fall) → 4 recovering (undershoot, refractory). The whole thing takes about 2 ms.</figcaption>
+    </figure>
+  </div>
+
+  <p><b>Where the electrode comes in.</b> A cathodic pulse makes the fluid just <em>outside</em> the membrane more negative. Membrane voltage is inside minus outside, so the inside looks relatively more positive. Sensors near the tip feel exactly what they would feel in step 2. Axons have the most sensors per µm of membrane and the smallest "capacitor" to charge, so they reach threshold first.</p>
+
+  <h3>Why axons are the easiest target</h3>
+  <ul class="panels">
+    <li><span class="pl">1</span><div><b>Channel density.</b> The axon's starting segment and the nodes of Ranvier (gaps in the axon's fatty myelin insulation) pack roughly 10–50× more Na⁺ channels per µm² than the cell body. More switches per patch means a smaller nudge starts the loop.</div></li>
+    <li><span class="pl">2</span><div><b>Small capacitor.</b> The soma is a big blob of membrane, a large capacitor that takes more charge to move by the same voltage. A thin axon segment is a small capacitor and charges quickly. That also gives axons short chronaxies (about 100–300 µs), which suits clinical ~200 µs pulses.</div></li>
+    <li><span class="pl">3</span><div><b>Long, thin geometry.</b> A long cable passing the tip sees the outside voltage <em>change</em> along its length, and that change is what pushes the membrane (the activating function, explained under Figure 1). A compact round cell body doesn't get this effect.</div></li>
+    <li><span class="pl">4</span><div><b>Myelin focuses it.</b> On insulated axons, all the action is squeezed into the nodes, so a node near the tip is a very sensitive trigger point.</div></li>
+  </ul>
+  <p>The consequence runs through the whole paper. The spike starts in whichever axon passes near the tip, not in the cell body that axon belongs to, and that body may be far away. That is why activated cells are scattered (Fig 2), why ICMS skips the cell's normal input processing (Fig 1g), and why spikes travel backward as well as forward (antidromic).</p>
+
+  <p><b>4. Signals normally flow one way:</b> dendrites → soma → axon → next neuron. That is called <b>orthodromic</b> ("correct direction"). A spike started mid-axon also travels <em>backwards</em> toward the soma. That is <b>antidromic</b>.</p>
+  <p><b>5. The cortex is a 2–3 mm thick sheet with 6 layers.</b> Sensory input from the thalamus (the brain's relay station) lands mainly in <b>layer 4</b>, goes up to <b>layers 2/3</b>, then down to <b>layer 5/6</b> outputs. The sheet is also split side-to-side into <b>columns</b> about 300–600 µm wide. Each column handles one patch of skin or one spot in the visual field.</p>
+
+  <figure>
+    <div class="svgscroll">
+    <svg viewBox="0 0 720 230" role="img" aria-label="A pyramidal neuron with dendrites, soma and a long axon; an electrode tip near the axon starts a spike that travels both forward (orthodromic) and backward (antidromic).">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        <marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-acc"/></marker>
+      </defs>
+      <!-- dendrites -->
+      <g class="stroke" stroke-width="2">
+        <path d="M110 120 L60 70 M110 120 L50 120 M110 120 L62 168 M60 70 L38 52 M60 70 L58 44 M62 168 L36 186 M110 120 L110 50 M110 50 L92 28 M110 50 L128 28"/>
+      </g>
+      <polygon points="96,136 124,136 110,100" class="f-soma"/>
+      <!-- axon -->
+      <path d="M124 128 L640 128" class="stroke" stroke-width="3"/>
+      <path d="M640 128 L690 100 M640 128 L690 156 M640 128 L695 128" class="stroke" stroke-width="2"/>
+      <text x="40" y="214" class="lbl">dendrites (inputs)</text>
+      <text x="110" y="92" class="lbl t-soma" text-anchor="middle">soma</text>
+      <text x="520" y="150" class="lbl" text-anchor="middle">axon (output wire, Na⁺ channels packed here)</text>
+      <text x="690" y="200" class="lbl" text-anchor="end">synapses → next neurons</text>
+      <!-- electrode -->
+      <polygon points="372,12 392,12 382,106" fill="var(--muted)" opacity=".55"/>
+      <circle cx="382" cy="110" r="5" class="f-cath"/>
+      <text x="400" y="26" class="lbl">electrode tip</text>
+      <!-- arrows -->
+      <path d="M362 112 L180 112" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#ahA)"/>
+      <path d="M402 112 L600 112" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#ahA)"/>
+      <text x="270" y="104" class="sm t-acc" text-anchor="middle">antidromic (backward)</text>
+      <text x="500" y="104" class="sm t-acc" text-anchor="middle">orthodromic (forward)</text>
+    </svg>
+    </div>
+    <figcaption>The core picture. An electrode sitting near an axon can start a spike right there, skipping the dendrites and soma. That spike runs forward to the axon's targets and backward toward its own cell body.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ FIG 1 ============ -->
+<section id="fig1">
+  <div class="fignum">Figure 1</div>
+  <h2>Basic mechanisms: how a current pulse makes a neuron fire</h2>
+  <p>Figure 1 is the foundation. It starts at the patient and zooms down to ion channels, then shows how pulse settings and distance decide who fires.</p>
+
+  <ul class="panels">
+    <li><span class="pl">a</span><div><b>The setup.</b> A <b>Utah array</b> (a 4×4 mm bed of about 100 silicon needles, each 1–1.5 mm long) is implanted in sensory cortex. A cable runs to a stimulator. Since 2015, people with spinal-cord injury have felt touch on their hand this way, and a blind participant has seen dots of light (<b>phosphenes</b>) from an array in visual cortex.</div></li>
+    <li><span class="pl">b</span><div><b>Zooming in on one electrode tip.</b> Current from the tip pushes charged ions (Na⁺, K⁺, Cl⁻) around in the fluid. This shifts the voltage across nearby cell membranes. The shift flips open the voltage sensor of sodium channels; ions flow in, and if enough add up, the neuron spikes. Small sub-threshold nudges can add up over space (many dendrites) and time. How long a nudge lingers is set by the membrane <b>time constant</b>, about 10 ms on average (range 2–140 ms).</div></li>
+    <li><span class="pl">c</span><div><b>The pulse itself.</b> Two knobs: <b>amplitude</b> (how much current, in microamps, µA) and <b>pulse width</b> (how long, in microseconds, µs). Amplitude × width = charge (nanocoulombs, nC). Clinical systems use <b>biphasic, charge-balanced</b> pulses: a negative (<span class="cath">cathodic</span>) phase, a short gap (interphase interval, IPI), then a positive (<span class="anod">anodic</span>) phase that pulls the same charge back out. Single-direction (<b>monophasic</b>) pulses leave net charge behind, which corrodes the electrode and damages tissue.</div></li>
+    <li><span class="pl">d</span><div><b>The activating function.</b> A rule for where along an axon the pulse actually depolarizes (excites) the membrane. A <span class="cath">cathodic</span> pulse depolarizes the axon right under the tip. An <span class="anod">anodic</span> pulse hyperpolarizes (quiets) under the tip but creates two excited spots off to the sides, called <b>virtual cathodes</b>. So anodic pulses can still fire neurons, but need more current. Whether virtual cathodes matter for tiny brain electrodes is still unproven.</div></li>
+    <li><span class="pl">e</span><div><b>The strength–duration curve.</b> Short pulses need more current; long pulses need less. The curve flattens at the <b>rheobase</b> (the minimum current that works even with an infinitely long pulse). The <b>chronaxie</b> is the pulse width at which you need exactly 2× rheobase. It is a single number that says how "fast" a neural element is. In rat cortex chronaxie was 200–400 µs, which is right where clinical pulse widths sit.</div></li>
+    <li><span class="pl">f</span><div><b>Threshold vs distance.</b> The farther a neuron is from the tip, the more current it takes to fire it. The curve is a bowl. <span class="cath">Direct</span> activation (the pulse hits the axon) has a steep bowl. <span class="anod">Synaptic</span> activation (a directly-hit neuron then excites its neighbor) needs more current near the tip but spreads farther.</div></li>
+    <li><span class="pl">g</span><div><b>Direct vs indirect activation.</b> <b>Direct</b>: the pulse starts a spike in an axon. It is fast (under 5 ms) but <em>bypasses</em> all the normal input math the soma would do, so it is "non-physiological". <b>Indirect</b>: neurons fire because a directly-hit neuron excited them through a synapse. It is slower but runs through normal circuitry, so it should feel more natural.</div></li>
+  </ul>
+
+  <div class="grid2">
+    <figure>
+      <svg id="pulseSvg" viewBox="0 0 340 200" role="img" aria-label="Pulse shapes: biphasic charge-balanced pulse with cathodic phase, interphase gap and anodic phase; plus monophasic cathodic and anodic pulses."></svg>
+      <figcaption><b>1c, redrawn.</b> One biphasic pulse. The blue area (charge in) equals the red area (charge out). The clinical recipe shown: 200 µs cathodic, 100 µs gap, 400 µs anodic at half the height.</figcaption>
+    </figure>
+    <figure>
+      <svg id="afSvg" viewBox="0 0 340 200" role="img" aria-label="Activating function along an axon: cathodic pulse gives a central depolarizing peak with negative flanks; anodic gives a central dip with two positive side peaks called virtual cathodes."></svg>
+      <figcaption><b>1d, computed.</b> Depolarization along a straight axon passing 100 µm under the tip. Blue (cathodic) excites the middle. Red (anodic) excites two side spots, the "virtual cathodes".</figcaption>
+    </figure>
+    <figure>
+      <svg id="sdSvg" viewBox="0 0 340 200" role="img" aria-label="Strength-duration curve: required current falls with pulse duration, approaching rheobase; at chronaxie the current is twice rheobase."></svg>
+      <figcaption><b>1e, computed.</b> Each point on the curve is a (width, current) pair that just barely fires the neuron. Here chronaxie is set to 300 µs, typical for cortex.</figcaption>
+    </figure>
+    <figure>
+      <svg id="tdSvg" viewBox="0 0 340 200" role="img" aria-label="Threshold versus distance: two U-shaped curves; direct activation is steeper and lower near the electrode; synaptic activation is higher near but shallower."></svg>
+      <figcaption><b>1f, schematic.</b> Near the tip, direct hits are cheap. Far away, it can be cheaper to reach a neuron through its neighbors (red).</figcaption>
+    </figure>
+  </div>
+
+  <div class="qa" id="qa-af">
+  <div class="q">Deep dive · a question I had</div>
+  <p class="qtext">"What is the activating function? How does depolarizing equal getting excited? Why would a cathodic pulse excite the axon, an anodic pulse quiet it, and why does it create two excited spots off to the sides?"</p>
+  <h3>The activating function, step by step</h3>
+
+  <h4>1 · "Depolarize" means "move toward the trigger"</h4>
+  <p>At rest the inside of the axon sits at about −70 mV. The spike fires at about −55 mV. Depolarizing is moving <em>up</em> this scale. Push up 15 mV or more and you cross threshold, the sodium gates open, and the spike fires. That is all "excite" means. Hyperpolarizing moves the voltage <em>down</em>, further from threshold, so the neuron gets harder to fire. That is all "quiet" means.</p>
+  <div class="grid2">
+    <figure>
+      <svg id="ladderSvg" viewBox="0 0 340 240" role="img" aria-label="Voltage scale: rest at -70 mV, threshold at -55 mV; pushing up is depolarizing and excites, pushing down is hyperpolarizing and quiets."></svg>
+      <figcaption>The membrane-voltage scale. Up = depolarize = toward firing. Down = hyperpolarize = away from firing.</figcaption>
+    </figure>
+    <figure id="qa-sides-fig">
+      <svg id="xsecSvg" viewBox="0 0 340 240" role="img" aria-label="Cross-section of an axon: the inside is the salty fluid core enclosed by the membrane; outside is the surrounding brain fluid."></svg>
+      <figcaption>Cut the axon and look end-on. "Inside" is the salty fluid core; "outside" is the brain fluid around it; the membrane is the thin insulating skin between.</figcaption>
+    </figure>
+  </div>
+
+  <h4 id="qa-sides">2 · What "inside", "outside" and "off to the sides" mean</h4>
+  <p class="qtext" style="margin-top:6px">I also wondered: what does "off to the sides" mean, and why would "the inside settle near −8"?</p>
+  <p>Picture the axon as a garden hose lying flat, with the electrode tip hovering just above one spot on it. <b>Inside</b> is the fluid core within the axon. <b>Outside</b> is the brain fluid around it. <b>Off to the sides</b> means points further along the <em>same</em> axon, away from the spot directly beneath the tip. The axon is long, so different points along it sit at different distances from the electrode.</p>
+  <figure>
+    <div class="svgscroll"><svg id="hoseSvg" viewBox="0 0 700 230" role="img" aria-label="Side view of an axon lying under an electrode tip, with the region directly under the tip and the regions off to each side marked."></svg></div>
+    <figcaption>Side view. The electrode only changes the voltage of the fluid <em>outside</em> the axon: strongly right under the tip, weakly at the sides.</figcaption>
+  </figure>
+
+  <h4>3 · The key fact: membrane voltage is inside minus outside</h4>
+  <div class="eq">V<sub>m</sub> = V<sub>inside</sub> − V<sub>outside</sub></div>
+  <p>The electrode never touches the inside. It only changes the outside fluid. The inside of the axon, though, is a long, salty, conductive core, so it behaves like a wire. A wire can't hold a sharp voltage bump at one spot, because charge flows along it and evens it out, like water levelling in a pipe. So the inside settles near the <b>average</b> of what the outside is doing along that stretch.</p>
+  <div class="rule"><b>The rule.</b> Wherever the outside is <span class="cath">below</span> that average, V<sub>m</sub> goes <b>up</b> (depolarized, excitable). Wherever the outside is <span class="anod">above</span> it, V<sub>m</sub> goes <b>down</b> (hyperpolarized, quieted).</div>
+  <p>All numbers below are <b>changes caused by the pulse</b>, added on top of the resting −70 mV. What matters is how the pulse shifts the <em>difference</em> between inside and outside.</p>
+
+  <h4>4 · Cathodic pulse: the spot under the tip gets excited</h4>
+  <p>A cathode is the negative electrode, so it makes the outside fluid negative, most strongly right at the tip.</p>
+  <figure>
+    <div class="svgscroll"><svg id="voutC" viewBox="0 0 700 270" role="img" aria-label="Cathodic pulse: outside voltage dips to -30 mV under the tip; the inside settles at -8 mV; under the tip the outside is far below the inside line so the membrane depolarizes by 22 mV; at the sides it is slightly above so the membrane hyperpolarizes slightly."></svg></div>
+    <figcaption>Outside voltage along the axon during a cathodic pulse (curve) and the level the inside settles at (dashed). Blue shading: outside below the inside level → depolarized. Red shading: outside above it → hyperpolarized. Numbers on the dots are the membrane change.</figcaption>
+  </figure>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Position along axon</th><th class="num">Outside shifts</th><th class="num">Inside shifts</th><th class="num">Membrane shifts (in − out)</th><th class="num">New membrane voltage</th></tr></thead>
+    <tbody>
+      <tr><td>300 µm left</td><td class="num">−2 mV</td><td class="num">−8 mV</td><td class="num">−6 mV</td><td class="num">−76 (quieter)</td></tr>
+      <tr><td>150 µm left</td><td class="num">−7 mV</td><td class="num">−8 mV</td><td class="num">−1 mV</td><td class="num">−71</td></tr>
+      <tr class="hi"><td><b>right under the tip</b></td><td class="num"><b>−30 mV</b></td><td class="num"><b>−8 mV</b></td><td class="num"><b>+22 mV</b></td><td class="num"><b>−48 → fires</b></td></tr>
+      <tr><td>150 µm right</td><td class="num">−7 mV</td><td class="num">−8 mV</td><td class="num">−1 mV</td><td class="num">−71</td></tr>
+      <tr><td>300 µm right</td><td class="num">−2 mV</td><td class="num">−8 mV</td><td class="num">−6 mV</td><td class="num">−76 (quieter)</td></tr>
+    </tbody>
+  </table></div>
+  <p>The <b>outside</b> column varies a lot because the tissue can hold different voltages at different places, and it is closest to the electrode under the tip. The <b>inside</b> column is the same everywhere because the core is one continuous conductor. (−8 is an illustrative value for where it settles.) Under the tip, the outside dropped far more than the inside (30 vs 8), so the inside is now relatively 22 mV more positive: the membrane goes from −70 to −48, past threshold, and fires. At the sides the outside barely moved (2) but the inside dropped 8, so the membrane goes down to −76.</p>
+
+  <h4>5 · Anodic pulse: every sign flips, creating "virtual cathodes"</h4>
+  <p>An anode is the positive electrode, so the outside bump points <em>up</em> instead.</p>
+  <figure>
+    <div class="svgscroll"><svg id="voutA" viewBox="0 0 700 270" role="img" aria-label="Anodic pulse: outside voltage peaks at +30 mV under the tip; the inside settles at +8 mV; under the tip the membrane hyperpolarizes by 22 mV, while at the sides it depolarizes slightly — the virtual cathodes."></svg></div>
+    <figcaption>The mirror image. Under the tip the outside is far <em>above</em> the inside level, so the membrane is quieted. Off to the sides it is <em>below</em>, so those spots are pushed up. They act as if a cathode were sitting there, which is why they're called virtual cathodes.</figcaption>
+  </figure>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Position along axon</th><th class="num">Outside shifts</th><th class="num">Inside shifts</th><th class="num">Membrane shifts</th><th class="num">New membrane voltage</th></tr></thead>
+    <tbody>
+      <tr><td>300 µm left</td><td class="num">+2 mV</td><td class="num">+8 mV</td><td class="num">+6 mV</td><td class="num">−64 (virtual cathode)</td></tr>
+      <tr><td>150 µm left</td><td class="num">+7 mV</td><td class="num">+8 mV</td><td class="num">+1 mV</td><td class="num">−69</td></tr>
+      <tr class="hi"><td><b>right under the tip</b></td><td class="num"><b>+30 mV</b></td><td class="num"><b>+8 mV</b></td><td class="num"><b>−22 mV</b></td><td class="num"><b>−92 (quieted)</b></td></tr>
+      <tr><td>150 µm right</td><td class="num">+7 mV</td><td class="num">+8 mV</td><td class="num">+1 mV</td><td class="num">−69</td></tr>
+      <tr><td>300 µm right</td><td class="num">+2 mV</td><td class="num">+8 mV</td><td class="num">+6 mV</td><td class="num">−64 (virtual cathode)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>6 · Why anodic pulses need more current</h4>
+  <p>The side spots are much weaker than the centre. In the table, +6 mV at the sides doesn't reach the +15 mV needed to fire. For a point electrode, the side peaks are only about <b>20%</b> as strong as the centre peak, so in theory you need roughly <b>5× more anodic current</b> to fire an axon through a virtual cathode than with a cathodic pulse right under the tip.</p>
+
+  <h4>7 · So what is the "activating function"?</h4>
+  <p>It is the name for this "how far is this spot from the average of its neighbours" calculation, done at every point along the axon. Mathematically it is the curvature (second derivative) of the outside voltage along the axon. For a discrete cable:</p>
+  <div class="eq">f(here) = V(left) + V(right) − 2·V(here)</div>
+  <p>Positive values mark spots that will depolarize; negative values mark spots that will hyperpolarize. The blue and red curves in the computed Fig 1d above are exactly this.</p>
+
+  <h4>8 · Why it's "unproven" for tiny brain electrodes</h4>
+  <p>Virtual cathodes have been clearly measured in heart tissue, but with large electrodes and long pulses. With brain microelectrodes and short pulses of about 200 µs, the side peaks are weak, and it isn't yet clear whether they're ever strong enough to fire neurons in practice.</p>
+  </div>
+
+  <div class="qa" id="qa-chron">
+  <div class="q">Deep dive · a question I had</div>
+  <p class="qtext">"What on earth is a chronaxie?"</p>
+  <h3>Chronaxie: how fast a neuron responds to a push</h3>
+  <p>It comes from a simple experiment. Take one neuron and one electrode. For each pulse width, find the smallest current that makes it fire:</p>
+  <div class="tablewrap"><table style="max-width:460px">
+    <thead><tr><th>Pulse width</th><th class="num">Smallest current that fires it</th></tr></thead>
+    <tbody>
+      <tr><td>50 µs</td><td class="num">70 µA</td></tr>
+      <tr><td>100 µs</td><td class="num">40 µA</td></tr>
+      <tr class="hi"><td><b>300 µs ← chronaxie</b></td><td class="num"><b>20 µA</b> (2 × rheobase)</td></tr>
+      <tr><td>1,000 µs</td><td class="num">13 µA</td></tr>
+      <tr><td>10,000 µs</td><td class="num">10.3 µA</td></tr>
+      <tr><td>infinitely long</td><td class="num"><b>10 µA ← rheobase</b></td></tr>
+    </tbody>
+  </table></div>
+  <p>Plot those pairs and you get the computed Fig 1e curve above. The floor (10 µA) is the <b>rheobase</b>: the weakest current that can ever fire the neuron, however long you hold it. The <b>chronaxie</b> is the pulse width where you need exactly <b>2× the rheobase</b>. Here 2 × 10 = 20 µA happens at 300 µs, so the chronaxie is 300 µs.</p>
+  <figure>
+    <svg id="bucketSvg" viewBox="0 0 700 250" role="img" aria-label="Leaky bucket analogy: current pours into a bucket with a hole; the neuron fires when the water reaches the threshold line."></svg>
+    <figcaption><b>Why the curve has this shape: a leaky bucket.</b> Current fills the bucket (charge on the membrane); ions seep back out through the hole; it fires when the water reaches the line. In circuit terms the bucket is the membrane's RC time constant.</figcaption>
+  </figure>
+  <ul class="panels">
+    <li><span class="pl">S</span><div><b>Short pulse:</b> you must pour hard to reach the line before time runs out. High current, but the leak barely matters.</div></li>
+    <li><span class="pl">L</span><div><b>Long pulse:</b> you can pour gently, but the leak keeps stealing water, so you still need some minimum flow. That minimum is the rheobase.</div></li>
+    <li><span class="pl">C</span><div><b>Chronaxie</b> is roughly how long the bucket takes to fill noticeably. Fast elements (small, leaky bucket) have short chronaxies; slow ones (big bucket) have long ones.</div></li>
+  </ul>
+  <h4>Why anyone cares</h4>
+  <ul class="panels">
+    <li><span class="pl">1</span><div><b>It's a fingerprint for what you're hitting.</b> Axons have short chronaxies, about 100–300 µs. Cell bodies and dendrites are slower, often 1 ms or more. In the paper, rat cortex gave 200–400 µs, consistent with ICMS firing axons.</div></li>
+    <li><span class="pl">2</span><div><b>It's the efficient pulse width.</b> In this simple model, the energy needed to fire is lowest when the pulse width equals the chronaxie. Clinical ICMS uses 200–400 µs pulses, right around it.</div></li>
+    <li><span class="pl">3</span><div><b>Pulse width could pick targets.</b> Since elements differ in chronaxie, short versus long pulses could in principle favour axons versus cell bodies, one of the pulse-shape ideas the paper calls underexplored.</div></li>
+  </ul>
+  <p class="meta">The name is Greek <i>chronos</i> (time) + <i>axia</i> (value): "the time value". It was coined in 1909.</p>
+  </div>
+
+  <div class="analogy">Think of a crowd and a megaphone. Direct activation is tapping someone's shoulder. Indirect activation is that person turning around and telling their friends. Tapping is fast and certain, but it skips the conversation that normally decides whether someone speaks up.</div>
+
+  <div class="take"><b>Takeaway.</b> ICMS mostly fires <em>axons</em>, not cell bodies. Cathode-first pulses work at lower currents. More current or longer pulses recruit more neurons, but with diminishing returns. And every directly-hit neuron also excites others downstream, so one pulse sets off a small network event.</div>
+</section>
+
+<!-- ============ FIG 2 ============ -->
+<section id="fig2">
+  <div class="fignum">Figure 2</div>
+  <h2>Turning up the current: where do activated neurons appear?</h2>
+  <p>Two classic findings seemed to contradict each other.</p>
+  <p><b>Stoney, 1968:</b> activation follows a tidy distance rule. The current needed to fire a neuron grows with the <em>square</em> of its distance:</p>
+  <div class="eq">i = k · r²  &nbsp;&nbsp;→&nbsp;&nbsp; r = √(i / k), &nbsp; k ≈ 1,292 µA/mm²</div>
+  <p>Example: at 15 µA, r = √(15/1292) mm ≈ 0.108 mm, so everything within about 108 µm fires. To double the radius you need 4× the current.</p>
+  <p><b>Histed, 2009</b>, using two-photon microscopy to watch cells light up: activated cell bodies are <em>sparse and scattered</em> up to about a millimetre away, even at low current, and the spread barely changes with amplitude.</p>
+  <p>Figure 2 is a computer model (Kumaravelu et al., 2022) that shows both are true at once. <b>The current activates axons in a compact sphere around the tip.</b> But those axons belong to cell bodies that may sit far away. So if you look at <em>axons</em>, you see Stoney's sphere. If you look at <em>cell bodies</em>, you see Histed's sparse cloud.</p>
+
+  <ul class="panels">
+    <li><span class="pl">a</span><div>3D column of cortex coloured by layer (L1 pink, L2/3 orange, L4 green, L5 blue, L6 grey). Red dots are activated <b>axons</b>. They fill a black dashed sphere around the tip that grows from 5 to 50 µA.</div></li>
+    <li><span class="pl">b</span><div>Same simulation, but red now marks activated <b>cell bodies</b>. They are spread through the whole column at every amplitude. Only the <em>density</em> rises.</div></li>
+    <li><span class="pl">c</span><div>Top-down polar plots of the axon sites. At 5 µA they all sit within 100 µm; at 15 µA they reach 200–300 µm.</div></li>
+    <li><span class="pl">d</span><div>Same view for cell bodies. Already at 5 µA they reach about 1,000 µm, and they barely spread further at 50 µA. They just fill in.</div></li>
+  </ul>
+
+  <figure>
+    <div class="control"><label for="amp">Current amplitude</label><input id="amp" type="range" min="5" max="50" step="1" value="15"><span id="ampv" style="min-width:56px">15 µA</span></div>
+    <div class="grid2">
+      <svg id="axonSvg" viewBox="0 0 300 300" role="img" aria-label="Top-down view: activated axon sites fill a circle around the electrode whose radius grows with current."></svg>
+      <svg id="somaSvg" viewBox="0 0 300 300" role="img" aria-label="Top-down view: activated cell bodies are scattered across a wide area regardless of current; density grows with current."></svg>
+    </div>
+    <div class="readout"><span>activation radius (axons): <b id="rOut"></b></span><span>axon sites: <b id="aOut"></b></span><span>cell bodies firing: <b id="sOut"></b></span><span>farthest cell body: <b id="fOut"></b></span></div>
+    <figcaption><b>Try the slider.</b> This is a toy version of panels c and d. Each grey dot is a cell body. Its axon passes the electrode at some random closest distance. A cell fires when its axon passes inside the radius r = √(i/k) (dashed ring). Left: where activation happens (axons). Right: which cells fire (cell bodies). The ring grows, but the right-hand cloud stays wide and only gets denser.</figcaption>
+  </figure>
+
+  <div class="qa" id="qa-soma">
+  <div class="q">Deep dive · a question I had</div>
+  <p class="qtext">"Do the cell bodies activate or not? Is it sparse because only the axon activates?"</p>
+  <h3>Yes, the red cell bodies fire, but the current never reaches them</h3>
+  <p>The current hits their <b>axon</b> near the electrode. The spike starts there and travels <b>backward</b> along the axon to the cell body (antidromic), as well as forward to the axon's targets. So the cell body fires, even though it sits far outside the zone the current reaches.</p>
+  <figure>
+    <div class="svgscroll"><svg id="abcdSvg" viewBox="0 0 700 300" role="img" aria-label="Four neurons: A, B and C have axons that pass through the small activation zone around the electrode, so spikes start there and their cell bodies fire; D's axon misses the zone so it stays silent."></svg></div>
+    <figcaption>Three neurons fire; one doesn't. What decides it is where the <b>axon</b> runs, not how close the <b>cell body</b> is.</figcaption>
+  </figure>
+  <ul class="panels">
+    <li><span class="pl">A</span><div><b>A, B and C fire.</b> Each axon happens to cross the dashed zone. A spike starts there (✱) and runs back to the cell body, which may be hundreds of µm away.</div></li>
+    <li><span class="pl">D</span><div><b>D stays silent.</b> Its cell body is no farther away than A's, but its axon never passes through the zone.</div></li>
+  </ul>
+  <h4>Reading the slider with this in mind</h4>
+  <p><b>Left panel:</b> each red dot is a spot <em>where a spike starts</em>, all on axons inside the dashed ring. <b>Right panel:</b> each red dot is the <em>cell body that axon belongs to</em>. It's the same set of neurons, which is why the two counts always match: each left dot has a partner on the right. <b>Grey dots</b> are neurons whose axons didn't cross the ring.</p>
+  <p><b>Why sparse and spread out:</b> axons are long and run in all directions, so the cells whose axons cross that tiny zone can live anywhere. Their bodies end up scattered up to about 600 µm away, mixed among grey neighbours that didn't fire. Raise the current and the ring grows, so more axons cross it and more red dots appear. They don't spread much further out, because they were already as far as axons reach. The pattern gets <b>denser, not wider</b>.</p>
+  <div class="analogy">The electrode is a junction box in one room that hundreds of phone lines pass through. Zap the box and phones ring in houses all over the neighbourhood. Only the houses whose line runs through that box ring, wherever those houses are.</div>
+  <p class="meta">One simplification in the toy model: a cell body sitting right next to the electrode would also get hit directly. The toy only models the axon route, because that route is the paper's point.</p>
+  </div>
+
+  <h3>What people report</h3>
+  <p>In human studies, turning up amplitude makes a sensation feel <b>stronger</b> (intensity rose linearly, about 0.025 normalized units per µA for 1-second trains). It mostly does <b>not</b> make the touched area on the hand bigger. That fits the model: more current means denser activation (stronger), not a wider footprint (bigger). One recent study did see the projected field grow, so this point is not settled.</p>
+
+  <div class="take"><b>Takeaway.</b> More current means more neurons firing in the same region, not a much larger region. Brightness goes up; the spot does not get much bigger.</div>
+</section>
+
+<!-- ============ PARAMS ============ -->
+<section id="params">
+  <div class="fignum">No figure · text section</div>
+  <h2>Pulse shape and frequency</h2>
+  <h3>Pulse shape</h3>
+  <p>Clinical groups use different recipes. Pittsburgh uses 200 µs cathodic, 100 µs gap, 400 µs anodic at half amplitude. Others use a symmetric 200 µs / 200 µs pulse. Shape matters because different parts of a neuron charge at different speeds. In rodents, a <b>long, low cathodic lead</b> (5–8× longer than the trailing phase) gave more focal activation around the electrode than an anodic lead. Models suggest cathode-first favours passing axons and anode-first favours nearby cell bodies. Pulse shape is a largely unexplored knob in humans.</p>
+  <h3>Frequency (pulses per second)</h3>
+  <p>Frequency changes the <em>quality</em> of a sensation: "touch" and "tingle" at some rates, "buzzing" and "tapping" at others. On a given electrode, the same settings give the same quality day after day.</p>
+  <p>Higher frequency helps detection up to about 100–200 Hz, then stops helping. The reason is simple arithmetic. At 100 Hz the gap between pulses is 10 ms, about the membrane time constant. Below that gap, leftover voltage from one pulse is still there when the next arrives and the two add up. Going faster than ~100–200 Hz adds little extra summation.</p>
+  <p>High frequency has a cost: neurons <b>far</b> from the electrode get <b>suppressed</b>, perhaps because they run out of energy or because inhibition builds up. Even 130 Hz and 200 Hz give distinguishable activity patterns.</p>
+  <p>Newer ideas move away from a steady tick. Varying the timing between pulses (temporal patterning), bursts, or randomized (stochastic) timing look more like how real neurons fire. Bursts kept sensations alive longer than continuous trains in humans.</p>
+</section>
+
+<!-- ============ FIG 3 ============ -->
+<section id="fig3">
+  <div class="fignum">Figure 3</div>
+  <h2>Too much stimulation: permanent damage vs temporary fatigue</h2>
+  <p>The top half of Figure 3 covers settings that <b>kill tissue</b>. The bottom half covers settings that are "safe" yet still make neurons <b>temporarily less responsive</b>.</p>
+
+  <ul class="panels">
+    <li><span class="pl">a</span><div><b>Shannon's safety model.</b> Two quantities matter together: <b>charge per phase</b> (how much charge each pulse pushes) and <b>charge density</b> (that charge divided by electrode surface area; a tiny tip concentrates it). Plot one against the other: below a diagonal line is safe, above it is damage. Other knobs (frequency, duration) could be plotted the same way.</div></li>
+    <li><span class="pl">b</span><div><b>What damage looks like.</b> With non-damaging ICMS, labelled neurons around the electrode survive. With damaging ICMS, there is a hole of dead neurons and damaged tissue near the tip. Animal data: more than 4 nC per phase, frequencies above 50 Hz, and durations over 8 hours all raised damage. Halving charge (4 → 2 nC), halving density (200 → 100 µC/cm²), or duty-cycling (1 s on, 1 s off) improved survival.</div></li>
+    <li><span class="pl">c</span><div><b>SIDNE builds up.</b> Stimulation-Induced Depression of Neuronal Excitability. During 8 hours of continuous, non-damaging stimulation, the evoked response shrinks hour by hour. Average responses fell 0–80% and thresholds rose 0–5×.</div></li>
+    <li><span class="pl">d</span><div><b>SIDNE recovers slowly.</b> After 7 hours of ICMS, full recovery took <b>2 to 17 days</b>. That is far slower than normal sensory adaptation (seconds to minutes), so it is a different mechanism. Candidates: potassium piling up outside cells, or toxic by-products of chemistry at the electrode surface.</div></li>
+    <li><span class="pl">e</span><div><b>Depression during stimulation</b>, seen with calcium imaging (neurons glow when active). At low frequency, neurons near the electrode stay steady or even ramp up (facilitation). At high frequency and amplitude, neurons far from the electrode fade quickly and stay quiet briefly after stimulation stops.</div></li>
+    <li><span class="pl">f</span><div><b>Same story in spike recordings.</b> Each row is a trial; each tick is a spike. Low settings: firing locks to each pulse, then a short quiet period afterwards. High settings: strong firing that fades over time, sometimes a rebound burst after stimulation stops, then quiet.</div></li>
+  </ul>
+
+  <div class="grid2">
+    <figure>
+      <svg id="shannonSvg" viewBox="0 0 340 220" role="img" aria-label="Shannon safety plot: log charge density versus log charge per phase; a diagonal boundary separates safe region below from damage above."></svg>
+      <figcaption><b>3a, computed.</b> Shannon's line: log(D) = k − log(Q), drawn with k = 1.85, a commonly used value. Point A (small charge, small tip) can be safe while point B, at the same charge, crosses into damage.</figcaption>
+    </figure>
+    <figure>
+      <svg id="depSvg" viewBox="0 0 340 220" role="img" aria-label="Calcium response over time during high-frequency ICMS: near-electrode neurons stay elevated while far neurons spike then decay, then dip below baseline after stimulation ends."></svg>
+      <figcaption><b>3e, schematic.</b> High-frequency ICMS. Near neurons (red) hold their response. Far neurons (blue) fire, then fade, then dip below baseline after ICMS ends.</figcaption>
+    </figure>
+  </div>
+
+  <p>There are two speeds of fatigue. <b>Rapid depression</b> happens in the first few seconds and depends on stimulation settings. <b>Slow depression</b> builds over many seconds and depends on how strongly neurons were first activated. In people, a continuous ICMS sensation can fade to imperceptible in <b>under a minute</b>, which is a practical problem for a prosthetic hand you want to feel all day.</p>
+
+  <div class="take"><b>Takeaway.</b> Stay under the damage line, and you still have to deal with fatigue. Strong, fast, continuous stimulation tires neurons on timescales from seconds to weeks.</div>
+</section>
+
+<!-- ============ FIG 4 ============ -->
+<section id="fig4">
+  <div class="fignum">Figure 4</div>
+  <h2>Cortex wiring, and how an electrode disrupts it</h2>
+  <p>The busiest figure. Its message is that natural sensation is an <em>ordered</em> event in a structured circuit, and ICMS hits that circuit all at once, in the wrong order, through an electrode that has damaged it.</p>
+
+  <ul class="panels">
+    <li><span class="pl">a</span><div><b>Folds limit reach.</b> The cortex is crumpled into ridges (<b>gyri</b>) and grooves (<b>sulci</b>). Touch processing starts in area 3b, which lies <em>inside</em> the central sulcus, where a flat Utah array cannot reach (the ✗). Arrays go on area 1 on the crown of the ridge (the ✓). The inset shows a second problem: the cortex surface is curved but the array is rigid and its needles all have the same length. On tilted cortex, neighbouring needles end in different layers.</div></li>
+    <li><span class="pl">b</span><div><b>Maps are folded too.</b> Visual cortex V1 is laid out like a map of what you see (numbered patches 1–12 match regions of the visual field). Central vision sits near the surface. Peripheral vision lies deep in the calcarine fissure, out of reach.</div></li>
+    <li><span class="pl">c</span><div><b>Columns, layers, and electrode types.</b> A rigid single-site needle stimulates only at its tip, so one layer. A rigid multisite shank or a flexible polymer one has contacts along its length and can reach several layers.</div></li>
+    <li><span class="pl">d</span><div><b>Natural activation</b>, in order: thalamus → layer 4 → layer 2/3 → deeper layers. Along the way, inhibitory cells silence neighbouring columns (<b>lateral inhibition</b>), which sharpens the signal, like edge-enhancement in an image.</div></li>
+    <li><span class="pl">e</span><div><b>ICMS activation.</b> The shank has cut through local connections. Everything near the tip fires at once, regardless of its role. ICMS in layer 4 can catch axons passing up to 2/3 and down to 5. ICMS in layer 2/3 skips the layer-4 step entirely.</div></li>
+    <li><span class="pl">f</span><div><b>The body's reaction</b> to the implant: bleeding, nearby neurons dying, and <b>glial encapsulation</b> (support cells wall the electrode off like a scar). All of this pushes healthy neurons farther away and raises thresholds.</div></li>
+    <li><span class="pl">g</span><div><b>Cell types fire in a sequence.</b> Excitatory <b>pyramidal</b> cells (Pyr) do the main signalling. Inhibitory cells, only 10–20% of neurons, come in subtypes. <b>PV</b> cells are fast (up to 450 Hz) and give <em>feedforward</em> inhibition; they fire first. <b>SOM</b> cells are slower (under 10 Hz) and give <em>feedback</em> inhibition; they fire last. <b>VIP</b> cells inhibit other inhibitors. Normal touch recruits PV → Pyr → SOM.</div></li>
+    <li><span class="pl">h</span><div><b>ICMS breaks the sequence.</b> Near the electrode, Pyr, PV and SOM all fire at the same instant. For neurons recruited indirectly, the order is unknown (the "???" in the figure). The electrode also touches blood vessels and non-neuronal cells.</div></li>
+  </ul>
+
+  <figure>
+    <div class="svgscroll">
+    <svg id="seqSvg" viewBox="0 0 700 250" role="img" aria-label="Timeline comparing natural touch, where PV, pyramidal and SOM cells fire in sequence, with ICMS, where all three fire at the same moment near the electrode."></svg>
+    </div>
+    <figcaption><b>4g vs 4h, as a timeline.</b> Natural input is a sequence: PV inhibition first sets up a narrow window, pyramidal cells fire, then SOM feedback shuts it down. ICMS fires all three types at once. The authors flag the downstream order after ICMS as an open question.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="svgscroll">
+    <svg id="layerSvg" viewBox="0 0 700 300" role="img" aria-label="Six-layer cortex: natural signal enters layer 4 from thalamus and moves to layer 2/3 then deeper layers; an ICMS electrode tip in layer 2/3 activates a sphere spanning neighbouring layers and skips the layer 4 step."></svg>
+    </div>
+    <figcaption><b>4c–4e, simplified.</b> Left: the natural route through one column. Right: an electrode ending in layer 2/3 activates everything in its sphere, including axons passing through, and skips layer 4. Fixed-length Utah needles can end in different layers depending on how the cortex tilts.</figcaption>
+  </figure>
+
+  <h3>Beyond neurons</h3>
+  <p>Electrical stimulation also activates <b>glia</b> (support cells) and touches <b>blood vessels</b>. Neurons signal to vessels, so ICMS can change local blood flow. ICMS increases deoxygenated hemoglobin nearby, and recovery from depression depends on oxygen coming back. That links back to Figure 3: fatigue may partly be an energy-supply problem. The authors suggest this could become a tool: steer blood flow to keep tissue healthy and electrodes working longer.</p>
+  <p>They also compare ICMS with <b>optogenetics</b> (making genetically chosen neurons fire with light). Optogenetics activates cell bodies of a chosen type; ICMS activates axons near the tip, whatever their type. Optogenetic patterns look more like natural sensation, but it needs genetic modification, so it is not a near-term option in humans.</p>
+
+  <div class="take"><b>Takeaway.</b> Real perception is a timed sequence across layers, columns and cell types. ICMS fires a local blob simultaneously, in whatever layer the needle tip happens to land, inside tissue the implant has damaged. That gap is probably why ICMS sensations often feel "artificial".</div>
+</section>
+
+<!-- ============ FIG 5 ============ -->
+<section id="fig5">
+  <div class="fignum">Figure 5</div>
+  <h2>Emerging approaches: better hardware, smarter pulses</h2>
+  <ul class="panels">
+    <li><span class="pl">a</span><div><b>Fully implanted, wireless systems.</b> Today's systems use a <b>percutaneous pedestal</b>, a connector through the skull and skin. It is an infection risk and a mechanical weak point: in non-human primates with rigid arrays, <b>48% of devices failed from acute mechanical issues</b> like broken wires. Wireless implants controlled from a small portable device would fix this, but their long-term reliability is not yet proven.</div></li>
+    <li><span class="pl">b</span><div><b>Small, distributed, flexible electrodes</b> spread across all layers. Smaller and softer means less scarring and finer targeting. The trade-off: a smaller contact concentrates charge (higher density, see Fig. 3a), increases cross-talk between channels, and adds new ways to fail.</div></li>
+    <li><span class="pl">c</span><div><b>Biomimetic pulse trains.</b> Record what real neurons do during a touch: a big burst at <b>onset</b>, a lower steady rate, and a burst at <b>offset</b>. A model turns that into a matching ICMS amplitude or frequency profile. In people, this made sensations feel more natural, improved discrimination, and helped a robotic arm transfer objects faster. It also uses less total charge.</div></li>
+    <li><span class="pl">d</span><div><b>Multielectrode modulation.</b> Give each electrode its own pulse shape and timing to target different cell types. Overlapping fields from two electrodes can create a "virtual electrode" between them (<b>current steering</b>). Cycling through electrodes lets each rest, which fights the fatigue in Fig. 3.</div></li>
+  </ul>
+
+  <figure>
+    <svg id="bioSvg" viewBox="0 0 700 220" role="img" aria-label="Left: a recorded neural firing rate during a touch shows an onset spike, a sustained plateau, and an offset spike. Right: the derived ICMS amplitude follows the same onset and offset transients, compared with a flat conventional train."></svg>
+    <figcaption><b>5c, redrawn.</b> A conventional train is flat for the whole contact. A biomimetic train copies what real touch neurons do: emphasise the moment of contact and release, and coast in between. The transients carry most of the useful information.</figcaption>
+  </figure>
+
+  <figure>
+    <svg id="steerSvg" viewBox="0 0 700 170" role="img" aria-label="Current steering: two electrodes sharing current create a peak of activation between them that shifts toward whichever electrode carries more current."></svg>
+    <figcaption><b>Current steering (Fig. 5d idea), computed.</b> Field strength along a line through two electrodes. Splitting current 50/50 puts a combined hotspot between them; shifting to 80/20 slides it toward one side. This is how a few physical contacts could address more locations.</figcaption>
+  </figure>
+
+  <div class="qa" id="qa-bio">
+  <div class="q">Deep dive · a question I had</div>
+  <p class="qtext">The review says: "Researchers have begun to build more sophisticated approaches to parameter modulation that more closely resemble physiological cortical activation (that is, are biomimetic) and use multiple electrodes. What does this mean?"</p>
+  <h3>Copying biology in time, and in space</h3>
+  <p>Researchers are improving ICMS in two ways: changing the stimulation over time so it looks like real brain activity, and spreading it across several electrodes instead of one.</p>
+  <h4>The old way</h4>
+  <p>Pick one electrode and one setting, say 60 µA at 100 Hz, and keep it running the whole time the robotic hand touches an object. That is the flat dashed line in the 5c figure above.</p>
+  <h4>Biomimetic = "copying biology" in time</h4>
+  <p>Real touch neurons don't fire steadily. They burst when contact starts, settle to a low rate while you hold, and burst again when you let go (the 5c figure). "Parameter modulation" just means changing the amplitude or frequency moment by moment to follow that shape. Example: you pick up a cup. A biomimetic pattern gives a strong jolt at contact ("I've got it"), a gentle background while you hold it, and another jolt when you set it down. People said this felt more natural, could tell intensities apart better, and moved objects faster with a robotic arm. It also uses less total charge, which is easier on the tissue.</p>
+  <h4>Multiple electrodes = copying biology in space</h4>
+  <p>Real touch activates many neurons spread across a patch of cortex, not one dense blob around a single tip. Using several electrodes together lets researchers:</p>
+  <ul class="panels">
+    <li><span class="pl">1</span><div><b>Spread activation out</b> so it looks more like natural input.</div></li>
+    <li><span class="pl">2</span><div><b>Steer it:</b> split current between two electrodes (50/50, 80/20) and the activated spot moves somewhere between them, creating "virtual" electrode positions (the current-steering plot above).</div></li>
+    <li><span class="pl">3</span><div><b>Take turns:</b> cycling through electrodes lets each patch of neurons rest, so the sensation fades more slowly (the fatigue problem in Fig 3).</div></li>
+  </ul>
+  </div>
+
+  <p>The authors also push <b>biophysical models</b>, like the Blue Brain-based column model behind Figure 2, as a cheap test bench for new stimulation patterns before trying them in people. The missing piece is a model that goes from "which neurons fired" to "what the person felt".</p>
+</section>
+
+<!-- ============ TABLE ============ -->
+<section id="table">
+  <div class="fignum">Table 1</div>
+  <h2>The paper's own summary</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>What we know</th><th>What we don't</th><th>Tech to build</th></tr></thead>
+    <tbody>
+      <tr><td>ICMS mainly activates axons, not cell bodies, so the cells that fire are sparse and spread out.</td><td>How does targeting a specific area, layer or column change what is felt?</td><td>More focal activation</td></tr>
+      <tr><td>Neurons fire directly and also indirectly via synapses; indirect ones are farther away on average.</td><td>How do upstream and downstream areas and the thalamus respond?</td><td>Precise targeting of specific neural subpopulations</td></tr>
+      <tr><td>More amplitude = denser activation in roughly the same space, so stronger, not much bigger, sensations.</td><td>What ranges of pattern, frequency and pulse shape give more useful activation?</td><td>Coverage across areas, layers, columns, and inside sulci</td></tr>
+      <tr><td>The split of charge between the cathodic and anodic phases shapes who fires.</td><td>What causes ICMS-induced depression, and how does it relate to normal adaptation?</td><td>Better biocompatibility</td></tr>
+      <tr><td>Higher frequency improves detection but changes quality and adaptation, electrode by electrode.</td><td>How do cell subtypes, glia and blood vessels respond compared with natural input?</td><td>Flexible per-electrode pulse settings</td></tr>
+      <tr><td>Continuous high-amplitude, high-frequency ICMS depresses neurons afterwards.</td><td>How does the tissue response to insertion change the circuit and its response?</td><td></td></tr>
+      <tr><td>Responses vary with distance, circuit, cell type and tissue response.</td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="take"><b>Bottom line.</b> ICMS works well enough to restore useful touch and crude vision today. Making it feel natural needs three things: hitting the right layer and cell types, firing them in the right order and rhythm, and doing it with electrodes the brain tolerates for years. Combining human reports (what it feels like) with animal experiments (what the neurons did) is the path forward.</div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="gloss">
+  <div class="fignum">Reference</div>
+  <h2>Glossary</h2>
+  <dl class="gloss">
+    <dt>Action potential (spike)</dt><dd>The all-or-nothing voltage pulse a neuron fires once its membrane crosses threshold.</dd>
+    <dt>Depolarize / hyperpolarize</dt><dd>Push the membrane voltage toward firing / away from firing.</dd>
+    <dt>Cathodic / anodic</dt><dd>Negative / positive current phase at the electrode. Cathodic excites more easily.</dd>
+    <dt>Charge per phase; charge density</dt><dd>Current × pulse width (nC); that charge divided by the electrode area (µC/cm²). Both set the damage limit.</dd>
+    <dt>Rheobase; chronaxie</dt><dd>The lowest current that ever works; the pulse width at which you need twice that.</dd>
+    <dt>Orthodromic / antidromic</dt><dd>A spike travelling the normal direction / backwards toward the cell body.</dd>
+    <dt>Phosphene</dt><dd>A dot of light someone "sees" from stimulation of visual cortex.</dd>
+    <dt>Projected field</dt><dd>The patch of body (or visual field) where a stimulated electrode's sensation is felt.</dd>
+    <dt>SIDNE</dt><dd>Stimulation-induced depression of neuronal excitability. Reversible fatigue that lasts days.</dd>
+    <dt>Glia / gliosis</dt><dd>Non-neuronal support cells / their scar-like response that walls off an implant.</dd>
+    <dt>PV, SOM, VIP</dt><dd>Three families of inhibitory interneurons named after marker proteins. Fast feedforward, slow feedback, and inhibit-the-inhibitors.</dd>
+  </dl>
+  <footer>Diagrams on this page are simplified redraws and toy models made for explanation; for exact data, see the original figures. Fig. 2 is reproduced in the paper from Kumaravelu et al., <i>Brain Stimulation</i> 15, 141–151 (2022).</footer>
+</section>
+</div>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
+function path(pts){return pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");}
+function axes(svg,x0,y0,x1,y1,xl,yl){
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"stroke","stroke-width":1},svg);
+  el("line",{x1:x0,y1:y0,x2:x0,y2:y1,class:"stroke","stroke-width":1},svg);
+  if(xl)el("text",{x:(x0+x1)/2,y:y1+30,class:"sm muted","text-anchor":"middle"},svg,xl);
+  if(yl){const t=el("text",{x:0,y:0,class:"sm muted","text-anchor":"middle",transform:`translate(${x0-26} ${(y0+y1)/2}) rotate(-90)`},svg,yl);}
+}
+
+/* ---- 1c pulse ---- */
+(function(){
+  const s=document.getElementById("pulseSvg");
+  const base=100, us=0.28; // px per µs
+  let x=20;
+  el("line",{x1:10,y1:base,x2:330,y2:base,stroke:"var(--rule)","stroke-width":1},s);
+  const amp=60;
+  const c0=x+20, c1=c0+200*us, g1=c1+100*us, a1=g1+400*us;
+  el("rect",{x:c0,y:base,width:c1-c0,height:amp,fill:"var(--cath)",opacity:.18},s);
+  el("rect",{x:g1,y:base-amp/2,width:a1-g1,height:amp/2,fill:"var(--anod)",opacity:.18},s);
+  el("path",{d:`M10 ${base} L${c0} ${base} L${c0} ${base+amp} L${c1} ${base+amp} L${c1} ${base} L${g1} ${base} L${g1} ${base-amp/2} L${a1} ${base-amp/2} L${a1} ${base} L330 ${base}`,class:"stroke","stroke-width":2},s);
+  el("text",{x:(c0+c1)/2,y:base+amp+16,class:"sm t-cath","text-anchor":"middle"},s,"cathodic 200 µs");
+  el("text",{x:(c1+g1)/2,y:base-8,class:"sm muted","text-anchor":"middle"},s,"gap");
+  el("text",{x:(g1+a1)/2,y:base-amp/2-8,class:"sm t-anod","text-anchor":"middle"},s,"anodic 400 µs, ½ height");
+  el("text",{x:c0-6,y:base+amp/2+4,class:"sm muted","text-anchor":"end"},s,"−I");
+  el("text",{x:330,y:20,class:"sm muted","text-anchor":"end"},s,"blue area = red area");
+  el("text",{x:20,y:20,class:"sm muted"},s,"current");
+  el("text",{x:330,y:base+14,class:"sm muted","text-anchor":"end"},s,"time →");
+})();
+
+/* ---- 1d activating function ---- */
+(function(){
+  const s=document.getElementById("afSvg");
+  const X0=44,X1=325,Y0=20,Y1=160,mid=(Y0+Y1)/2;
+  axes(s,X0,Y0,X1,Y1,"position along axon (µm)","depolarization");
+  el("line",{x1:X0,y1:mid,x2:X1,y2:mid,stroke:"var(--rule)","stroke-dasharray":"3 3"},s);
+  const h=100, f=x=>(2*x*x-h*h)/Math.pow(x*x+h*h,2.5);
+  const f0=Math.abs(f(0));
+  const cath=[],anod=[];
+  for(let i=0;i<=200;i++){const xu=-400+i*4;const v=-f(xu)/f0; // cathodic: positive at center
+    const px=X0+(xu+400)/800*(X1-X0);cath.push([px,mid-v*58]);anod.push([px,mid+v*58]);}
+  el("path",{d:path(anod),class:"c-anod","stroke-width":2},s);
+  el("path",{d:path(cath),class:"c-cath","stroke-width":2.2},s);
+  const cx=(X0+X1)/2;
+  el("text",{x:cx,y:Y0+4,class:"sm t-cath","text-anchor":"middle"},s,"cathodic: fires here");
+  const vx=X0+((100*Math.sqrt(1.5))+400)/800*(X1-X0); // approx flank peak
+  const peak=Math.sqrt(1.5)*h; // flank extremum of f
+  const vxR=X0+(peak*1.2+400)/800*(X1-X0), vxL=X0+(-peak*1.2+400)/800*(X1-X0);
+  el("text",{x:vxR+4,y:mid-40,class:"sm t-anod"},s,"virtual");
+  el("text",{x:vxR+4,y:mid-28,class:"sm t-anod"},s,"cathode");
+  el("text",{x:vxL-4,y:mid-40,class:"sm t-anod","text-anchor":"end"},s,"virtual");
+  el("text",{x:vxL-4,y:mid-28,class:"sm t-anod","text-anchor":"end"},s,"cathode");
+  [-400,0,400].forEach(v=>{const px=X0+(v+400)/800*(X1-X0);el("text",{x:px,y:Y1+14,class:"sm muted","text-anchor":"middle"},s,v);});
+})();
+
+/* ---- 1e strength-duration ---- */
+(function(){
+  const s=document.getElementById("sdSvg");
+  const X0=40,X1=320,Y0=20,Y1=160;
+  axes(s,X0,Y0,X1,Y1,"pulse width (µs)","current needed");
+  const rh=1, ch=300, maxPW=1500, maxI=6;
+  const sx=pw=>X0+pw/maxPW*(X1-X0), sy=I=>Y1-I/maxI*(Y1-Y0);
+  const pts=[];for(let pw=60;pw<=maxPW;pw+=10)pts.push([sx(pw),sy(rh*(1+ch/pw))]);
+  el("path",{d:path(pts),stroke:"var(--accent)","stroke-width":2.4,fill:"none"},s);
+  el("line",{x1:X0,y1:sy(1),x2:X1,y2:sy(1),stroke:"var(--muted)","stroke-dasharray":"4 3"},s);
+  el("line",{x1:X0,y1:sy(2),x2:sx(ch),y2:sy(2),stroke:"var(--muted)","stroke-dasharray":"2 3"},s);
+  el("line",{x1:sx(ch),y1:sy(2),x2:sx(ch),y2:Y1,stroke:"var(--muted)","stroke-dasharray":"2 3"},s);
+  el("circle",{cx:sx(ch),cy:sy(2),r:4,class:"f-acc"},s);
+  el("text",{x:X1,y:sy(1)-6,class:"sm muted","text-anchor":"end"},s,"rheobase");
+  el("text",{x:X0+4,y:sy(2)+13,class:"sm muted"},s,"2 × rheobase");
+  el("text",{x:sx(ch)+6,y:Y1-6,class:"sm t-acc"},s,"chronaxie ≈ 300 µs");
+  [0,500,1000,1500].forEach(v=>el("text",{x:sx(v),y:Y1+14,class:"sm muted","text-anchor":"middle"},s,v));
+  el("text",{x:sx(150),y:sy(5.4),class:"sm muted"},s,"short pulse → lots of current");
+})();
+
+/* ---- 1f threshold-distance ---- */
+(function(){
+  const s=document.getElementById("tdSvg");
+  const X0=40,X1=320,Y0=20,Y1=160,cx=(X0+X1)/2;
+  axes(s,X0,Y0,X1,Y1,"distance from electrode","threshold current");
+  const d=[],y=[];
+  for(let i=0;i<=140;i++){const u=-1+i/70;const px=cx+u*(X1-X0)/2;
+    d.push([px,Y1-8-130*u*u]); y.push([px,Y1-45-55*u*u]);}
+  el("path",{d:path(d),class:"c-cath","stroke-width":2.2},s);
+  el("path",{d:path(y),class:"c-anod","stroke-width":2.2},s);
+  el("text",{x:cx+14,y:Y1-14,class:"sm t-cath"},s,"direct");
+  el("text",{x:cx,y:Y1-54,class:"sm t-anod","text-anchor":"middle"},s,"synaptic");
+  el("text",{x:cx,y:Y1+14,class:"sm muted","text-anchor":"middle"},s,"0");
+  el("polygon",{points:`${cx-5},${Y1+20} ${cx+5},${Y1+20} ${cx},${Y1+8}`,fill:"var(--muted)"},s);
+})();
+
+/* ---- Fig 2 interactive ---- */
+(function(){
+  const ax=document.getElementById("axonSvg"), so=document.getElementById("somaSvg");
+  const k=1292; // µA/mm^2
+  const S=300, C=150, scale=150/650; // px per µm (±650 µm)
+  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+  const N=520, cells=[];
+  for(let i=0;i<N;i++){
+    const r=Math.sqrt(rnd())*620, th=rnd()*Math.PI*2;
+    const pass=Math.pow(rnd(),1.4)*420; // closest approach of axon to electrode (µm)
+    const pth=rnd()*Math.PI*2;
+    cells.push({x:r*Math.cos(th),y:r*Math.sin(th),pass,px:pass*Math.cos(pth),py:pass*Math.sin(pth),dist:r});
+  }
+  function frame(svg,title){
+    svg.innerHTML="";
+    [200,400,600].forEach(r=>{el("circle",{cx:C,cy:C,r:r*scale,fill:"none",stroke:"var(--rule)"},svg);
+      el("text",{x:C+r*scale*0.71+2,y:C-r*scale*0.71-2,class:"sm muted"},svg,r+" µm");});
+    el("text",{x:8,y:16,class:"lbl"},svg,title);
+  }
+  function draw(I){
+    const r=Math.sqrt(I/k)*1000; // µm
+    frame(ax,"Where it fires: axons");
+    frame(so,"Who fires: cell bodies");
+    el("circle",{cx:C,cy:C,r:r*scale,fill:"var(--anod)","fill-opacity":.08,stroke:"var(--ink)","stroke-dasharray":"4 3"},ax);
+    el("circle",{cx:C,cy:C,r:r*scale,fill:"none",stroke:"var(--ink)","stroke-dasharray":"4 3",opacity:.5},so);
+    let nA=0,nS=0,far=0;
+    cells.forEach(c=>{
+      const on=c.pass<r;
+      el("circle",{cx:C+c.x*scale,cy:C+c.y*scale,r:on?3.2:1.6,fill:on?"var(--anod)":"var(--muted)",opacity:on?1:.35},so);
+      if(on){nA++;nS++;far=Math.max(far,c.dist);
+        el("circle",{cx:C+c.px*scale,cy:C+c.py*scale,r:2.6,fill:"var(--anod)"},ax);}
+    });
+    el("circle",{cx:C,cy:C,r:4,class:"f-cath"},ax);el("circle",{cx:C,cy:C,r:4,class:"f-cath"},so);
+    document.getElementById("rOut").textContent=Math.round(r)+" µm";
+    document.getElementById("aOut").textContent=nA;
+    document.getElementById("sOut").textContent=nS+" / "+N;
+    document.getElementById("fOut").textContent=Math.round(far)+" µm";
+    document.getElementById("ampv").textContent=I+" µA";
+  }
+  const inp=document.getElementById("amp");
+  inp.addEventListener("input",()=>draw(+inp.value));
+  draw(+inp.value);
+})();
+
+/* ---- 3a Shannon ---- */
+(function(){
+  const s=document.getElementById("shannonSvg");
+  const X0=50,X1=320,Y0=20,Y1=170;
+  axes(s,X0,Y0,X1,Y1,"charge per phase, log Q (µC)","log charge density (µC/cm²)");
+  // log Q from -3 to 0 ; log D from 0 to 4 ; boundary logD = 1.85 - logQ
+  const sx=q=>X0+(q+3)/3*(X1-X0), sy=d=>Y1-d/4*(Y1-Y0);
+  const poly=[[sx(-3),Y0],[sx(-2.15),sy(4)],[sx(0),sy(1.85)],[X1,Y0]];
+  el("polygon",{points:`${sx(-2.15)},${sy(4)} ${sx(0)},${sy(1.85)} ${X1},${Y0}`,fill:"var(--anod)",opacity:.15},s);
+  el("line",{x1:sx(-2.15),y1:sy(4),x2:sx(0),y2:sy(1.85),stroke:"var(--anod)","stroke-width":2.2},s);
+  el("text",{x:X1-8,y:Y0+18,class:"lbl t-anod","text-anchor":"end"},s,"damage");
+  el("text",{x:X0+8,y:Y1-10,class:"lbl"},s,"safe");
+  el("circle",{cx:sx(-2),cy:sy(2.3),r:4.5,class:"f-cath"},s);
+  el("text",{x:sx(-2)+8,y:sy(2.3)+4,class:"sm t-cath"},s,"A");
+  el("circle",{cx:sx(-2),cy:sy(3.7),r:4.5,class:"f-anod"},s);
+  el("text",{x:sx(-2)+8,y:sy(3.7)+4,class:"sm t-anod"},s,"B");
+  [-3,-2,-1,0].forEach(v=>el("text",{x:sx(v),y:Y1+14,class:"sm muted","text-anchor":"middle"},s,v));
+  [0,2,4].forEach(v=>el("text",{x:X0-6,y:sy(v)+4,class:"sm muted","text-anchor":"end"},s,v));
+})();
+
+/* ---- 3e depression ---- */
+(function(){
+  const s=document.getElementById("depSvg");
+  const X0=40,X1=325,Y0=20,Y1=170;
+  axes(s,X0,Y0,X1,Y1,"time","calcium response");
+  const t0=90,t1=250, base=Y1-35;
+  el("rect",{x:t0,y:Y0,width:t1-t0,height:Y1-Y0,fill:"var(--muted)",opacity:.1},s);
+  el("text",{x:(t0+t1)/2,y:Y0+12,class:"sm muted","text-anchor":"middle"},s,"ICMS on");
+  el("line",{x1:X0,y1:base,x2:X1,y2:base,stroke:"var(--muted)","stroke-dasharray":"3 3"},s);
+  const near=[],far=[];
+  for(let x=X0;x<=X1;x+=2){
+    let n=0,f=0;
+    if(x>=t0&&x<=t1){const u=(x-t0);n=95*(1-Math.exp(-u/8));f=110*Math.exp(-u/10)*(1-Math.exp(-u/3))+12;}
+    else if(x>t1){const u=x-t1;n=95*Math.exp(-u/10);f=12*Math.exp(-u/6)-22*Math.exp(-u/40)*(1-Math.exp(-u/4));}
+    near.push([x,base-n]);far.push([x,base-f]);
+  }
+  el("path",{d:path(near),class:"c-anod","stroke-width":2.2},s);
+  el("path",{d:path(far),class:"c-cath","stroke-width":2.2},s);
+  el("text",{x:t0+40,y:base-103,class:"sm t-anod"},s,"near electrode");
+  el("text",{x:t0+40,y:base-30,class:"sm t-cath"},s,"far from electrode");
+  el("text",{x:t1+6,y:base+22,class:"sm t-cath"},s,"post-ICMS dip");
+})();
+
+/* ---- 4g/h sequence ---- */
+(function(){
+  const s=document.getElementById("seqSvg");
+  const rows=[["PV","var(--cath)"],["Pyr","var(--ink)"],["SOM","var(--soma)"]];
+  function block(x0,title,times,note){
+    el("text",{x:x0,y:22,class:"lbl"},s,title);
+    const w=300;
+    el("line",{x1:x0+40,y1:200,x2:x0+40+w-50,y2:200,class:"stroke"},s);
+    el("text",{x:x0+40+w-50,y:220,class:"sm muted","text-anchor":"end"},s,"time after input (ms) →");
+    rows.forEach((r,i)=>{
+      const y=60+i*45;
+      el("text",{x:x0+30,y:y+4,class:"sm","text-anchor":"end",style:"fill:"+r[1]},s,r[0]);
+      el("line",{x1:x0+40,y1:y,x2:x0+40+w-50,y2:y,stroke:"var(--rule)"},s);
+      times[i].forEach(t=>el("line",{x1:x0+40+t,y1:y-12,x2:x0+40+t,y2:y+12,stroke:r[1],"stroke-width":2.5},s));
+    });
+    el("text",{x:x0+40,y:242,class:"sm muted"},s,note);
+  }
+  block(10,"Natural touch",[[30,38,46],[70,80],[150,175]],"ordered: PV → Pyr → SOM");
+  block(370,"ICMS, near the electrode",[[20],[20],[20]],"all at once; downstream order unknown");
+  el("line",{x1:370+40+20,y1:40,x2:370+40+20,y2:190,stroke:"var(--accent)","stroke-dasharray":"3 3"},s);
+  el("text",{x:370+40+26,y:46,class:"sm t-acc"},s,"pulse");
+})();
+
+/* ---- 4c-e layers ---- */
+(function(){
+  const s=document.getElementById("layerSvg");
+  const L=[["L1",30,"var(--l1)"],["L2/3",70,"var(--l23)"],["L4",40,"var(--l4)"],["L5",50,"var(--l5)"],["L6",50,"var(--l6)"]];
+  function column(x0,w){let y=30;const ys={};L.forEach(l=>{el("rect",{x:x0,y:y,width:w,height:l[1],fill:l[2],opacity:.28},s);el("text",{x:x0+6,y:y+15,class:"sm"},s,l[0]);ys[l[0]]=[y,y+l[1]];y+=l[1];});return ys;}
+  const a=column(30,270); const b=column(400,270);
+  el("text",{x:30,y:20,class:"lbl"},s,"Natural");
+  el("text",{x:400,y:20,class:"lbl"},s,"ICMS with tip in layer 2/3");
+  // natural arrows
+  const mk=(x1,y1,x2,y2,cls)=>el("path",{d:`M${x1} ${y1} L${x2} ${y2}`,stroke:"var(--accent)","stroke-width":2.2,fill:"none","marker-end":"url(#ahA2)"},s);
+  const defs=el("defs",{},s);const m=el("marker",{id:"ahA2",viewBox:"0 0 10 10",refX:9,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},defs);el("path",{d:"M0,0 L10,5 L0,10 z",fill:"var(--accent)"},m);
+  mk(165,290,165,(a["L4"][0]+a["L4"][1])/2+4);
+  el("text",{x:172,y:284,class:"sm t-acc"},s,"thalamus");
+  mk(165,a["L4"][0]+6,165,(a["L2/3"][0]+a["L2/3"][1])/2+6);
+  mk(185,(a["L2/3"][0]+a["L2/3"][1])/2,215,a["L5"][0]+20);
+  el("text",{x:224,y:a["L5"][0]+24,class:"sm t-acc"},s,"then deeper");
+  el("text",{x:156,y:a["L4"][0]+26,class:"sm t-acc","text-anchor":"end"},s,"1st");
+  el("text",{x:156,y:a["L2/3"][0]+48,class:"sm t-acc","text-anchor":"end"},s,"2nd");
+  // ICMS electrode
+  const tipY=(b["L2/3"][0]+b["L2/3"][1])/2+10, tx=535;
+  el("polygon",{points:`${tx-7},0 ${tx+7},0 ${tx},${tipY}`,fill:"var(--muted)",opacity:.6},s);
+  el("circle",{cx:tx,cy:tipY,r:55,fill:"var(--anod)","fill-opacity":.15,stroke:"var(--anod)","stroke-dasharray":"4 3"},s);
+  el("circle",{cx:tx,cy:tipY,r:4,class:"f-cath"},s);
+  // passing axons
+  el("path",{d:`M${tx+30} ${b["L5"][1]} L${tx+30} ${b["L1"][0]+10}`,stroke:"var(--anod)","stroke-width":1.5,fill:"none"},s);
+  el("path",{d:`M${tx-35} ${b["L4"][1]+20} L${tx-35} ${b["L2/3"][0]}`,stroke:"var(--anod)","stroke-width":1.5,fill:"none"},s);
+  el("text",{x:tx+62,y:tipY+4,class:"sm t-anod"},s,"activated");
+  el("text",{x:tx+62,y:tipY+18,class:"sm t-anod"},s,"sphere");
+  el("text",{x:tx-38,y:b["L4"][1]+34,class:"sm t-anod","text-anchor":"middle"},s,"passing axons");
+  el("text",{x:406,y:b["L4"][0]+32,class:"sm muted"},s,"L4 step skipped");
+})();
+
+/* ---- 5c biomimetic ---- */
+(function(){
+  const s=document.getElementById("bioSvg");
+  function trace(x0,title,fn,cls,ylab){
+    const X1=x0+290,Y0=30,Y1=170;
+    axes(s,x0+30,Y0,X1,Y1,"time",ylab);
+    el("text",{x:x0+30,y:20,class:"lbl"},s,title);
+    const c0=x0+70,c1=x0+250;
+    el("rect",{x:c0,y:Y0,width:c1-c0,height:Y1-Y0,fill:"var(--muted)",opacity:.08},s);
+    el("text",{x:(c0+c1)/2,y:Y1-6,class:"sm muted","text-anchor":"middle"},s,"object in contact");
+    fn(x0,c0,c1,Y1);
+  }
+  const rate=(x0,c0,c1,Y1)=>{const p=[];for(let x=x0+30;x<=x0+290;x+=1.5){let v=6;
+    if(x>=c0&&x<=c1){const u=x-c0;v=30+95*Math.exp(-u/10);} if(x>c1){const u=x-c1;v=6+70*Math.exp(-u/8);} p.push([x,Y1-v]);}
+    return p;};
+  trace(20,"Recorded neuron (real touch)",(x0,c0,c1,Y1)=>{el("path",{d:path(rate(x0,c0,c1,Y1)),stroke:"var(--accent)","stroke-width":2.2,fill:"none"},s);
+    el("text",{x:c0+8,y:Y1-118,class:"sm t-acc"},s,"onset");el("text",{x:c1+6,y:Y1-70,class:"sm t-acc"},s,"offset");},"","firing rate");
+  trace(390,"ICMS amplitude",(x0,c0,c1,Y1)=>{
+    el("path",{d:`M${x0+30} ${Y1} L${c0} ${Y1} L${c0} ${Y1-55} L${c1} ${Y1-55} L${c1} ${Y1} L${x0+290} ${Y1}`,stroke:"var(--muted)","stroke-width":1.6,fill:"none","stroke-dasharray":"5 3"},s);
+    el("path",{d:path(rate(x0,c0,c1,Y1).map(p=>[p[0],p[1]])),class:"c-cath","stroke-width":2.2},s);
+    el("text",{x:c0+60,y:Y1-60,class:"sm muted"},s,"conventional (flat)");
+    el("text",{x:c0+60,y:Y1-14,class:"sm t-cath"},s,"biomimetic");},"","current");
+})();
+
+/* ---- current steering ---- */
+(function(){
+  const s=document.getElementById("steerSvg");
+  const X0=30,X1=680,Y1=140,e1=310,e2=410;
+  el("line",{x1:X0,y1:Y1,x2:X1,y2:Y1,class:"stroke"},s);
+  const field=(x,w1,w2)=>w1/Math.hypot((x-e1)/40,1.4)+w2/Math.hypot((x-e2)/40,1.4);
+  const mx=field((e1+e2)/2,1,1);
+  [[0.5,0.5,"var(--cath)","50 / 50"],[0.8,0.2,"var(--anod)","80 / 20"]].forEach(([a,b,c,t],i)=>{
+    const p=[];let best=0,cx=0;for(let x=X0;x<=X1;x+=2){const v=field(x,a,b);if(v>best){best=v;cx=x;}p.push([x,Y1-v*75]);}
+    el("path",{d:path(p),stroke:c,"stroke-width":2.2,fill:"none"},s);
+    el("polygon",{points:`${cx-6},${Y1+16} ${cx+6},${Y1+16} ${cx},${Y1+4}`,fill:c},s);
+    el("text",{x:X1,y:22+i*16,class:"sm","text-anchor":"end",style:"fill:"+c},s,"split "+t);
+  });
+  [e1,e2].forEach((e,i)=>{el("circle",{cx:e,cy:Y1,r:5,fill:"var(--ink)"},s);el("text",{x:e,y:Y1+30,class:"sm","text-anchor":"middle"},s,"electrode "+(i+1));});
+  el("text",{x:X0,y:22,class:"sm muted"},s,"field strength along the line ▲ = centre of activation");
+})();
+
+
+/* ---- battery ---- */
+(function(){
+  const s=document.getElementById("batSvg");
+  el("rect",{x:0,y:100,width:700,height:30,fill:"var(--memb)"},s);
+  el("text",{x:8,y:20,class:"sm muted"},s,"OUTSIDE");
+  el("text",{x:8,y:150,class:"sm muted"},s,"INSIDE (−70 mV)");
+  el("text",{x:692,y:120,class:"sm muted","text-anchor":"end"},s,"membrane");
+  let seed=3;const r=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+  const dot=(x,y,cls,t)=>{el("circle",{cx:x,cy:y,r:8,class:cls},s);el("text",{x:x,y:y+4,class:"sm","text-anchor":"middle",style:"fill:var(--surface)"},s,t);};
+  for(let i=0;i<14;i++)dot(120+r()*200,34+r()*52,"f-anod","+");
+  for(let i=0;i<3;i++)dot(420+r()*200,34+r()*52,"f-acc","+");
+  for(let i=0;i<3;i++)dot(120+r()*200,150+r()*48,"f-anod","+");
+  for(let i=0;i<14;i++)dot(420+r()*200,150+r()*48,"f-acc","+");
+  el("text",{x:220,y:224,class:"lbl t-anod","text-anchor":"middle"},s,"Na⁺: lots outside → wants IN (→ +55 mV)");
+  el("text",{x:520,y:224,class:"lbl t-acc","text-anchor":"middle"},s,"K⁺: lots inside → wants OUT (→ −90 mV)");
+  const d=el("defs",{},s);const m1=el("marker",{id:"ahBat1",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},d);el("path",{d:"M0,0 L10,5 L0,10 z",class:"f-anod"},m1);
+  const m2=el("marker",{id:"ahBat2",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},d);el("path",{d:"M0,0 L10,5 L0,10 z",class:"f-acc"},m2);
+  el("line",{x1:345,y1:60,x2:345,y2:170,stroke:"var(--anod)","stroke-width":3,"marker-end":"url(#ahBat1)"},s);
+  el("line",{x1:395,y1:170,x2:395,y2:60,stroke:"var(--accent)","stroke-width":3,"marker-end":"url(#ahBat2)"},s);
+})();
+
+/* ---- ladder ---- */
+(function(){
+  const s=document.getElementById("ladderSvg");
+  const sy=v=>20+(45-v)/140*200;
+  const X=110;
+  el("line",{x1:X,y1:sy(40),x2:X,y2:sy(-92),class:"stroke","stroke-width":2},s);
+  [[40,"+40","spike peak","var(--muted)"],[-55,"−55","threshold","var(--anod)"],[-70,"−70","rest","var(--ink)"],[-90,"−90","","var(--muted)"]].forEach(([v,t,lab,c])=>{
+    el("line",{x1:X-8,y1:sy(v),x2:X+8,y2:sy(v),stroke:c,"stroke-width":2},s);
+    el("text",{x:X-14,y:sy(v)+4,class:"sm","text-anchor":"end"},s,t+" mV");
+    if(lab)el("text",{x:X+14,y:sy(v)+4,class:"sm",style:"fill:"+c},s,lab);
+  });
+  el("rect",{x:X-3,y:sy(40),width:6,height:sy(-55)-sy(40),fill:"var(--anod)",opacity:.25},s);
+  const d=el("defs",{},s);const m=el("marker",{id:"ahLd",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},d);el("path",{d:"M0,0 L10,5 L0,10 z",fill:"currentColor"},m);
+  el("line",{x1:200,y1:sy(-70)-4,x2:200,y2:sy(-50),class:"c-cath","stroke-width":3,"marker-end":"url(#ahLd)",style:"color:var(--cath)"},s);
+  el("text",{x:216,y:sy(-58),class:"sm t-cath"},s,"depolarize");
+  el("text",{x:216,y:sy(-58)+13,class:"sm t-cath"},s,"→ excites");
+  el("line",{x1:200,y1:sy(-70)+4,x2:200,y2:sy(-88),class:"c-anod","stroke-width":3,"marker-end":"url(#ahLd)"},s);
+  el("text",{x:216,y:sy(-82),class:"sm t-anod"},s,"hyperpolarize");
+  el("text",{x:216,y:sy(-82)+13,class:"sm t-anod"},s,"→ quiets");
+})();
+
+/* ---- cross-section ---- */
+(function(){
+  const s=document.getElementById("xsecSvg");
+  let seed=11;const r=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+  for(let i=0;i<70;i++){const a=r()*6.283,d=88+r()*60;el("circle",{cx:170+d*Math.cos(a),cy:120+d*Math.sin(a),r:1.6,fill:"var(--muted)",opacity:.5},s);}
+  el("circle",{cx:170,cy:120,r:72,fill:"var(--prot)",opacity:.55},s);
+  el("circle",{cx:170,cy:120,r:72,fill:"none",stroke:"var(--memb)","stroke-width":9},s);
+  el("circle",{cx:170,cy:120,r:72,fill:"none",stroke:"var(--muted)","stroke-width":1},s);
+  el("text",{x:170,y:116,class:"lbl","text-anchor":"middle"},s,"INSIDE");
+  el("text",{x:170,y:132,class:"sm muted","text-anchor":"middle"},s,"fluid core");
+  el("text",{x:12,y:24,class:"lbl"},s,"OUTSIDE");
+  el("text",{x:12,y:38,class:"sm muted"},s,"brain fluid");
+  el("line",{x1:236,y1:76,x2:280,y2:40,stroke:"var(--muted)"},s);
+  el("text",{x:282,y:38,class:"sm"},s,"membrane");
+})();
+
+/* ---- hose side view ---- */
+(function(){
+  const s=document.getElementById("hoseSvg");
+  let seed=5;const r=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+  for(let i=0;i<120;i++){el("circle",{cx:20+r()*660,cy:r()<.5?55+r()*45:162+r()*24,r:1.5,fill:"var(--muted)",opacity:.45},s);}
+  el("rect",{x:30,y:108,width:640,height:44,rx:22,fill:"var(--prot)",opacity:.55,stroke:"var(--muted)"},s);
+  el("text",{x:350,y:134,class:"lbl","text-anchor":"middle"},s,"inside the axon (fluid core, acts like one wire)");
+  el("text",{x:30,y:50,class:"sm muted"},s,"outside fluid");
+  el("polygon",{points:"340,4 360,4 350,86",fill:"var(--muted)",opacity:.6},s);
+  el("circle",{cx:350,cy:90,r:5,class:"f-cath"},s);
+  el("text",{x:368,y:20,class:"sm"},s,"electrode tip");
+  const br=(x1,x2,t,cls)=>{el("path",{d:`M${x1} 196 V204 H${x2} V196`,stroke:"currentColor",fill:"none"},s);el("text",{x:(x1+x2)/2,y:222,class:"sm "+cls,"text-anchor":"middle"},s,t);};
+  br(40,300,"off to the side","muted");br(318,382,"under the tip","t-cath");br(400,660,"off to the side","muted");
+})();
+
+/* ---- outside voltage plots ---- */
+function vout(id,sign){
+  const s=document.getElementById(id);
+  const X0=60,X1=680,Y0=20,Y1=220,h=80,inside=-8*sign;
+  const sx=x=>X0+(x+450)/900*(X1-X0), sy=v=>Y0+(34-v)/68*(Y1-Y0);
+  const V=x=>sign*-30*h*h/(x*x+h*h);
+  el("line",{x1:X0,y1:sy(0),x2:X1,y2:sy(0),stroke:"var(--rule)"},s);
+  el("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,class:"stroke"},s);
+  [-30,-15,0,15,30].forEach(v=>el("text",{x:X0-6,y:sy(v)+4,class:"sm muted","text-anchor":"end"},s,(v>0?"+":"")+v));
+  const t=el("text",{x:0,y:0,class:"sm muted","text-anchor":"middle",transform:`translate(16 ${(Y0+Y1)/2}) rotate(-90)`},s,"outside voltage change (mV)");
+  const xs=[];for(let x=-450;x<=450;x+=5)xs.push(x);
+  const below=xs.map(x=>[sx(x),sy(Math.min(V(x),inside))]), above=xs.map(x=>[sx(x),sy(Math.max(V(x),inside))]);
+  const line=[[sx(450),sy(inside)],[sx(-450),sy(inside)]];
+  el("polygon",{points:below.concat(line).map(p=>p.join(",")).join(" "),fill:"var(--cath)",opacity:.18},s);
+  el("polygon",{points:above.concat(line).map(p=>p.join(",")).join(" "),fill:"var(--anod)",opacity:.18},s);
+  el("line",{x1:X0,y1:sy(inside),x2:X1,y2:sy(inside),stroke:"var(--ink)","stroke-dasharray":"6 4","stroke-width":1.5},s);
+  el("text",{x:X1,y:sy(inside)+(sign>0?16:-8),class:"sm","text-anchor":"end"},s,"inside settles at "+(inside>0?"+":"")+inside+" mV");
+  el("path",{d:path(xs.map(x=>[sx(x),sy(V(x))])),stroke:"var(--ink)","stroke-width":2.4,fill:"none"},s);
+  [-300,-150,0,150,300].forEach(x=>{
+    const v=Math.round(V(x)), dm=inside-v;
+    el("circle",{cx:sx(x),cy:sy(V(x)),r:4.5,fill:"var(--ink)"},s);
+    const up=(sign>0)?(x===0?-1:1):(x===0?1:-1);
+    const lab=(dm>0?"+":"")+dm+" mV";
+    el("text",{x:sx(x)+(x===0?-12:0),y:sy(V(x))+(x===0?4:(sign>0?-10:18)),class:"sm","text-anchor":x===0?"end":"middle",style:"fill:"+(dm>0?"var(--cath)":"var(--anod)")},s,lab);
+    el("text",{x:sx(x),y:Y1+16,class:"sm muted","text-anchor":"middle"},s,(x>0?"+":"")+x+" µm");
+  });
+  el("text",{x:(X0+X1)/2,y:Y1+38,class:"sm muted","text-anchor":"middle"},s,"position along the axon (0 = under the tip)");
+  if(sign<0){
+    el("text",{x:sx(-330),y:sy(0)+30,class:"sm t-cath","text-anchor":"middle"},s,"virtual cathode");
+    el("text",{x:sx(330),y:sy(0)+30,class:"sm t-cath","text-anchor":"middle"},s,"virtual cathode");
+  } else {
+    el("text",{x:sx(60),y:sy(-30)+4,class:"sm t-cath"},s,"fires here");
+  }
+}
+vout("voutC",1); vout("voutA",-1);
+
+/* ---- bucket ---- */
+(function(){
+  const s=document.getElementById("bucketSvg");
+  const d=el("defs",{},s);const m=el("marker",{id:"ahBk",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},d);el("path",{d:"M0,0 L10,5 L0,10 z",fill:"var(--cath)"},m);
+  el("path",{d:"M260 60 L280 200 L420 200 L440 60",stroke:"currentColor","stroke-width":2.5,fill:"none"},s);
+  el("path",{d:"M270 132 L280 200 L420 200 L430 132 Z",fill:"var(--cath)",opacity:.3},s);
+  el("line",{x1:250,y1:90,x2:450,y2:90,stroke:"var(--anod)","stroke-dasharray":"6 4","stroke-width":2},s);
+  el("text",{x:458,y:94,class:"sm t-anod"},s,"threshold: it fires here");
+  el("line",{x1:350,y1:8,x2:350,y2:118,stroke:"var(--cath)","stroke-width":4,"marker-end":"url(#ahBk)"},s);
+  el("text",{x:362,y:24,class:"sm t-cath"},s,"current in (your pulse)");
+  el("text",{x:350,y:172,class:"sm","text-anchor":"middle"},s,"charge on membrane");
+  el("path",{d:"M350 200 Q352 214 346 228",stroke:"var(--muted)","stroke-width":2,fill:"none"},s);
+  el("circle",{cx:345,cy:236,r:3.5,fill:"var(--muted)"},s);
+  el("text",{x:362,y:228,class:"sm muted"},s,"leak: ions seep back out");
+  el("text",{x:40,y:70,class:"sm"},s,"short pulse:");
+  el("text",{x:40,y:84,class:"sm muted"},s,"pour hard, fast");
+  el("text",{x:40,y:150,class:"sm"},s,"long pulse:");
+  el("text",{x:40,y:164,class:"sm muted"},s,"pour gently, but must");
+  el("text",{x:40,y:178,class:"sm muted"},s,"outpace the leak");
+})();
+
+/* ---- A/B/C/D neurons ---- */
+(function(){
+  const s=document.getElementById("abcdSvg");
+  const cx=430,cy=150,R=58;
+  el("circle",{cx:cx,cy:cy,r:R,fill:"var(--anod)","fill-opacity":.1,stroke:"var(--ink)","stroke-dasharray":"5 4"},s);
+  el("text",{x:cx+R+6,y:cy-R+6,class:"sm muted"},s,"activation zone");
+  const soma=(x,y,on,t)=>{el("polygon",{points:`${x-11},${y+9} ${x+11},${y+9} ${x},${y-13}`,fill:on?"var(--anod)":"var(--muted)"},s);el("text",{x:x-18,y:y+5,class:"lbl","text-anchor":"end"},s,t);};
+  const ax=(d,on)=>el("path",{d:d,stroke:on?"var(--ink)":"var(--muted)","stroke-width":2.2,fill:"none",opacity:on?1:.6},s);
+  ax("M72 40 H405 V292",true); ax("M72 150 H690",true); ax("M72 262 H455 V8",true); ax("M72 205 H300 L360 292",false);
+  soma(60,40,true,"A"); soma(60,150,true,"B"); soma(60,262,true,"C"); soma(60,205,false,"D");
+  [[405,128],[470,150],[455,178]].forEach(([x,y])=>{el("circle",{cx:x,cy:y,r:9,fill:"var(--anod)",opacity:.3},s);el("circle",{cx:x,cy:y,r:4.5,fill:"var(--anod)"},s);});
+  el("circle",{cx:cx,cy:cy,r:5,class:"f-cath"},s);
+  const d=el("defs",{},s);const m=el("marker",{id:"ahAb",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},d);el("path",{d:"M0,0 L10,5 L0,10 z",fill:"var(--accent)"},m);
+  el("line",{x1:300,y1:140,x2:110,y2:140,stroke:"var(--accent)","stroke-width":2,"marker-end":"url(#ahAb)"},s);
+  el("text",{x:205,y:132,class:"sm t-acc","text-anchor":"middle"},s,"spike runs back to the cell body");
+  el("text",{x:150,y:30,class:"sm t-anod"},s,"A fires");
+  el("text",{x:150,y:252,class:"sm t-anod"},s,"C fires");
+  el("text",{x:150,y:195,class:"sm muted"},s,"D silent: axon misses the zone");
+  el("text",{x:560,y:142,class:"sm t-anod"},s,"B fires");
+  el("text",{x:480,y:290,class:"sm muted"},s,"✱ = where each spike starts");
+})();
+
+/* ---- Na channel 4 states ---- */
+(function(){
+  const s=document.getElementById("naSvg");
+  const topM=92, botM=162, W=162, L=64;
+  const defs=el("defs",{},s);
+  const mk=el("marker",{id:"ahNa",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:6,markerHeight:6,orient:"auto"},defs);
+  el("path",{d:"M0,0 L10,5 L0,10 z",class:"f-anod"},mk);
+  const mk2=el("marker",{id:"ahS4",viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:6,markerHeight:6,orient:"auto"},defs);
+  el("path",{d:"M0,0 L10,5 L0,10 z",class:"f-acc"},mk2);
+  // membrane band
+  el("rect",{x:L-6,y:topM,width:720-L,height:botM-topM,fill:"var(--memb)"},s);
+  for(let x=L;x<714;x+=11){
+    el("line",{x1:x,y1:topM+8,x2:x,y2:topM+30,stroke:"var(--muted)","stroke-width":1,opacity:.5},s);
+    el("line",{x1:x,y1:botM-8,x2:x,y2:botM-30,stroke:"var(--muted)","stroke-width":1,opacity:.5},s);
+    el("circle",{cx:x,cy:topM+5,r:4.5,fill:"var(--surface)",stroke:"var(--muted)","stroke-width":1},s);
+    el("circle",{cx:x,cy:botM-5,r:4.5,fill:"var(--surface)",stroke:"var(--muted)","stroke-width":1},s);
+  }
+  el("text",{x:4,y:topM-26,class:"sm muted"},s,"OUTSIDE");
+  el("text",{x:4,y:topM-13,class:"sm muted"},s,"lots Na⁺");
+  el("text",{x:4,y:(topM+botM)/2+4,class:"sm muted"},s,"membrane");
+  el("text",{x:4,y:botM+30,class:"sm muted"},s,"INSIDE");
+  el("text",{x:4,y:botM+43,class:"sm muted"},s,"little Na⁺");
+  const ion=(x,y)=>{el("circle",{cx:x,cy:y,r:7.5,class:"f-anod",opacity:.9},s);el("text",{x:x,y:y+4,class:"sm","text-anchor":"middle",style:"fill:var(--surface)"},s,"+");};
+  const states=[
+    {t:"1 · Resting",v:"−70 mV",s4:"down",m:"closed",h:"free",g:"m shut · h free"},
+    {t:"2 · Activated",v:"rising →",s4:"up",m:"open",h:"free",g:"m open · h free"},
+    {t:"3 · Inactivated",v:"≈ +40 mV",s4:"up",m:"open",h:"plug",g:"m open · h PLUGGED"},
+    {t:"4 · Recovering",v:"≈ −80 mV",s4:"down",m:"closed",h:"back",g:"refractory"}
+  ];
+  states.forEach((st,i)=>{
+    const cx=L+W*i+W/2;
+    el("text",{x:cx,y:18,class:"lbl","text-anchor":"middle"},s,st.t);
+    el("text",{x:cx,y:34,class:"sm muted","text-anchor":"middle"},s,"inside "+st.v);
+    if(i>0)el("line",{x1:L+W*i,y1:44,x2:L+W*i,y2:290,stroke:"var(--rule)","stroke-dasharray":"3 4"},s);
+    // ions outside
+    [[-60,50],[-30,64],[32,48],[60,64]].forEach(p=>ion(cx+p[0],p[1]));
+    el("rect",{x:cx-12,y:topM,width:24,height:botM-topM,fill:"var(--bg)"},s);
+    // protein halves
+    el("rect",{x:cx-46,y:topM-16,width:34,height:botM-topM+32,rx:12,fill:"var(--prot)",stroke:"var(--muted)","stroke-width":1},s);
+    el("rect",{x:cx+12,y:topM-16,width:34,height:botM-topM+32,rx:12,fill:"var(--prot)",stroke:"var(--muted)","stroke-width":1},s);
+    // voltage sensor
+    const sy=st.s4==="up"?topM-6:botM-30;
+    el("rect",{x:cx-41,y:sy,width:24,height:28,rx:4,class:"f-acc"},s);
+    el("text",{x:cx-29,y:sy+12,class:"sm","text-anchor":"middle",style:"fill:var(--surface)"},s,"+");
+    el("text",{x:cx-29,y:sy+24,class:"sm","text-anchor":"middle",style:"fill:var(--surface)"},s,"+");
+    if(i===1)el("line",{x1:cx-56,y1:botM-4,x2:cx-56,y2:topM+6,stroke:"var(--accent)","stroke-width":2,"marker-end":"url(#ahS4)"},s);
+    if(i===3)el("line",{x1:cx-56,y1:topM+6,x2:cx-56,y2:botM-4,stroke:"var(--accent)","stroke-width":2,"marker-end":"url(#ahS4)"},s);
+    // m-gate
+    if(st.m==="closed")el("rect",{x:cx-13,y:topM-12,width:26,height:7,rx:2,fill:"var(--ink)"},s);
+    else el("rect",{x:cx-14,y:topM-38,width:7,height:26,rx:2,fill:"var(--ink)"},s);
+    el("text",{x:st.m==="closed"?cx:cx-10,y:st.m==="closed"?topM-17:topM-43,class:"sm","text-anchor":"middle"},s,"m");
+    // h-gate
+    const base=[cx+30,botM+16];
+    let ball, chain;
+    if(st.h==="free"){ball=[cx+40,botM+52];chain=`M${base[0]} ${base[1]} Q${cx+50} ${botM+30} ${ball[0]} ${ball[1]-10}`;}
+    else if(st.h==="plug"){ball=[cx,botM+18];chain=`M${base[0]} ${base[1]} Q${cx+24} ${botM+38} ${ball[0]+9} ${ball[1]+3}`;}
+    else {ball=[cx+18,botM+44];chain=`M${base[0]} ${base[1]} Q${cx+38} ${botM+40} ${ball[0]+8} ${ball[1]-5}`;}
+    el("path",{d:chain,stroke:"var(--soma)","stroke-width":2.5,fill:"none"},s);
+    el("circle",{cx:ball[0],cy:ball[1],r:10,class:"f-soma"},s);
+    el("text",{x:ball[0]+(st.h==="plug"?-16:16),y:ball[1]+4,class:"sm t-soma","text-anchor":st.h==="plug"?"end":"start"},s,"h");
+    if(st.h==="back")el("path",{d:`M${cx+2} ${botM+30} Q${cx+4} ${botM+48} ${ball[0]-12} ${ball[1]+6}`,stroke:"var(--soma)","stroke-dasharray":"3 3",fill:"none"},s);
+    // flow
+    if(i===1){
+      el("line",{x1:cx,y1:topM-24,x2:cx,y2:botM+44,stroke:"var(--anod)","stroke-width":3,"marker-end":"url(#ahNa)"},s);
+      ion(cx-30,botM+56);ion(cx-6,botM+66);
+      el("text",{x:cx,y:botM+86,class:"sm t-anod","text-anchor":"middle"},s,"Na⁺ floods in");
+    } else if(i===2){
+      ion(cx-36,botM+56);ion(cx-14,botM+70);
+      el("text",{x:cx-24,y:botM+90,class:"sm t-soma","text-anchor":"middle"},s,"flow blocked");
+    } else {
+      ion(cx-36,botM+60);
+      el("text",{x:cx,y:botM+90,class:"sm muted","text-anchor":"middle"},s,i===0?"no flow":"no flow");
+    }
+    el("text",{x:cx,y:290,class:"sm","text-anchor":"middle"},s,st.g);
+  });
+})();
+
+/* ---- feedback loop ---- */
+(function(){
+  const s=document.getElementById("fbSvg");
+  const defs=el("defs",{},s);
+  const mk=el("marker",{id:"ahFb",viewBox:"0 0 10 10",refX:9,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},defs);
+  el("path",{d:"M0,0 L10,5 L0,10 z",fill:"var(--anod)"},mk);
+  const mk2=el("marker",{id:"ahBr",viewBox:"0 0 10 10",refX:9,refY:5,markerWidth:7,markerHeight:7,orient:"auto"},defs);
+  el("path",{d:"M0,0 L10,5 L0,10 z",fill:"var(--soma)"},mk2);
+  const node=(x,y,w,t)=>{el("rect",{x:x-w/2,y:y-16,width:w,height:32,rx:8,fill:"var(--surface)",stroke:"currentColor","stroke-width":1.4},s);el("text",{x:x,y:y+4,class:"sm","text-anchor":"middle"},s,t);};
+  node(170,30,170,"inside voltage rises");
+  node(270,130,120,"m-gates open");
+  node(80,130,130,"Na⁺ flows in");
+  el("path",{d:"M232 46 Q268 70 270 112",stroke:"var(--anod)","stroke-width":2,fill:"none","marker-end":"url(#ahFb)"},s);
+  el("path",{d:"M208 130 L148 130",stroke:"var(--anod)","stroke-width":2,fill:"none","marker-end":"url(#ahFb)"},s);
+  el("path",{d:"M80 112 Q76 70 106 46",stroke:"var(--anod)","stroke-width":2,fill:"none","marker-end":"url(#ahFb)"},s);
+  el("text",{x:170,y:94,class:"lbl t-anod","text-anchor":"middle"},s,"+ feedback");
+  el("text",{x:170,y:110,class:"sm muted","text-anchor":"middle"},s,"(0.1 ms per lap)");
+  node(170,200,250,"brake ≈1 ms later: h-gate plugs, K⁺ out");
+  el("path",{d:"M170 184 L170 150",stroke:"var(--soma)","stroke-width":2,"stroke-dasharray":"4 3",fill:"none","marker-end":"url(#ahBr)"},s);
+})();
+
+/* ---- action potential trace ---- */
+(function(){
+  const s=document.getElementById("apSvg");
+  const X0=48,X1=330,Y0=16,Y1=190;
+  axes(s,X0,Y0,X1,Y1,"time (ms)","membrane voltage (mV)");
+  const sx=t=>X0+t/7*(X1-X0), sy=v=>Y1-(v+95)/140*(Y1-Y0);
+  const pts=[[0,-70],[1,-70],[1.3,-63],[1.55,-56],[1.75,-35],[1.95,0],[2.1,28],[2.25,38],[2.4,30],[2.65,0],[2.95,-40],[3.25,-72],[3.6,-84],[4.2,-81],[5,-75],[6,-71],[7,-70]];
+  // smooth via Catmull-Rom
+  const P=pts.map(p=>[sx(p[0]),sy(p[1])]);
+  let d=`M${P[0][0]} ${P[0][1]}`;
+  for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||p2;
+    d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;}
+  el("line",{x1:X0,y1:sy(-55),x2:X1,y2:sy(-55),stroke:"var(--muted)","stroke-dasharray":"4 3"},s);
+  el("text",{x:X1,y:sy(-55)-5,class:"sm muted","text-anchor":"end"},s,"threshold −55");
+  el("line",{x1:X0,y1:sy(0),x2:X1,y2:sy(0),stroke:"var(--rule)"},s);
+  el("path",{d:d,stroke:"var(--ink)","stroke-width":2.2,fill:"none"},s);
+  [[-80,"-80"],[-40,"-40"],[0,"0"],[40,"+40"]].forEach(([v,t])=>el("text",{x:X0-5,y:sy(v)+4,class:"sm muted","text-anchor":"end"},s,t));
+  [0,2,4,6].forEach(t=>el("text",{x:sx(t),y:Y1+14,class:"sm muted","text-anchor":"middle"},s,t));
+  const mkr=[[0.5,-70,"1"],[1.85,-18,"2"],[2.55,14,"3"],[3.6,-84,"4"]];
+  mkr.forEach(([t,v,n])=>{
+    const x=sx(t),y=sy(v);
+    const ox=n==="2"?-16:n==="3"?16:0, oy=n==="1"?-16:n==="4"?16:0;
+    el("circle",{cx:x+ox,cy:y+oy,r:9,fill:"var(--surface)",stroke:"var(--ink)","stroke-width":1.4},s);
+    el("text",{x:x+ox,y:y+oy+4,class:"sm","text-anchor":"middle"},s,n);
+  });
+  el("text",{x:sx(1.7)-22,y:sy(25),class:"sm t-anod","text-anchor":"end"},s,"Na⁺ in");
+  el("text",{x:sx(2.9)+16,y:sy(-20),class:"sm t-soma"},s,"K⁺ out");
+})();
+})();
+</script>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="language-neurons.html"><small>← Previous note</small><span>Language neurons, one by one</span></a><a class="next" href="chen-phosphenes.html"><small>Next note →</small><span>Shape perception from 1,024 electrodes in visual cortex</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>

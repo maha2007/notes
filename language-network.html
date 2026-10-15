@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The language network as a natural kind · Maha Nawaz</title>
+<meta name="description" content="Five left-hemisphere areas that do language and only language, sitting between perception below and reasoning above."><meta name="author" content="Maha Nawaz">
+<meta property="og:title" content="The language network as a natural kind"><meta property="og:description" content="Five left-hemisphere areas that do language and only language, sitting between perception below and reasoning above.">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Maha Nawaz · Reading notes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D2F66'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23FF9C0F'%3EMN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: single reading column (~68ch) with wider figure panels; each section = one figure panel, prose then redrawn diagram */
+:root{
+  --paper:#EDF0F3; --panel:#FFFFFF; --ink:#17202C; --muted:#586374; --rule:#D2D8E0; --soft:#E2E7ED;
+  --accent:#C9440E; --cool:#2856C2;
+  --cortex:#2F343C; --cortex-ink:#ECEFF3; --cortex-line:#5C6573;
+  --display:'Bricolage Grotesque','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --body:'Literata',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F141A; --panel:#161D26; --ink:#E5E9EF; --muted:#9AA5B5; --rule:#283240; --soft:#1F2833;
+  --accent:#FF7D45; --cool:#7EA3FF; --cortex:#2A2F37; --cortex-ink:#ECEFF3; --cortex-line:#5C6573; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:17px/1.62 var(--body);}
+.wrap{max-width:900px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(23px,3.4vw,30px);font-weight:700;margin-top:64px}
+h3{font-size:19px;font-weight:700;margin-top:36px}
+p{margin:12px 0}
+.eyebrow,.tag{font:500 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tag{color:var(--accent)}
+.cite{color:var(--muted);font-size:15px;margin-top:10px}
+.lede{font-size:19px;margin-top:20px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+nav.toc a{font:500 13px var(--mono);color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:5px 10px;border-radius:999px;background:var(--panel)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+.short{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:28px}
+.short ol{margin:8px 0 0;padding-left:20px;display:grid;gap:6px}
+.fig{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px;margin:22px 0}
+.fig .scroll{overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto}
+.fig .wide svg{min-width:640px}
+.cap{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
+.cap b{color:var(--ink);font-weight:600}
+.read{display:grid;gap:10px;margin:16px 0}
+.read div{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:baseline}
+.read dt,.read .k{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.ex{background:var(--soft);border-radius:8px;padding:12px 16px;margin:16px 0;font-size:16px}
+.ex .eyebrow{color:var(--cool)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.two>*{min-width:0}
+@media (max-width:640px){.two{grid-template-columns:1fr}.read div{grid-template-columns:1fr;gap:2px}}
+/* SVG text */
+svg text{font-family:var(--mono);font-size:12px;fill:var(--ink)}
+svg .m{fill:var(--muted)} svg .a{fill:var(--accent)} svg .c{fill:var(--cool)}
+svg .d{font-family:var(--display);font-weight:700;font-size:16px}
+svg .s{font-size:10.5px} svg .b{font-size:14px} svg .w{fill:var(--cortex-ink)}
+svg .ln{stroke:var(--ink);fill:none} svg .lm{stroke:var(--muted);fill:none} svg .lr{stroke:var(--rule);fill:none}
+svg .la{stroke:var(--accent);fill:none} svg .lc{stroke:var(--cool);fill:none}
+svg .box{fill:var(--paper);stroke:var(--rule)}
+svg .cx{fill:var(--cortex)}
+/* widgets */
+.ctrl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:12px;font:13px var(--mono)}
+.ctrl label{display:flex;align-items:center;gap:8px}
+input[type=range]{width:150px;accent-color:var(--accent)}
+button{font:500 13px var(--mono);background:var(--ink);color:var(--paper);border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.picker{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}
+.picker>*{min-width:0}
+@media (max-width:560px){.picker{grid-template-columns:1fr}}
+#swatch{width:150px;height:150px;border-radius:8px;border:1px solid var(--rule)}
+.sl{display:grid;gap:8px;font:13px var(--mono)}
+.sl label{display:grid;grid-template-columns:44px 1fr 48px;gap:10px;align-items:center}
+.sl input{width:100%}
+#pickout{margin-top:10px;font-size:16px}
+canvas#vor{display:block;width:100%;height:340px;border-radius:8px;touch-action:none;cursor:grab;background:var(--paper)}
+.eq{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.eq>div{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;min-width:0;background:var(--panel)}
+.eq .f{font:15px var(--mono);margin:6px 0;overflow-x:auto;white-space:nowrap}
+@media (max-width:640px){.eq{grid-template-columns:1fr}}
+.bar{height:14px;border-radius:3px;background:linear-gradient(90deg,#3a3f47 0%,#7a1c0c 18%,#c2300f 38%,#ef6a12 58%,#f8c43a 80%,#fffbe0 100%)}
+.barlab{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--muted);margin-top:4px}
+.swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:14px}
+.swatches span{display:flex;align-items:center;gap:8px}
+.swatches i{display:inline-block;width:26px;height:18px;border-radius:3px;border:1px solid var(--rule)}
+dl.gl{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;font-size:15px}
+dl.gl dt{font:500 13px var(--mono);color:var(--accent)} dl.gl dd{margin:0}
+@media (max-width:560px){dl.gl{grid-template-columns:1fr}}
+a{color:var(--cool)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style><style>
+.net{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:baseline}
+.stimbtns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.stimbtns button{background:transparent;color:var(--ink);border:1px solid var(--rule);font-size:12.5px;padding:6px 10px}
+.stimbtns button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#stimtext{font:15px var(--mono);background:var(--soft);border-radius:6px;padding:10px 12px;margin-bottom:6px}
+.link{border:1px solid var(--rule);border-radius:10px;padding:16px 18px;margin:22px 0;background:var(--panel)}
+.link .eyebrow{color:var(--cool)}
+</style>
+<style>
+:root{--paper:#FFF8EA;--panel:#FFFDF7;--ink:#1D2F66;--muted:#56628A;--rule:#E8DCC2;--soft:#FBEED3;--accent:#B65200;--cool:#2A57B8;--mn-page:#FFF8EA;--mn-panel:#FFFDF7;--mn-ink:#1D2F66;--mn-muted:#56628A;--mn-rule:#E8DCC2;--mn-accent:#B65200;--mn-soft:#FBEED3;--display:'Bitter',Georgia,serif;--body:'Bitter',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15224B;--panel:#1D2F66;--ink:#FFF5D9;--muted:#C3C8DA;--rule:#33498A;--soft:#243A78;--accent:#FFA043;--cool:#9DBBFF;--mn-page:#15224B;--mn-panel:#1D2F66;--mn-ink:#FFF5D9;--mn-muted:#C3C8DA;--mn-rule:#33498A;--mn-accent:#FFA043;--mn-soft:#243A78;color-scheme:dark}
+
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--mn-page)!important;color:var(--mn-ink);font-family:'Bitter',Georgia,serif!important}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
+h1,h2{font-family:'Shrikhand',Georgia,serif!important;font-weight:400!important;letter-spacing:-.005em!important;color:var(--mn-ink)}
+h1{line-height:1.12!important}
+h3,h4{font-family:'Bitter',Georgia,serif!important}
+code,.mono,.eyebrow,.tag,.fignum,.sec-kicker{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+/* family D (hard-coded fonts) */
+.t-lab,.t-lab-s,.t-ink,.prot-t{font-family:'Bitter',Georgia,serif!important}
+.standfirst,.sourceline{font-family:'Bitter',Georgia,serif}
+/* family B used body padding for gutters; move it to .wrap so the site bar can run full width */
+body.fam-B{padding-left:0!important;padding-right:0!important}
+body.fam-B .wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+body.fam-B header.top{padding-top:36px}
+body.fam-A .wrap{padding-top:28px}
+body.fam-C .wrap{padding-top:32px}
+body.fam-D .wrap{padding-top:32px}
+
+/* ---------- site chrome (mn-*) ---------- */
+.mn-bar{position:sticky;top:0;z-index:50;background:var(--mn-panel);border-bottom:2px solid var(--mn-accent);
+  padding:0 max(16px,env(safe-area-inset-left,0px));font-family:'Bitter',Georgia,serif}
+.mn-bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;flex-wrap:wrap}
+.mn-brand{font-family:'Shrikhand',Georgia,serif;font-size:22px;color:var(--mn-ink)!important;text-decoration:none;line-height:1}
+.mn-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mn-links a{font-family:'Bitter',Georgia,serif;font-size:14.5px;color:var(--mn-ink)!important;text-decoration:none;border-bottom:1.5px solid transparent;padding:2px 0}
+.mn-links a:hover,.mn-links a:focus-visible,.mn-links a[aria-current="page"]{border-bottom-color:var(--mn-accent);outline:none}
+.mn-series{max-width:1080px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-left,0px)) 0;font:500 12px/1.5 'IBM Plex Mono',ui-monospace,monospace;
+  letter-spacing:.04em;color:var(--mn-muted);display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.mn-series b{color:var(--mn-accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.mn-series a{color:var(--mn-ink)!important;text-decoration:none;border-bottom:1px solid var(--mn-rule)}
+.mn-series a:hover{border-bottom-color:var(--mn-accent)}
+.mn-byline{display:flex;align-items:center;gap:12px;margin:18px 0 4px;font-family:'Bitter',Georgia,serif;font-size:15px;color:var(--mn-muted)}
+.mn-avatar{width:34px;height:34px;border-radius:50%;background:var(--mn-ink);color:var(--mn-page);display:grid;place-items:center;
+  font-family:'Shrikhand',Georgia,serif;font-size:14px;flex:none}
+.mn-byline b{color:var(--mn-ink);font-weight:600}
+.mn-foot{border-top:1px solid var(--mn-rule);margin-top:40px;padding:28px max(16px,env(safe-area-inset-left,0px)) 56px;font-family:'Bitter',Georgia,serif}
+.mn-foot-in{max-width:1080px;margin:0 auto;display:grid;gap:18px}
+.mn-pn{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mn-pn a{display:block;border:1px solid var(--mn-rule);border-radius:10px;padding:12px 16px;background:var(--mn-panel);text-decoration:none;color:var(--mn-ink)!important;min-width:0}
+.mn-pn a:hover,.mn-pn a:focus-visible{border-color:var(--mn-accent);outline:none}
+.mn-pn small{display:block;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mn-muted)}
+.mn-pn span{font-weight:600}
+.mn-pn .next{text-align:right}
+@media (max-width:560px){.mn-pn{grid-template-columns:1fr}.mn-pn .next{text-align:left}}
+.mn-sign{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:14px;color:var(--mn-muted)}
+.mn-sign a{color:var(--mn-ink)!important}
+.mn-sign .mn-sig{font-family:'Shrikhand',Georgia,serif;font-size:18px;color:var(--mn-ink)}
+</style>
+</head>
+<body class="fam-A">
+<div class="mn-bar"><div class="mn-bar-in"><a class="mn-brand" href="https://mahanawaz.com">Maha Nawaz</a><nav class="mn-links" aria-label="Site"><a href="index.html">Reading notes</a><a href="https://mahanawaz.com/#ResearchPublications">Research</a><a href="https://mahanawaz.com/#EngineeringProjects">Projects</a><a href="https://mahanawaz.com">mahanawaz.com ↗</a></nav></div></div>
+<div class="mn-series" aria-label="Series"><b>Language &amp; thought</b><span>Part 2 of 4</span><a href="huth-semantic-maps.html">1. Huth et al. 2016</a><span aria-current="page">2. Fedorenko, Ivanova &amp; Regev 2024</span><a href="language-of-thought.html">3. Frankland &amp; Greene 2020</a><a href="language-neurons.html">4. Cai et al. 2026</a></div>
+<div class="wrap">
+<header class="col">
+  <div class="eyebrow">Reading notes · Nature Reviews Neuroscience 25, 289–312 (2024)</div>
+  <h1 style="margin-top:10px">The language network as a natural kind</h1>
+  <p class="cite">Fedorenko, Ivanova &amp; Regev · MIT / Georgia Tech</p><div class="mn-byline"><span class="mn-avatar" aria-hidden="true">M</span><span><b>Maha Nawaz</b> · October 13, 2026</span></div>
+  <p class="lede">The claim: inside every adult brain there is a specific set of left frontal and temporal areas that does <em>language</em>, and only language. It's separate from the areas that hear sounds or move the mouth below it, and from the areas that think, reason and model other minds above it.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#idea">Natural kind</a><a href="#box1">Box 1</a><a href="#fig1">Fig 1</a><a href="#fig2">Fig 2</a><a href="#fig3">Fig 3</a><a href="#box2">Box 2</a><a href="#fig4">Fig 4</a><a href="#fig5">Fig 5</a><a href="#try">Try it</a><a href="#huth">vs Huth 2016</a><a href="#open">Open questions</a>
+  </nav>
+  <div class="short">
+    <div class="eyebrow">The 60-second version</div>
+    <ol>
+      <li>Find language areas <b>in each person</b> with a quick localizer (sentences &gt; non-words), instead of averaging brains.</li>
+      <li>Those areas respond to language in any form (spoken, written, signed, typed, any language) for both understanding and speaking.</li>
+      <li>They barely respond to non-language: music, math, code, logic, pictures, gestures.</li>
+      <li>All five areas behave almost identically. They care about words and how words combine, but not about how sentences link into a story.</li>
+      <li><b>Below</b> them: perception and motor areas that only care about the <em>form</em> (sounds, letter shapes, mouth movements), not meaning.</li>
+      <li><b>Above</b> them: reasoning networks (multiple demand, theory of mind, default mode) that care about <em>content</em>, whatever format it arrives in.</li>
+    </ol>
+  </div>
+</header>
+
+<section id="idea" class="col">
+  <h2>What "natural kind" means here</h2>
+  <p>A natural kind is a grouping that reflects how nature is actually divided, not just a convenient label. "Mammal" is one; "things that are red" isn't. The authors argue the language network passes three tests:</p>
+  <div class="read">
+    <div><span class="k">Connected</span><span>Its areas are wired together and their activity rises and falls together, even during rest or movies. You can find the network from correlations alone, with no language task.</span></div>
+    <div><span class="k">Causal</span><span>Damage to it causes aphasia (loss of language) while sparing math, music, reasoning and social understanding.</span></div>
+    <div><span class="k">Selective</span><span>It responds to language and little else.</span></div>
+  </div>
+</section>
+
+<section id="box1">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Box 1 · Method</div>
+  <h2 style="margin-top:6px">Why you must localize in each person</h2>
+  <p>This is the methodological backbone of the whole review. The same function sits in slightly different places in different brains. If you average brains voxel by voxel in a common template, the blobs smear together, and neighbouring areas with different jobs blend into one.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="avg" viewBox="0 0 700 280" role="img" aria-label="Group averaging blurs individually shifted activations"></svg></div>
+    <div class="cap"><b>Toy illustration along one strip of cortex.</b> Each person has a sharp language area (purple) next to a speech-perception area (blue), but in slightly different spots. The group average (bottom) shows one broad, weak smear where the two areas overlap, so you can't tell them apart.</div>
+  </div>
+  <div class="col">
+  <p>The fix is <b>functional localization</b>: run a short, well-tested contrast in every person, define their areas from it, then measure those exact areas on the experiment you care about. For language, the standard <b>localizer</b> is:</p>
+  <div class="ex"><div class="eyebrow">The language localizer contrast</div>
+  <b>Sentences</b>: "NOBODY COULD HAVE PREDICTED THE EARTHQUAKE"<br>
+  <span style="font-size:20px">&gt;</span><br>
+  <b>Non-word lists</b>: "U BIZBY ACWORRILY MAPE LAS POME"<br>
+  Both look and sound alike, but only one has words and meaning. Areas that respond more to the first are the language network. Alternatives (intact vs degraded speech, native vs unfamiliar language) find the same areas.</div>
+  <p>Two more rules from Box 1: independent data must be used to <em>define</em> the areas and to <em>measure</em> them (otherwise the result is circular), and "Broca's area" defined by anatomy covers several functionally different areas, which has caused decades of confusion.</p>
+  </div>
+</section>
+
+<section id="fig1">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 1 · The big map</div>
+  <h2 style="margin-top:6px">Where language sits in the pipeline</h2>
+  <p>Figure 1 is the review's thesis as a flow diagram. Read it left to right for <b style="color:var(--cool)">comprehension</b> (blue arrows), right to left for <b style="color:#c0392b">production</b> (red arrows).</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="pipe2" viewBox="0 0 860 300" role="img" aria-label="Perception and motor feed language which links to knowledge and reasoning"></svg></div>
+    <div class="cap"><b>Redrawn schematic.</b> Solid arrows carry the signal bottom-up. Dashed arrows are top-down influence: what you know and expect shapes how you interpret and even perceive words.</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">Perception</span><span>Speech perception area (superior temporal) and visual word form area. Turn sounds or letter shapes into linguistic units.</span></div>
+    <div><span class="k">Motor</span><span>Broca's area (true, functionally defined) plans articulation; motor cortex executes it.</span></div>
+    <div><span class="k">Language</span><span>Stores words and constructions, and combines them. It decodes forms into meanings and encodes meanings into forms.</span></div>
+    <div><span class="k">Reasoning</span><span>Three green networks: <b>multiple demand</b> (hard tasks, math, logic), <b>theory of mind</b> (other people's beliefs), <b>default mode</b> (narratives, situation models). "Intended meaning" lives across all of these.</span></div>
+  </div>
+  <div class="ex col"><div class="eyebrow">Concrete walk-through</div>Your friend says "the ice cream melted". <b>Auditory cortex</b> gets sound waves → <b>speech perception area</b> picks out "ice", "cream", "melted" as speech sounds → <b>language network</b> looks up the words and builds "the ice cream → melted" → <b>default mode / ToM</b> networks link it to the story so far and infer "she's annoyed I left it out".</div>
+</section>
+
+<section id="fig2">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 2 · Topography and selectivity</div>
+  <h2 style="margin-top:6px">Five areas, different in every brain, stable over years</h2>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="brain" viewBox="0 0 700 300" role="img" aria-label="Schematic left hemisphere with the five language parcels"></svg></div>
+    <div class="cap"><b>Fig 2a, schematic.</b> The five core left-hemisphere language areas. In the real panel, colour = the fraction of 806 people with significant sentences &gt; non-words activation at each spot (yellow = nearly everyone). The right hemisphere shows a weaker mirror image. Black outlines are "parcels": the search zones where each person's own area is looked for.</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">2a</span><span><b>Probabilistic map (n = 806).</b> Not an average of activation strength but a vote: how many people activate here? No spot is 100%, which already tells you locations vary.</span></div>
+    <div><span class="k">2b</span><span><b>Four individuals.</b> Same rough layout (left frontal + temporal) but different exact shapes and positions. This is why Box 1 matters.</span></div>
+    <div><span class="k">2c</span><span><b>Same people, years apart.</b> One person scanned 58 months apart, another 23 months apart: almost identical maps. Your language network is like a fingerprint.</span></div>
+    <div><span class="k">2d</span><span><b>Selectivity bar chart.</b> The key evidence. Redrawn below.</span></div>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="sel" viewBox="0 0 760 400" role="img" aria-label="BOLD response of language network to language and non-linguistic tasks"></svg></div>
+    <div class="cap"><b>Fig 2d, approximate redraw.</b> Response of the language network (averaged over its five areas) as % BOLD signal change. Dashed line = the response to reading. Everything non-linguistic sits at less than half of it, and many tasks (music, math, executive tasks) sit at or below zero (zero = resting baseline).</div>
+  </div>
+  <div class="col">
+  <p><b>How to read the small bumps.</b> Speech in a language you don't know (~0.8) and letter strings (~0.6) get partial responses because they <em>look or sound</em> like language. Event and social pictures get some response too (~0.7–1.1). The authors argue these are side effects, not real roles: patients with severe aphasia still understand pictures of events normally.</p>
+  </div>
+</section>
+
+<section id="fig3">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 3 · What the network computes</div>
+  <h2 style="margin-top:6px">Sensitive to words and sentences, not to stories</h2>
+  <p>Fig 3 tests the network with stimuli that strip away structure at three scales. The pattern of bars tells you which kinds of structure the network uses.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="scales" viewBox="0 0 760 350" role="img" aria-label="Responses to discourse, syntactic and phonological manipulations"></svg></div>
+    <div class="cap"><b>Fig 3b ("all areas together"), approximate redraw.</b> Each group is one scale of structure, from coherent stories down to sound patterns.</div>
+  </div>
+  <div class="col">
+  <div class="tablewrap"><table>
+    <tr><th>Scale</th><th>Example contrast</th><th>Result</th><th>Meaning</th></tr>
+    <tr><td>Discourse</td><td>A paragraph vs the same sentences shuffled from different texts</td><td>Equal</td><td>The network doesn't link sentences into a story. Other networks do.</td></tr>
+    <tr><td>Syntax + words</td><td>Sentences &gt; phrases &gt; word lists</td><td>Graded drop</td><td>More combinable structure = more response.</td></tr>
+    <tr><td>Jabberwocky</td><td>"The flumpy blork was clooding in the meeves" vs non-word lists</td><td>Sentences higher</td><td>It responds to abstract grammar even without real words.</td></tr>
+    <tr><td>Real vs fake words</td><td>Real sentences vs Jabberwocky sentences</td><td>Real higher</td><td>Word meanings and grammar are processed together, in the same places.</td></tr>
+    <tr><td>Phonology</td><td>"blork" vs "bnork" vs "ngkpt"</td><td>Graded drop</td><td>Even prefers well-formed sound patterns of the language.</td></tr>
+  </table></div>
+  <p style="margin-top:18px"><b>Fig 3a</b> shows the same bars for each of the five areas separately (IFG, IFGorb, MFG, AntTemp, PostTemp). They all have the same shape and just differ in overall height. No area is "the syntax area" and another "the word area".</p>
+  </div>
+  <div class="fig">
+    <div class="two">
+      <div><svg id="corr" viewBox="0 0 340 320" role="img" aria-label="Correlation matrix among language areas"></svg></div>
+      <div class="cap" style="margin-top:0;align-self:center"><b>Fig 3c.</b> Each area's responses to 1,000 different sentences, correlated with every other area's. High r (0.47–0.77, mean ≈ 0.67) means if one area likes a sentence, the others do too. Concrete example: a hard, surprising sentence drives all five up together. The "All network" row is the network-wide average compared with each area.</div>
+    </div>
+  </div>
+  <div class="col">
+  <p><b>One area was dropped.</b> The angular gyrus used to be counted as language, but it responds to meaningful pictures, isn't sensitive to syntax, and doesn't correlate with the other areas. The authors no longer include it.</p>
+  </div>
+</section>
+
+<section id="box2" class="col">
+  <div class="tag" style="margin-top:64px">Box 2 · Philosophy</div>
+  <h2 style="margin-top:6px">"Language network" is a label, not a definition</h2>
+  <p>Our words for mental functions (language, syntax, reasoning) came from folk psychology and linguistics, not from brains. The brain may not split things the same way. Here the match is good but not perfect: discourse is part of "language" as linguists define it, yet the language network doesn't handle it. And syntax vs semantics, a core distinction in linguistics, doesn't map onto separate brain areas. So treat the label as a shorthand that may need revising.</p>
+</section>
+
+<section id="fig4">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 4 · The neighbours below</div>
+  <h2 style="margin-top:6px">Form areas vs meaning areas</h2>
+  <p>Take the non-word "blork". You can hear it, repeat it, read it and write it, but it means nothing. Perception and motor areas handle it fine. The language network barely cares. Fig 4b shows this with four stimulus types across five kinds of area.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="prof" viewBox="0 0 860 270" role="img" aria-label="Response profiles across sensory, perception, language, motor planning and motor areas"></svg></div>
+    <div class="cap"><b>Fig 4b, redrawn.</b> Bars: sentences, word lists, non-word lists, non-linguistic stimuli. Only the language network shows a <b>staircase</b>: it tracks how much meaning and structure there is.</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">Primary</span><span>A1, V1, motor cortex: respond to everything that hits the ears, eyes or muscles. Not language-specific at all.</span></div>
+    <div><span class="k">Perception</span><span>Speech perception area and VWFA: high for anything language-shaped, including non-words, low for other sounds or images. Selective for <em>form</em>.</span></div>
+    <div><span class="k">Language</span><span>Staircase: sentences &gt; word lists &gt; non-word lists &gt; non-linguistic. Selective for <em>meaning and structure</em>.</span></div>
+    <div><span class="k">Motor plan</span><span>Broca's area (articulation) and putative Exner's area (writing): high for producing any speech or writing, including nonsense syllables.</span></div>
+  </div>
+  <div class="col">
+  <h3>The specialized areas in brief</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Area</th><th>Location</th><th>Key facts</th></tr>
+    <tr><td>Speech perception</td><td>Superior temporal gyrus/sulcus, both hemispheres</td><td>Selective for speech over other natural sounds. Integrates over ~500 ms (between syllable and word). Equal response to familiar and foreign speech. Possibly Wernicke's original "sound images" area.</td></tr>
+    <tr><td>Broca's area (functional)</td><td>Posterior left inferior frontal gyrus</td><td>Plans articulation. Also responds to non-speech mouth movements. Damage → apraxia of speech (groping, distorted sounds). Different from the language areas next to it.</td></tr>
+    <tr><td>Ventral sensorimotor cortex</td><td>Motor strip</td><td>Executes articulation; neurons map onto lips, tongue, larynx. Damage → slurred speech (dysarthria).</td></tr>
+    <tr><td>VWFA</td><td>Left ventral temporal cortex</td><td>Letter strings in scripts you know (no response to Hebrew if you can't read it). Develops with learning to read. Disrupting it stops letter recognition.</td></tr>
+    <tr><td>Exner's area (putative)</td><td>Frontal, near hand motor</td><td>Proposed writing planner; evidence still thin.</td></tr>
+  </table></div>
+  <p style="margin-top:18px"><b>Fig 4c</b> shows each area's localizer, built on the same logic as Box 1: speech perception = foreign speech &gt; acoustically matched non-speech; VWFA = non-words &gt; scrambled letters or line drawings; Broca's = repeat syllables &gt; non-speech mouth movements; language = sentences &gt; non-word lists.</p>
+  </div>
+</section>
+
+<section id="fig5">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Figure 5 · The neighbours above</div>
+  <h2 style="margin-top:6px">Content networks don't care about format</h2>
+  <p>Fig 5 is a clean three-by-three design. Stimulus <b>1</b> is plain, contentless language. Stimuli <b>2a–c</b> are sentences with special content. Stimuli <b>3a–c</b> are the same content with no language.</p>
+  </div>
+  <div class="fig">
+    <div class="scroll wide"><svg id="dd" viewBox="0 0 860 360" role="img" aria-label="Double dissociation between language network and three reasoning networks"></svg></div>
+    <div class="tablewrap" style="margin-top:12px"><table>
+      <tr><th></th><th>Multiple demand</th><th>Theory of mind</th><th>Default mode</th></tr>
+      <tr><td class="mono">1</td><td colspan="3">"The ice cream was on the table. This is a typical brain." (unconnected sentences, no special content)</td></tr>
+      <tr><td class="mono">2</td><td>"Subtract three from six hundred and one, then add two."</td><td>"She thought that the ice cream was on the table."</td><td>"She moved the ice cream from the table to the freezer."</td></tr>
+      <tr><td class="mono">3</td><td>601 − 3 + 2 = ?</td><td>Pictures: a person imagining the ice cream on the table</td><td>Pictures: the ice cream moved into the freezer</td></tr>
+    </table></div>
+    <div class="cap"><b>Fig 5, redrawn.</b> Purple bars = language network; green bars = the matching reasoning network. Language goes high for anything verbal (1, 2) and drops for the non-verbal version (3). Each reasoning network ignores plain language (1) but responds to its content in either format (2 and 3).</div>
+  </div>
+  <div class="col read">
+    <div><span class="k">Multiple demand</span><span>Bilateral frontal and parietal. Hard tasks of any kind: working memory, math, logic, novel problems. Linked to fluid intelligence. Recruited for language only when there's an extra task (answer a question) or effortful listening (noisy, accented, foreign speech).</span></div>
+    <div><span class="k">Theory of mind</span><span>Temporo-parietal junction plus midline areas. Thinking about beliefs and intentions. Needed for sarcasm, indirect requests ("it's cold in here" = close the window), and conversations.</span></div>
+    <div><span class="k">Default mode</span><span>Medial prefrontal, medial parietal, TPJ, temporal pole. Tracks context over <em>minutes</em> (vs a few words for the language network). Builds the situation model of a story. Same response to a story and a movie of the same events.</span></div>
+  </div>
+  <div class="ex col"><div class="eyebrow">Why this is a double dissociation</div>Area A responds to X but not Y; area B responds to Y but not X. That's stronger than a single difference, because neither area can just be "less active overall". Patients show the same split: people with severe aphasia can still do arithmetic, play chess and understand others' minds.</div>
+</section>
+
+<section id="try">
+  <div class="col">
+  <div class="tag" style="margin-top:64px">Try it</div>
+  <h2 style="margin-top:6px">Which networks would respond?</h2>
+  <p>Pick a stimulus and see the schematic response of each system, following the review's figures.</p>
+  </div>
+  <div class="fig">
+    <div class="stimbtns" id="stimbtns" role="group" aria-label="Stimuli"></div>
+    <div id="stimtext"></div>
+    <div class="scroll"><svg id="netbars" viewBox="0 0 640 250" role="img" aria-label="Schematic network responses" style="min-width:460px"></svg></div>
+    <div class="cap" id="stimwhy"></div>
+  </div>
+</section>
+
+<section id="huth" class="col">
+  <h2>How this connects to <a href="huth-semantic-maps.html">Huth 2016</a></h2>
+  <p>The review cites Huth et al. (ref. 20) and the two papers fit together in an interesting way.</p>
+  <div class="read">
+    <div><span class="k">Agreement</span><span>Both find left frontal and temporal regions involved in language meaning. The review says naturalistic listening "engages a broad set of brain areas beyond the language network", citing Huth.</span></div>
+    <div><span class="k">Reframing</span><span>Many of Huth's semantic areas (LPC, MPC, superior prefrontal) are default mode and theory-of-mind territory. Huth himself noted they overlap the default mode network. On the review's view, those maps show the <em>reasoning and situation-model</em> networks tracking story content, not the language network.</span></div>
+    <div><span class="k">Bilaterality</span><span>Huth found surprisingly symmetric maps. The review's language network is left-lateralized, but the default mode and theory-of-mind networks are bilateral. Mixing those together in a story would naturally look bilateral.</span></div>
+    <div><span class="k">Method</span><span>Huth's voxel-wise models are fit in each person but the semantic areas weren't defined with a language localizer. Without one, you can't say which network a semantic voxel belongs to (Box 1).</span></div>
+    <div><span class="k">Angular gyrus</span><span>Huth's social-concept "bullseye" in lateral parietal cortex is around the angular gyrus, the very area this review removed from the language network.</span></div>
+  </div>
+</section>
+
+<section id="open" class="col">
+  <h2>Open questions the authors flag</h2>
+  <div class="read">
+    <div><span class="k">Meaning</span><span>The network responds to meaningful <em>language</em>, not meaning in general (pictures barely drive it). It even likes "Colourless green ideas sleep furiously". So they propose two steps: the language network pulls word meanings and combines them by rule; other networks turn that into deep, world-aware understanding.</span></div>
+    <div><span class="k">Interfaces</span><span>What format does information take when it passes from the language network to the reasoning networks, and how do they influence each other in real time?</span></div>
+    <div><span class="k">Edges</span><span>The blobs are drawn with sharp edges, but borders might be gradients. That wouldn't undo the separation of the peaks.</span></div>
+    <div><span class="k">Mechanism</span><span>Intracranial recordings and neural network language models (which predict language-network responses well) should reveal the actual computations.</span></div>
+    <div><span class="k">Development</span><span>Speech perception and articulation develop before the language network, which develops before reasoning. Tracking that could clarify how they come apart.</span></div>
+    <div><span class="k">Thought</span><span>If aphasia leaves reasoning intact, language isn't required for thought, though labels may still help some tasks (working memory, counting, learning concepts).</span></div>
+  </div>
+  <h3>Glossary</h3>
+  <dl class="gl">
+    <dt>Localizer</dt><dd>A short, validated contrast used to find an area in each individual.</dd>
+    <dt>fROI</dt><dd>Functional region of interest: one person's area, defined by the localizer.</dd>
+    <dt>Parcel</dt><dd>A broad search zone from the group map, in which each person's fROI is looked for.</dd>
+    <dt>Selectivity</dt><dd>Responding much more to one kind of input than to others.</dd>
+    <dt>Modality-independent</dt><dd>Same response whether input is spoken, written or signed.</dd>
+    <dt>Jabberwocky</dt><dd>Grammatical sentences with made-up content words.</dd>
+    <dt>Aphasia</dt><dd>Loss of language ability after brain damage.</dd>
+    <dt>Apraxia / dysarthria</dt><dd>Speech-planning deficit (Broca's area) / slurred execution (motor cortex).</dd>
+    <dt>Receptive window</dt><dd>How much past input an area integrates: ~500 ms (speech), a few words (language), minutes (default mode).</dd>
+  </dl>
+</section>
+</div>
+
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';
+function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function T(p,x,y,str,cls,anchor){const e=S('text',{x:x,y:y,class:cls||'','text-anchor':anchor||'start'},p);e.textContent=str;return e}
+const $=id=>document.getElementById(id);
+const C={lang:'#9b59b6',langD:'#6c3483',perc:'#2e86c1',sens:'#1b4f72',motor:'#c0392b',motorD:'#7b241c',md:'#82c785',tom:'#4caf50',dmn:'#2e7d32'};
+function arrowDefs(s,id,col){const d=S('defs',{},s);const m=S('marker',{id:id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},d);S('path',{d:'M0,0L10,5L0,10z',style:'fill:'+col},m)}
+
+/* Box 1 averaging */
+(function(){const s=$('avg');const shifts=[-30,10,40,-5];const X0=60,W=560;
+ function bump(x,c,w){return Math.exp(-Math.pow((x-c)/w,2)/2)}
+ const draw=(y0,h,f,col,lw,op)=>{let d='';for(let i=0;i<=280;i++){const x=X0+i*2;d+=(i?'L':'M')+x+','+(y0-h*f(x)).toFixed(1)}S('path',{d:d,stroke:col,'stroke-width':lw,fill:'none',opacity:op||1},s)};
+ shifts.forEach((sh,k)=>{const y=40+k*42;S('line',{x1:X0,y1:y,x2:X0+W,y2:y,class:'lr'},s);T(s,X0-8,y,'P'+(k+1),'m s','end');
+  draw(y,30,x=>bump(x,280+sh,14),C.lang,2);draw(y,30,x=>bump(x,330+sh,14),C.perc,2)});
+ const y=250;S('line',{x1:X0,y1:y,x2:X0+W,y2:y,class:'lm'},s);T(s,X0-8,y,'avg','a s','end');
+ draw(y,60,x=>shifts.reduce((a,sh)=>a+bump(x,280+sh,14),0)/4,C.lang,2.5);draw(y,60,x=>shifts.reduce((a,sh)=>a+bump(x,330+sh,14),0)/4,C.perc,2.5);
+ T(s,X0+W,y-50,'group average:','a s','end');T(s,X0+W,y-36,'peaks shrink and merge','m s','end');
+ T(s,X0+W-110,30,'language','s');S('rect',{x:X0+W-128,y:22,width:12,height:10,fill:C.lang},s);
+ T(s,X0+W-110,48,'speech perception','s');S('rect',{x:X0+W-128,y:40,width:12,height:10,fill:C.perc},s);
+ T(s,X0,272,'position along cortex →','m s');})();
+
+/* Fig 1 pipeline */
+(function(){const s=$('pipe2');arrowDefs(s,'ab',C.perc);arrowDefs(s,'ar',C.motor);arrowDefs(s,'ag','var(--muted)');
+ const box=(x,y,w,h,col,title,lines)=>{S('rect',{x:x,y:y,width:w,height:h,rx:8,class:'box'},s);S('rect',{x:x,y:y,width:6,height:h,rx:3,fill:col},s);T(s,x+16,y+24,title,'d');lines.forEach((l,i)=>T(s,x+16,y+44+i*16,l,'m s'))};
+ box(10,20,210,100,C.perc,'Perception',['speech perception area','visual word form area','form only: sounds, letters']);
+ box(10,180,210,100,C.motor,'Motor planning',["Broca's area, motor cortex",'form only: articulation,','hand movements']);
+ box(320,95,210,110,C.lang,'Language network',['5 left fronto-temporal areas','word meanings + combining','form ⇄ meaning']);
+ box(630,40,220,220,C.tom,'Knowledge & reasoning',['multiple demand: hard tasks','theory of mind: beliefs','default mode: narratives','','→ intended meaning','(content, any format)']);
+ S('line',{x1:222,y1:70,x2:316,y2:130,stroke:C.perc,'stroke-width':2,'marker-end':'url(#ab)'},s);
+ S('line',{x1:316,y1:145,x2:222,y2:90,stroke:C.perc,'stroke-width':1.5,'stroke-dasharray':'5 4','marker-end':'url(#ab)'},s);
+ S('line',{x1:532,y1:135,x2:626,y2:120,stroke:C.perc,'stroke-width':2,'marker-end':'url(#ab)'},s);
+ S('line',{x1:626,y1:140,x2:532,y2:155,stroke:C.perc,'stroke-width':1.5,'stroke-dasharray':'5 4','marker-end':'url(#ab)'},s);
+ S('line',{x1:626,y1:185,x2:532,y2:185,stroke:C.motor,'stroke-width':2,'marker-end':'url(#ar)'},s);
+ S('line',{x1:316,y1:190,x2:222,y2:225,stroke:C.motor,'stroke-width':2,'marker-end':'url(#ar)'},s);
+ T(s,270,60,'comprehension','c s','middle');T(s,580,210,'production','s','middle').setAttribute('style','fill:'+C.motor);})();
+
+/* Fig 2a schematic brain */
+(function(){const s=$('brain');
+ S('path',{d:'M90,170 C80,90 170,40 300,35 C430,30 560,60 610,120 C640,160 620,200 580,215 C560,235 520,240 470,236 C430,270 360,285 300,270 C240,262 190,250 150,235 C110,222 95,200 90,170Z',class:'cx'},s);
+ const reg=[['MFG',210,85,30,22,'Middle frontal'],['IFG',175,140,32,26,'Inferior frontal'],['IFGorb',150,195,30,20,'IFG orbital'],['AntTemp',300,220,60,16,'Anterior temporal'],['PostTemp',420,180,70,26,'Posterior temporal']];
+ reg.forEach(r=>{S('ellipse',{cx:r[1],cy:r[2],rx:r[3],ry:r[4],fill:'#ef6a12',opacity:0.85},s);T(s,r[1],r[2]+4,r[0],'w s','middle')});
+ T(s,640,60,'left hemisphere','m s','end');T(s,640,76,'front ←','m s','end');
+ T(s,20,290,'Frontal: IFG, IFGorb, MFG.  Temporal: AntTemp, PostTemp (along the superior & middle temporal gyri).','m s');})();
+
+/* Fig 2d selectivity */
+(function(){const s=$('sel');const d=[['Listening to sentences',2.45,'#c39bd3'],['Reading sentences',2.05,C.langD],['Speech: syllables, non-words',0.78,'#1f618d'],['Speech: unfamiliar language',0.76,'#3498db'],['Letter strings',0.63,'#aed6f1'],['Music',-0.15,'#76d7c4'],['Numerical cognition',0.03,'#17a589'],['Executive tasks',-0.1,'#1e8449'],['Object meaning (pictures)',0.43,'#82e0aa'],['Scene meaning',0.06,'#d4ac0d'],['Event meaning',0.8,'#f7dc6f'],['Face perception',0.08,'#f5b041'],['Hand & body perception',0.37,'#eb984e'],['Gesture perception',0.13,'#dc7633'],['Action perception',0.73,'#cd6155'],['Social event perception',1.08,'#a93226'],['Theory of mind',0.83,'#78281f']];
+ const X0=150,bw=34,Y=v=>230-v*70;S('line',{x1:X0-4,y1:Y(0),x2:X0+d.length*bw+10,y2:Y(0),class:'lm'},s);
+ [0,1,2,3].forEach(v=>{T(s,X0-10,Y(v)+4,v+'%','m s','end');S('line',{x1:X0-4,y1:Y(v),x2:X0,y2:Y(v),class:'lm'},s)});
+ S('line',{x1:X0,y1:Y(2.05),x2:X0+d.length*bw+10,y2:Y(2.05),class:'lm','stroke-dasharray':'4 4'},s);T(s,X0+d.length*bw+10,Y(2.05)-6,'reading level','m s','end');
+ S('line',{x1:X0,y1:Y(1.025),x2:X0+d.length*bw+10,y2:Y(1.025),class:'lr','stroke-dasharray':'2 4'},s);T(s,X0+d.length*bw+10,Y(1.025)-6,'half','m s','end');
+ d.forEach((b,i)=>{const x=X0+6+i*bw;S('rect',{x:x,y:Math.min(Y(b[1]),Y(0)),width:bw-10,height:Math.abs(Y(b[1])-Y(0)),fill:b[2]},s);
+  const t=T(s,0,0,b[0],'s','end');t.setAttribute('transform','translate('+(x+(bw-10)/2+4)+','+(Y(0)+16)+') rotate(-50)')});
+ T(s,X0+6,20,'language','s').setAttribute('style','fill:'+C.lang);T(s,X0+6+2*bw,20,'non-linguistic inputs and tasks →','m s');})();
+
+/* Fig 3 scales */
+(function(){const s=$('scales');const groups=[['Discourse',[['Paragraphs',1.48,'#27ae60'],['Unconnected sentences',1.52,'#82e0aa']]],
+ ['Syntax',[['Sentences',2.12,'#4a235a'],['Unconnected phrases',1.88,'#6c3483'],['Unconnected words',1.1,'#8e44ad'],['Jabberwocky sentences',1.22,'#bb8fce'],['Jabberwocky phrases',0.9,'#d2b4de'],['Non-word lists',0.55,'#e8daef']]],
+ ['Phonology',[['Well-formed non-words',0.6,'#1a5276'],['Somewhat well-formed',0.32,'#17a2b8'],['Ill-formed',0.15,'#7fcdd6']]]];
+ const Y=v=>220-v*70;let x=130;S('line',{x1:120,y1:Y(0),x2:740,y2:Y(0),class:'lm'},s);[0,1,2,3].forEach(v=>T(s,114,Y(v)+4,v+'%','m s','end'));
+ groups.forEach(g=>{const gx=x;g[1].forEach(b=>{S('rect',{x:x,y:Y(b[1]),width:26,height:Y(0)-Y(b[1]),fill:b[2]},s);const t=T(s,0,0,b[0],'s','end');t.setAttribute('transform','translate('+(x+16)+','+(Y(0)+14)+') rotate(-45)');x+=32});
+  T(s,(gx+x-6)/2,26,g[0],'b','middle');x+=40});
+ T(s,165,Y(1.6),'≈ same','a s','middle');T(s,390,Y(2.35),'graded: more structure → more response','a s','middle');})();
+
+/* Fig 3c corr matrix */
+(function(){const s=$('corr');const L=['IFGorb','IFG','MFG','AntTemp','PostTemp','All'];
+ const M=[[1],[0.73,1],[0.70,0.65,1],[0.65,0.54,0.47,1],[0.77,0.70,0.72,0.74,1],[0.84,0.79,0.76,0.84,0.97,1]];
+ const X0=78,Y0=20,c=40;const col=v=>{const t=(v-0.4)/0.6;return 'rgb('+Math.round(240-60*t)+','+Math.round(170-160*t)+','+Math.round(170-140*t)+')'};
+ M.forEach((row,i)=>{T(s,X0-6,Y0+i*c+c/2+4,L[i],'s','end');row.forEach((v,j)=>{S('rect',{x:X0+j*c,y:Y0+i*c,width:c-2,height:c-2,fill:col(v)},s);const t=T(s,X0+j*c+c/2-1,Y0+i*c+c/2+4,v===1?'1':v.toFixed(2),'s','middle');t.setAttribute('style','fill:#fff')})});
+ L.forEach((l,j)=>{const t=T(s,0,0,l,'s','end');t.setAttribute('transform','translate('+(X0+j*c+c/2)+','+(Y0+6*c+8)+') rotate(-45)')});})();
+
+/* Fig 4 profiles */
+(function(){const s=$('prof');arrowDefs(s,'ab2',C.perc);arrowDefs(s,'ar2',C.motor);
+ const P=[['Primary sensory','A1, V1',[1,1,1,1],C.sens],['Perception','speech area, VWFA',[1,1,1,0.12],C.perc],['Language network','',[1,0.68,0.38,0.1],C.lang],['Motor planning',"Broca's, Exner's",[1,1,1,0.12],C.motor],['Primary motor','M1 mouth, fingers',[1,1,1,1],C.motorD]];
+ const lab=['sent','words','non-w','non-ling'];
+ P.forEach((p,i)=>{const x0=10+i*172;T(s,x0,20,p[0],'b');T(s,x0,36,p[1],'m s');S('line',{x1:x0,y1:200,x2:x0+140,y2:200,class:'lm'},s);
+  p[2].forEach((v,k)=>{S('rect',{x:x0+6+k*34,y:200-v*130,width:26,height:v*130,fill:p[3],opacity:1-k*0.18},s);const t=T(s,0,0,lab[k],'s','end');t.setAttribute('transform','translate('+(x0+22+k*34)+',212) rotate(-40)')});
+  if(i<4)S('line',{x1:x0+146,y1:130,x2:x0+166,y2:130,stroke:i<2?C.perc:C.motor,'stroke-width':2,'marker-end':i<2?'url(#ab2)':'url(#ar2)'},s)});
+ T(s,180,262,'comprehension →','c s','middle');T(s,620,262,'→ production','s','middle').setAttribute('style','fill:'+C.motor);})();
+
+/* Fig 5 double dissociation */
+(function(){const s=$('dd');const nets=[['Multiple demand',C.md,'2a: "Subtract three from six hundred and one, then add two."','3a: 601 − 3 + 2 = ?'],
+ ['Theory of mind',C.tom,'2b: "She thought that the ice cream was on the table."','3b: picture of someone imagining the ice cream'],
+ ['Default mode',C.dmn,'2c: "She moved the ice cream from the table to the freezer."','3c: picture sequence of the move']];
+  nets.forEach((n,i)=>{const x0=10+i*285;T(s,x0,52,n[0],'d');
+  const bars=(y0,vals,cols,title)=>{T(s,x0,y0-118,title,'m s');S('line',{x1:x0,y1:y0,x2:x0+130,y2:y0,class:'lm'},s);vals.forEach((v,k)=>{S('rect',{x:x0+8+k*40,y:y0-v*90,width:30,height:v*90,fill:cols[k]},s);T(s,x0+23+k*40,y0+14,['1',(i===0?'2a':i===1?'2b':'2c'),(i===0?'3a':i===1?'3b':'3c')][k],'s','middle')})};
+  bars(190,[1,1,0.08],[C.lang,C.lang,C.lang],'language network');
+  bars(340,[0.1,1,1],[n[1],n[1],n[1]],n[0].toLowerCase());
+  const w=(str,y)=>{const words=str.split(' ');let line='',yy=y;words.forEach(wd=>{if((line+wd).length>34){T(s,x0+150,yy,line,'m s');line='';yy+=14}line+=wd+' '});T(s,x0+150,yy,line,'m s')};
+});})();
+
+/* Interactive: stimulus → networks */
+(function(){const nets=[['Auditory cortex',C.sens],['Speech perception',C.perc],['VWFA',C.perc],['Language',C.lang],['Multiple demand',C.md],['Theory of mind',C.tom],['Default mode',C.dmn]];
+ const stim=[
+  ['Heard sentence','"Steve was late to school." (spoken)',[1,1,0,1,0.1,0.1,0.15],'Everything on the listening path fires; language responds fully. No special content, so reasoning networks stay low.'],
+  ['Read sentence','"Steve was late to school." (on screen)',[0,0,1,1,0.1,0.1,0.15],'Same language response through the visual route: the language network is modality-independent.'],
+  ['Heard non-words','"piv wuba wos le paffing"',[1,1,0,0.3,0.15,0.05,0.05],'Speech areas treat it like any speech. The language network only responds weakly, to the surface resemblance.'],
+  ['Foreign speech','Hebrew sentence, to a non-speaker',[1,1,0,0.35,0.3,0.05,0.05],'Speech perception responds as strongly as to your own language; the language network does not.'],
+  ['Math expression','601 − 3 + 2 = ?',[0,0,0.2,0.05,1,0.05,0.05],'Multiple demand handles the problem; language stays near baseline.'],
+  ['Math in words','"Subtract three from six hundred and one, then add two."',[0,0,1,1,1,0.05,0.1],'Both: language decodes the sentence, multiple demand does the arithmetic.'],
+  ['False belief story','"She thought the ice cream was on the table."',[0,0,1,1,0.15,1,0.4],'Language for the sentence, theory of mind for the belief content.'],
+  ['Comic strip','Pictures: a character imagines the ice cream',[0,0,0,0.15,0.15,1,0.6],'Theory of mind responds to the content without any language.'],
+  ['Connected story','A coherent paragraph',[0,0,1,1,0.1,0.4,1],'Language responds the same as to shuffled sentences; default mode tracks the story across sentences.'],
+  ['Music','A piano piece',[1,0.15,0,0,0.1,0.05,0.1],'Auditory cortex responds; language network does not, despite music\'s hierarchical structure.']];
+ const box=$('stimbtns');let cur=0;
+ stim.forEach((st,i)=>{const b=document.createElement('button');b.type='button';b.textContent=st[0];b.setAttribute('aria-pressed',i===0?'true':'false');b.addEventListener('click',()=>{cur=i;[...box.children].forEach((c,k)=>c.setAttribute('aria-pressed',k===i?'true':'false'));draw()});box.appendChild(b)});
+ const s=$('netbars');
+ function draw(){while(s.firstChild)s.removeChild(s.firstChild);const st=stim[cur];$('stimtext').textContent=st[1];$('stimwhy').textContent=st[3];
+  S('line',{x1:10,y1:190,x2:630,y2:190,class:'lm'},s);
+  nets.forEach((n,i)=>{const x=20+i*88,v=st[2][i];S('rect',{x:x,y:190-v*160,width:60,height:Math.max(1,v*160),fill:n[1],rx:2},s);
+   const words=n[0].split(' ');words.forEach((w,k)=>T(s,x+30,208+k*14,w,'s','middle'))})}
+ draw();})();
+})();
+</script>
+<div class="mn-foot"><div class="mn-foot-in"><div class="mn-pn"><a href="huth-semantic-maps.html"><small>← Previous note</small><span>Semantic maps that tile the cortex</span></a><a class="next" href="language-of-thought.html"><small>Next note →</small><span>In search of the brain&#x27;s language of thought</span></a></div><div class="mn-sign"><span class="mn-sig">Maha Nawaz</span><span>Stanford EECS · <a href="index.html">All reading notes</a> · <a href="https://mahanawaz.com">mahanawaz.com</a></span></div></div></div>
+</body></html>
